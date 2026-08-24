@@ -1,521 +1,623 @@
-<title>Dominus</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,440;0,9..144,600;1,9..144,400;1,9..144,500&family=Archivo:wght@400;500;600;700&display=swap');
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<!-- Meta Pixel + Google Analytics: ID letti dinamicamente da immonova_site_settings
+     (pagina admin/site-settings.html) invece di essere scritti qui a mano. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/config.js"></script>
+<script src="/js/theme-loader.js"></script>
+<script src="/js/site-analytics.js"></script>
 
-  :root{
-    --parchment: #F2ECDE;
-    --parchment-dim: #E8DFCB;
-    --ink: #14110D;
-    --ink-soft: #211C15;
-    --slate: #3A362E;
-    --stone: #857D69;
-    --brass: #9C7A3E;
-    --brass-bright: #C9A45C;
-    --hair: rgba(60,50,30,0.16);
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DOMINUS | Off Market Consulting — Immobili Off-Market per Investitori</title>
 
-    --bg: var(--parchment);
-    --bg-raised: #FBF8F0;
-    --fg: var(--slate);
-    --fg-dim: var(--stone);
-    --fg-strong: var(--ink);
-    --accent: var(--brass);
-    --accent-strong: #7C5F2E;
-    --rule: var(--hair);
+<!-- SEO base -->
+<meta name="description" content="DOMINUS seleziona opportunità immobiliari off-market per investitori italiani e internazionali: dossier riservati, analisi di mercato e consulenza dedicata su immobili non pubblicati sul mercato tradizionale." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://dominus-suite.it/index.html" />
+
+<!-- Open Graph (anteprime su WhatsApp, LinkedIn, Facebook) -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="DOMINUS" />
+<meta property="og:title" content="DOMINUS | Off Market Consulting" />
+<meta property="og:description" content="Opportunità immobiliari off-market selezionate per investitori italiani e internazionali: dossier riservati e consulenza dedicata." />
+<meta property="og:url" content="https://dominus-suite.it/index.html" />
+<meta property="og:locale" content="it_IT" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="DOMINUS | Off Market Consulting" />
+<meta name="twitter:description" content="Opportunità immobiliari off-market selezionate per investitori italiani e internazionali." />
+
+<!-- Dati strutturati JSON-LD. Indirizzo verificato via ricerca (Via Emilio Faà di Bruno, non
+     "Faà Bruno"). Telefono omesso: non fornito, va aggiunto quando disponibile. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "DOMINUS",
+  "alternateName": "DOMINUS Off Market Consulting",
+  "url": "https://dominus-suite.it/index.html",
+  "email": "amministrazione@dominus-suite.it",
+  "description": "Consulenza immobiliare off-market per investitori italiani e internazionali: selezione, analisi e dossier riservati su opportunità non pubblicate sul mercato tradizionale.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Via Emilio Faà di Bruno 43",
+    "addressLocality": "Roma",
+    "postalCode": "00195",
+    "addressCountry": "IT"
+  },
+  "areaServed": "Worldwide"
+}
+</script>
+
+<!-- PWA: manifest, icone, colore tema -->
+<link rel="manifest" href="/manifest.json" />
+<link rel="apple-touch-icon" href="/apple-touch-icon-v2.png" />
+<meta name="theme-color" content="#a67f34" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="DOMINUS" />
+
+<!-- config.js e la libreria Supabase sono già caricati in cima a <head> (per
+     site-analytics.js): qui si crea solo il client usato dal resto della pagina. -->
+<script>
+  var immonovaClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
+<script>
+// Registra il service worker (necessario per installabilità + notifiche push)
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("/service-worker.js").catch(function (err) {
+      console.warn("Registrazione service worker fallita:", err);
+    });
+  });
+}
+
+// Rileva se l'app è stata aperta in modalità "installata" (standalone) per la prima volta,
+// e se l'utente non ha ancora risposto alla richiesta di notifiche, lo manda alla schermata dedicata.
+(function () {
+  var isStandalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true; // iOS Safari
+
+  if (!isStandalone) return;
+
+  logAppInstallOnce();
+
+  var alreadyAsked = false;
+  try {
+    alreadyAsked = localStorage.getItem("immonova_push_asked") === "1";
+  } catch (e) {}
+
+  if (!alreadyAsked && window.location.pathname.indexOf("notifications-consent.html") === -1) {
+    window.location.href = "/notifications-consent.html";
+  }
+})();
+
+/* Registra un'installazione anonima UNA SOLA VOLTA per dispositivo (flag in localStorage,
+   così riaprire l'app 50 volte non gonfia il conteggio installazioni). Nessun dato personale:
+   solo paese (rilevato via IP, best-effort, MAI bloccante) e user agent grezzo. */
+async function logAppInstallOnce(){
+  var alreadyLogged = false;
+  try{ alreadyLogged = localStorage.getItem("immonova_install_logged") === "1"; }catch(e){}
+  if(alreadyLogged) return;
+
+  var country = null;
+  try{
+    var geoRes = await fetch("https://ipapi.co/json/");
+    if(geoRes.ok){
+      var geoData = await geoRes.json();
+      country = geoData && geoData.country_name ? geoData.country_name : null;
+    }
+  }catch(e){
+    console.warn("Geolocalizzazione paese non disponibile (non bloccante):", e);
   }
 
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg: var(--ink);
-      --bg-raised: var(--ink-soft);
-      --fg: #D9D1BE;
-      --fg-dim: #8C8370;
-      --fg-strong: var(--parchment);
-      --accent: var(--brass-bright);
-      --accent-strong: var(--brass-bright);
-      --rule: rgba(201,164,92,0.22);
+  try{
+    await fetch(String(SUPABASE_URL||"").replace(/\/+$/,"") + "/rest/v1/immonova_app_installs", {
+      method:"POST",
+      headers:{
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify({ country: country, user_agent: navigator.userAgent })
+    });
+    try{ localStorage.setItem("immonova_install_logged", "1"); }catch(e){}
+  }catch(e){
+    console.warn("Registrazione installazione non riuscita (non bloccante):", e);
+  }
+}
+</script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%}
+
+body{
+  overflow:hidden;
+  background:var(--page-bg-color,#f4ecdf);
+  font-family:"Avenir Next","Helvetica Neue",Arial,sans-serif;
+}
+
+.background{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  background:
+    radial-gradient(circle at center,rgba(255,255,255,.72) 0%,rgba(255,255,255,.34) 38%,rgba(244,236,223,.06) 72%),
+    var(--page-bg-color,#f4ecdf);
+}
+
+.background::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    none,
+    none,
+    none;
+  background-size:230px 199px;
+  opacity:.3;
+}
+
+.background::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(120,90,45,.08),transparent 16%),
+    radial-gradient(circle at 66% 70%,rgba(120,90,45,.06),transparent 18%),
+    repeating-radial-gradient(circle at center,rgba(120,90,45,.035) 0 1px,transparent 1px 4px);
+  opacity:.06;
+  mix-blend-mode:multiply;
+}
+
+.landing{
+  position:relative;
+  z-index:2;
+  width:100vw;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.brand{
+  position:relative;
+  text-align:center;
+  transform:translateY(-2vh);
+}
+
+.logo-wrap{
+  display:inline-block;
+  overflow:hidden;
+  opacity:0;
+  filter:blur(12px);
+  clip-path:inset(0 50% 0 50%);
+  animation:
+    composeFromCenter 4.4s cubic-bezier(.19,1,.22,1) forwards,
+    letterGlow 3.6s ease forwards 7.6s;
+}
+
+.logo-svg{
+  width:min(840px,86vw);
+  height:auto;
+  display:block;
+  overflow:visible;
+}
+
+.logo-fill{
+  fill:none;
+  stroke:url(#goldGradient);
+  stroke-width:3.2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.logo-i{
+  fill:url(#goldGradient);
+}
+
+.logo-line{
+  width:0;
+  height:1px;
+  margin:14px auto 0;
+  background:linear-gradient(to right,transparent,rgba(197,157,72,.88),transparent);
+  opacity:0;
+  animation:lineReveal 2.2s ease forwards 4.5s;
+}
+
+.payoff{
+  display:block;
+  margin-top:13px;
+  color:#a58139;
+  font-size:clamp(10px,1.35vw,20px);
+  font-weight:700;
+  letter-spacing:.025em;
+  text-transform:uppercase;
+  opacity:0;
+  filter:blur(10px);
+  clip-path:inset(0 50% 0 50%);
+  animation:composeFromCenter 1.6s cubic-bezier(.19,1,.22,1) forwards;
+  animation-delay:1.1s;
+}
+
+.discover{
+  position:fixed;
+  top:600px;
+  left:50%;
+  z-index:5;
+  transform:translateX(-50%) translateY(-14px);
+  padding:11px 34px;
+  border:1px solid rgba(165,129,57,.42);
+  background:rgba(255,252,244,.22);
+  backdrop-filter:blur(8px);
+  color:#a58139;
+  text-decoration:none;
+  text-transform:uppercase;
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:.24em;
+  opacity:0;
+  pointer-events:none;
+  animation:discoverAppear 1s ease forwards;
+  animation-delay:3s;
+}
+
+.admin-lock{
+  position:fixed;
+  right:26px;
+  bottom:24px;
+  z-index:20;
+
+  width:38px;
+  height:38px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border:1px solid rgba(165,129,57,.32);
+  background:rgba(255,252,244,.12);
+  backdrop-filter:blur(8px);
+
+  color:#a58139;
+  text-decoration:none;
+
+  opacity:.28;
+  transition:.35s ease;
+}
+
+.admin-lock:hover{
+  opacity:1;
+  transform:translateY(-2px);
+  box-shadow:0 0 18px rgba(165,129,57,.16);
+}
+
+.admin-lock svg{
+  width:15px;
+  height:15px;
+  stroke:#a58139;
+}
+
+@keyframes composeFromCenter{
+  0%{opacity:0;filter:blur(12px);clip-path:inset(0 50% 0 50%);transform:scale(.96)}
+  70%{opacity:1;filter:blur(2px)}
+  100%{opacity:1;filter:blur(0);clip-path:inset(0 0 0 0);transform:scale(1)}
+}
+
+@keyframes lineReveal{
+  to{width:76%;opacity:.72}
+}
+
+@keyframes letterGlow{
+  to{
+    filter:
+      drop-shadow(0 0 3px rgba(255,230,170,.22))
+      drop-shadow(0 0 8px rgba(255,220,145,.12));
+  }
+}
+
+@keyframes discoverAppear{
+  to{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+    pointer-events:auto;
+  }
+}
+
+@media(max-width:700px){
+  .logo-svg{width:90vw}
+  .payoff{font-size:11px}
+  .discover{top:26px;padding:9px 24px;font-size:10px}
+
+  .admin-lock{
+    right:18px;
+    bottom:18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<a href="opportunities.html" class="discover">Discover</a>
+
+<a href="admin/login.html" class="admin-lock" aria-label="Admin access">
+  <svg viewBox="0 0 24 24" fill="none">
+    <rect x="5" y="10" width="14" height="10" rx="1.8" stroke-width="1.6"/>
+    <path d="M8 10V7.5C8 5.3 9.7 3.5 12 3.5C14.3 3.5 16 5.3 16 7.5V10" stroke-width="1.6" stroke-linecap="round"/>
+  </svg>
+</a>
+
+<main class="landing">
+  <section class="brand" aria-label="DOMINUS Off Market Consulting">
+
+    <div class="logo-wrap">
+      <img class="logo-svg" src="assets/dominus-logo-orizzontale.png" alt="DOMINUS" style="width:min(560px,86vw);height:auto;display:block;margin:0 auto;">
+    </div>
+
+    <div class="logo-line"></div>
+    
+
+  </section>
+</main>
+
+
+<!-- ============================================================
+     BANNER "INSTALLA L'APP DOMINUS" — solo mobile, facoltativo
+     config.js è già caricato in <head> (serve anche al tracciamento installazioni),
+     quindi qui non va ricaricato.
+     ============================================================ -->
+<div id="installBanner" style="display:none">
+  <style>
+    #installBanner{position:fixed;left:0;right:0;bottom:0;z-index:9999;font-family:"Avenir Next","Helvetica Neue",Arial,sans-serif}
+    #installBanner .ib-sheet{background:var(--page-bg-color,#f4ecdf);border-top:1px solid rgba(166,127,52,.30);box-shadow:0 -12px 40px rgba(90,68,25,.18);padding:20px 20px calc(20px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .45s cubic-bezier(.19,1,.22,1)}
+    #installBanner.ib-visible .ib-sheet{transform:translateY(0)}
+    #installBanner .ib-close{position:absolute;top:10px;right:14px;background:none;border:none;color:#a58139;font-size:18px;cursor:pointer;padding:6px;line-height:1}
+    #installBanner .ib-row{display:flex;align-items:center;gap:14px}
+    #installBanner .ib-icon{font-size:26px;flex-shrink:0}
+    #installBanner .ib-text{flex:1}
+    #installBanner .ib-title{font-size:14px;font-weight:600;color:#5c4a20;margin-bottom:3px}
+    #installBanner .ib-sub{font-size:12px;color:#8f7643;line-height:1.4}
+    #installBanner .ib-actions{display:flex;gap:10px;margin-top:16px}
+    #installBanner .ib-btn{flex:1;padding:12px 14px;border:1px solid var(--primary-color,#a67f34);background:var(--primary-color,#a67f34);color:#fff;font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-family:inherit;text-align:center}
+    #installBanner .ib-btn.ib-secondary{background:transparent;color:var(--primary-color,#a67f34)}
+    #installBanner .ib-field{margin-bottom:10px}
+    #installBanner .ib-field input{width:100%;padding:11px 12px;border:1px solid rgba(166,127,52,.30);background:rgba(255,255,255,.6);font-size:14px;color:#5c4a20;font-family:inherit;outline:none}
+    #installBanner .ib-privacy{font-size:11px;line-height:1.5;color:#8f7643;display:flex;gap:8px;align-items:flex-start;margin:12px 0}
+    #installBanner .ib-privacy a{color:var(--primary-color,#a67f34)}
+    #installBanner .ib-privacy input{margin-top:2px;flex-shrink:0}
+    #installBanner .ib-step{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;font-size:13px;color:#5c4a20;line-height:1.5}
+    #installBanner .ib-step-num{flex-shrink:0;width:22px;height:22px;border:1px solid var(--primary-color,#a67f34);color:var(--primary-color,#a67f34);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+    #installBanner .ib-status{font-size:12px;margin-top:10px;min-height:16px}
+    #installBanner .ib-status.error{color:#9c2f2f}
+    #installBanner .ib-status.success{color:#4f7f45}
+    #installBanner .ib-skip{display:block;text-align:center;margin-top:10px;font-size:11.5px;color:#8f7643;text-decoration:underline;cursor:pointer;background:none;border:none;font-family:inherit}
+  </style>
+
+  <div class="ib-sheet">
+    <button class="ib-close" type="button" onclick="DominusInstallBanner.dismiss()">&times;</button>
+
+    <!-- Stato 1: proposta iniziale -->
+    <div id="ibStatePrompt">
+      <div class="ib-row">
+        <div class="ib-icon">📲</div>
+        <div class="ib-text">
+          <div class="ib-title">Installa l'app DOMINUS</div>
+          <div class="ib-sub">Resta sempre aggiornato sulle nuove opportunità off-market.</div>
+        </div>
+      </div>
+      <div class="ib-actions">
+        <button class="ib-btn ib-secondary" type="button" onclick="DominusInstallBanner.goInstructions()">Continua senza account</button>
+        <button class="ib-btn" type="button" onclick="DominusInstallBanner.goForm()">Crea il tuo account</button>
+      </div>
+    </div>
+
+    <!-- Stato 2: creazione account -->
+    <div id="ibStateForm" style="display:none">
+      <div class="ib-title" style="margin-bottom:14px">Crea il tuo account</div>
+      <div class="ib-field"><input type="text" id="ibNome" placeholder="Nome" /></div>
+      <div class="ib-field"><input type="text" id="ibCognome" placeholder="Cognome" /></div>
+      <div class="ib-field"><input type="email" id="ibEmail" placeholder="Email" /></div>
+      <div class="ib-field"><input type="tel" id="ibTelefono" placeholder="Telefono" /></div>
+      <div class="ib-field"><input type="password" id="ibPassword" placeholder="Password (almeno 8 caratteri)" minlength="8" /></div>
+      <label class="ib-privacy">
+        <input type="checkbox" id="ibPrivacyCheck" />
+        <span>Ho letto e accetto la <a href="/privacy.html" target="_blank">Privacy Policy</a> di DOMINUS.</span>
+      </label>
+      <div class="ib-actions">
+        <button class="ib-btn ib-secondary" type="button" onclick="DominusInstallBanner.goInstructions()">Salta</button>
+        <button class="ib-btn" type="button" id="ibSubmitBtn" onclick="DominusInstallBanner.submitLead()">Crea account</button>
+      </div>
+      <div id="ibFormStatus" class="ib-status"></div>
+    </div>
+
+    <!-- Stato 3: istruzioni installazione (iOS o Android) -->
+    <div id="ibStateInstructions" style="display:none">
+      <div class="ib-title" style="margin-bottom:14px">Come installare</div>
+      <div id="ibIosSteps" style="display:none">
+        <div class="ib-step"><div class="ib-step-num">1</div><div>Apri il menu di condivisione (l'icona con il quadrato e la freccia verso l'alto, in basso nella barra di Safari).</div></div>
+        <div class="ib-step"><div class="ib-step-num">2</div><div>Scorri l'elenco e tocca <strong>"Aggiungi alla schermata Home"</strong>.</div></div>
+        <div class="ib-step"><div class="ib-step-num">3</div><div>Conferma toccando <strong>"Aggiungi"</strong> in alto a destra.</div></div>
+      </div>
+      <div id="ibAndroidSteps" style="display:none">
+        <div class="ib-step"><div class="ib-step-num">1</div><div>Tocca il pulsante qui sotto per installare l'app direttamente.</div></div>
+      </div>
+      <button class="ib-btn" id="ibAndroidInstallBtn" type="button" style="display:none;width:100%" onclick="DominusInstallBanner.triggerAndroidInstall()">Installa ora</button>
+      <button class="ib-skip" type="button" onclick="DominusInstallBanner.dismiss()">Ho capito, chiudi</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var DominusInstallBanner = (function () {
+  var DISMISS_KEY = "immonova_install_banner_dismissed_at";
+  var DISMISS_DAYS = 7;
+  var deferredAndroidPrompt = null;
+
+  function isStandalone() {
+    return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  }
+
+  function isMobile() {
+    return /iphone|ipad|ipod|android/i.test(navigator.userAgent) || window.matchMedia("(max-width: 768px)").matches;
+  }
+
+  function isIOS() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent);
+  }
+
+  function wasDismissedRecently() {
+    try {
+      var raw = localStorage.getItem(DISMISS_KEY);
+      if (!raw) return false;
+      var elapsedDays = (Date.now() - Number(raw)) / (1000 * 60 * 60 * 24);
+      return elapsedDays < DISMISS_DAYS;
+    } catch (e) {
+      return false;
     }
   }
-  :root[data-theme="dark"]{
-    --bg: var(--ink);
-    --bg-raised: var(--ink-soft);
-    --fg: #D9D1BE;
-    --fg-dim: #8C8370;
-    --fg-strong: var(--parchment);
-    --accent: var(--brass-bright);
-    --accent-strong: var(--brass-bright);
-    --rule: rgba(201,164,92,0.22);
+
+  function dismiss() {
+    try { localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch (e) {}
+    var el = document.getElementById("installBanner");
+    el.classList.remove("ib-visible");
   }
 
-  *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--fg);
-    font-family:'Archivo', ui-sans-serif, system-ui, sans-serif;
-    font-size:16.5px;
-    line-height:1.65;
-    overflow-x:hidden;
-  }
-  ::selection{ background:var(--accent); color:var(--ink); }
-
-  a{ color:inherit }
-  h1,h2,h3{
-    font-family:'Fraunces', Georgia, 'Times New Roman', serif;
-    font-weight:440;
-    color:var(--fg-strong);
-    text-wrap:balance;
-    margin:0;
-  }
-
-  .wrap{ max-width:1120px; margin:0 auto; padding-left:32px; padding-right:32px; }
-  @media (max-width:640px){ .wrap{ padding-left:20px; padding-right:20px; } }
-
-  .eyebrow{
-    font-family:'Archivo', sans-serif;
-    font-size:11px;
-    letter-spacing:.22em;
-    text-transform:uppercase;
-    color:var(--accent-strong);
-    font-weight:600;
-  }
-
-  /* ---------- Nav ---------- */
-  .nav{
-    position:sticky; top:0; z-index:40;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:22px 32px;
-    background:color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--rule);
-  }
-  .nav-mark{ display:flex; align-items:center; gap:12px; text-decoration:none; }
-  .nav-mark svg{ width:30px; height:30px; flex-shrink:0; }
-  .nav-word{
-    font-family:'Fraunces', serif; font-weight:500; font-size:19px;
-    letter-spacing:.14em; color:var(--fg-strong);
-  }
-  .nav-cta{
-    font-size:12px; letter-spacing:.1em; text-transform:uppercase; font-weight:600;
-    padding:11px 22px; border:1px solid var(--fg-strong); text-decoration:none;
-    color:var(--fg-strong); white-space:nowrap;
-    transition:background .2s ease, color .2s ease;
-  }
-  .nav-cta:hover{ background:var(--fg-strong); color:var(--bg); }
-
-  /* ---------- Hero ---------- */
-  .hero{
-    position:relative;
-    padding:104px 32px 96px;
-    text-align:center;
-    overflow:hidden;
-  }
-  .hero-plan{
-    position:absolute; inset:0; z-index:0;
-    opacity:.5;
-    pointer-events:none;
-  }
-  :root:not([data-theme="light"]) .hero-plan{ opacity:.35; }
-  :root[data-theme="dark"] .hero-plan{ opacity:.35; }
-
-  .hero-inner{ position:relative; z-index:1; max-width:760px; margin:0 auto; }
-  .seal{ width:78px; height:78px; margin:0 auto 30px; }
-  .hero h1{
-    font-size:clamp(2.6rem, 6vw, 4.4rem);
-    line-height:1.04;
-    letter-spacing:-0.01em;
-  }
-  .hero h1 em{ font-style:italic; font-weight:400; color:var(--accent-strong); }
-  .hero-sub{
-    margin:26px auto 0;
-    max-width:520px;
-    font-size:17px;
-    color:var(--fg-dim);
-    line-height:1.7;
-  }
-  .hero-actions{
-    margin-top:40px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
-  }
-  .btn-solid, .btn-line{
-    font-size:12.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:600;
-    padding:15px 30px; text-decoration:none; display:inline-block;
-  }
-  .btn-solid{ background:var(--fg-strong); color:var(--bg); border:1px solid var(--fg-strong); }
-  .btn-solid:hover{ background:var(--accent-strong); border-color:var(--accent-strong); color:var(--bg); }
-  .btn-line{ border:1px solid var(--rule); color:var(--fg); }
-  .btn-line:hover{ border-color:var(--fg-strong); }
-
-  .hero-foot{
-    margin-top:64px; display:flex; justify-content:center; gap:40px; flex-wrap:wrap;
-    font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--fg-dim);
-  }
-  .hero-foot span b{ color:var(--fg-strong); font-weight:600; }
-
-  /* ---------- Section shell ---------- */
-  section{ padding:96px 0; border-top:1px solid var(--rule); }
-  .section-head{ max-width:600px; margin-bottom:56px; }
-  .section-head h2{ font-size:clamp(1.9rem, 3.4vw, 2.6rem); margin-top:14px; }
-  .section-head p{ margin-top:18px; color:var(--fg-dim); font-size:16px; max-width:480px; }
-
-  /* ---------- Manifesto / intro band ---------- */
-  .manifesto{ display:grid; grid-template-columns: 1fr 1.3fr; gap:64px; align-items:start; }
-  @media (max-width:760px){ .manifesto{ grid-template-columns:1fr; gap:32px; } }
-  .manifesto blockquote{
-    margin:0; font-family:'Fraunces', serif; font-style:italic; font-weight:400;
-    font-size:1.5rem; line-height:1.5; color:var(--fg-strong);
-    border-left:2px solid var(--accent); padding-left:24px;
-  }
-  .manifesto .col p{ color:var(--fg-dim); font-size:15.5px; margin:0 0 16px; max-width:52ch; }
-  .manifesto .col p:last-child{ margin-bottom:0; }
-
-  /* ---------- Ledger (moduli) ---------- */
-  .ledger{ border-top:1px solid var(--rule); }
-  .ledger-row{
-    display:grid; grid-template-columns: 64px 1fr 1.4fr; gap:28px;
-    padding:26px 0; border-bottom:1px solid var(--rule);
-    align-items:baseline;
-  }
-  @media (max-width:640px){
-    .ledger-row{ grid-template-columns: 40px 1fr; }
-    .ledger-desc{ grid-column: 2 / 3; }
-  }
-  .ledger-num{
-    font-family:'Archivo', sans-serif; font-size:12px; color:var(--fg-dim);
-    font-variant-numeric: tabular-nums; letter-spacing:.05em; padding-top:3px;
-  }
-  .ledger-name{
-    font-family:'Fraunces', serif; font-size:1.2rem; font-weight:500; color:var(--fg-strong);
-  }
-  .ledger-name .tag{
-    display:inline-block; margin-left:10px; font-family:'Archivo',sans-serif;
-    font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:600;
-    color:var(--accent-strong); border:1px solid var(--rule); padding:2px 8px;
-    vertical-align:middle; position:relative; top:-2px;
-  }
-  .ledger-desc{ color:var(--fg-dim); font-size:14.5px; line-height:1.6; max-width:46ch; }
-
-  /* ---------- Positioning band (dark inverted) ---------- */
-  .band{
-    background:var(--ink); color:var(--parchment);
-  }
-  .band .eyebrow{ color:var(--brass-bright); }
-  .band h2{ color:var(--parchment); }
-  .band-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:48px; margin-top:56px; }
-  @media (max-width:760px){ .band-grid{ grid-template-columns:1fr; gap:40px; } }
-  .band-item h3{
-    font-size:1.15rem; color:var(--parchment); font-weight:500; margin-bottom:12px;
-  }
-  .band-item p{ color:#B4AA92; font-size:14.5px; line-height:1.7; margin:0; }
-  .band-item .mark{ color:var(--brass-bright); font-size:13px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; margin-bottom:14px; display:block; }
-
-  /* ---------- Steps ---------- */
-  .steps{ counter-reset: step; }
-  .step{
-    display:grid; grid-template-columns:110px 1fr; gap:28px;
-    padding:36px 0; border-bottom:1px solid var(--rule);
-  }
-  .step:first-child{ border-top:1px solid var(--rule); }
-  @media (max-width:640px){ .step{ grid-template-columns:56px 1fr; } }
-  .step-num{
-    font-family:'Fraunces', serif; font-style:italic; font-size:2.4rem; color:var(--rule);
-    line-height:1;
-  }
-  .step h3{ font-size:1.25rem; margin-bottom:10px; font-weight:500; }
-  .step p{ color:var(--fg-dim); font-size:15px; max-width:52ch; margin:0; }
-
-  /* ---------- Closing CTA ---------- */
-  .closing{
-    text-align:center; padding-top:110px; padding-bottom:120px;
-  }
-  .closing h2{ font-size:clamp(2rem,4vw,3rem); }
-  .closing p{ color:var(--fg-dim); margin:20px auto 0; max-width:440px; font-size:16px; }
-  .closing .btn-solid{ margin-top:36px; }
-  .closing-note{
-    margin-top:22px; font-size:12.5px; color:var(--fg-dim); letter-spacing:.02em;
-  }
-  .closing-note a{ color:var(--accent-strong); text-decoration:none; border-bottom:1px solid var(--rule); }
-
-  .contact-form{
-    margin:44px auto 0; max-width:440px; text-align:left; display:flex; flex-direction:column; gap:16px;
-  }
-  .field{ display:flex; flex-direction:column; gap:6px; }
-  .field label{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--fg-dim); }
-  .field input, .field textarea{
-    font-family:'Archivo', sans-serif; font-size:15px; color:var(--fg-strong);
-    background:var(--bg-raised); border:1px solid var(--rule); padding:12px 14px;
-    border-radius:2px; outline:none; transition:border-color .15s ease;
-  }
-  .field input:focus, .field textarea:focus{ border-color:var(--accent-strong); }
-  .field textarea{ resize:vertical; min-height:88px; font-family:inherit; }
-  .contact-form .btn-solid{
-    margin-top:6px; border:1px solid var(--fg-strong); cursor:pointer; font:inherit;
-    font-size:14px; letter-spacing:.02em; padding:14px 20px;
-  }
-  .contact-form .btn-solid:disabled{ opacity:.55; cursor:default; }
-  .form-status{ font-size:13px; min-height:18px; margin-top:2px; }
-  .form-status.ok{ color:var(--accent-strong); }
-  .form-status.err{ color:#b5482f; }
-
-  /* ---------- Footer ---------- */
-  footer{
-    border-top:1px solid var(--rule); padding:36px 0;
-    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;
-  }
-  .footer-mark{ display:flex; align-items:center; gap:10px; }
-  .footer-mark svg{ width:20px; height:20px; }
-  .footer-word{ font-family:'Fraunces', serif; font-size:13px; letter-spacing:.16em; color:var(--fg-dim); }
-  footer .fine{ font-size:11.5px; color:var(--fg-dim); letter-spacing:.04em; }
-
-  /* ---------- reveal ---------- */
-  .reveal{ opacity:0; transform:translateY(14px); transition:opacity .7s ease, transform .7s ease; }
-  .reveal.in{ opacity:1; transform:none; }
-  @media (prefers-reduced-motion: reduce){
-    .reveal{ opacity:1; transform:none; transition:none; }
-  }
-</style>
-
-<nav class="nav">
-  <a class="nav-mark" href="#top">
-    <svg viewBox="0 0 60 60" aria-hidden="true">
-      <circle cx="30" cy="30" r="28" fill="none" stroke="var(--fg-strong)" stroke-width="1.2"/>
-      <circle cx="30" cy="30" r="23" fill="none" stroke="var(--accent)" stroke-width="1"/>
-      <text x="30" y="39" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="26" fill="var(--fg-strong)">D</text>
-    </svg>
-    <span class="nav-word">DOMINVS</span>
-  </a>
-  <a class="nav-cta" href="#contatti">Richiedi una demo</a>
-</nav>
-
-<header class="hero" id="top">
-  <svg class="hero-plan" viewBox="0 0 1120 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <g fill="none" stroke="var(--rule)" stroke-width="1">
-      <line x1="0" y1="60" x2="1120" y2="60"/>
-      <line x1="0" y1="460" x2="1120" y2="460"/>
-      <line x1="140" y1="0" x2="140" y2="520"/>
-      <line x1="560" y1="0" x2="560" y2="520"/>
-      <line x1="980" y1="0" x2="980" y2="520"/>
-      <rect x="60" y="60" width="1000" height="400"/>
-      <rect x="200" y="140" width="720" height="240"/>
-      <circle cx="560" cy="260" r="120"/>
-      <line x1="440" y1="260" x2="680" y2="260"/>
-      <line x1="560" y1="140" x2="560" y2="380"/>
-    </g>
-  </svg>
-  <div class="hero-inner">
-    <svg class="seal" viewBox="0 0 78 78" aria-hidden="true">
-      <circle cx="39" cy="39" r="36" fill="none" stroke="var(--fg-strong)" stroke-width="1.3"/>
-      <circle cx="39" cy="39" r="29" fill="none" stroke="var(--accent)" stroke-width="1"/>
-      <text x="39" y="51" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="34" fill="var(--fg-strong)">D</text>
-    </svg>
-    <h1>Il gestionale per chi dirige<br>un'agenzia come <em>un'impresa</em></h1>
-    <p class="hero-sub">Dominus è la piattaforma completa per la gestione immobiliare — dal primo contatto al dossier d'investimento — con il tuo marchio, i tuoi colori, il tuo dominio. Pronta in giorni, non in mesi.</p>
-    <div class="hero-actions">
-      <a class="btn-solid" href="#contatti">Richiedi una demo</a>
-      <a class="btn-line" href="#sistema">Scopri il sistema</a>
-    </div>
-    <div class="hero-foot">
-      <span><b>10</b> pacchetti attivabili</span>
-      <span><b>100%</b> a marchio tuo</span>
-      <span><b>Multilingua</b> nativo</span>
-    </div>
-  </div>
-</header>
-
-<section id="sistema">
-  <div class="wrap">
-    <div class="manifesto reveal">
-      <blockquote>Non un elenco di funzioni. Un sistema che si comporta come la tua agenzia dovrebbe.</blockquote>
-      <div class="col">
-        <p>Ogni agenzia comincia dal pacchetto Base — opportunità, clienti, statistiche — e aggiunge solo ciò che serve davvero: calendario condiviso, presenza social, notifiche push, intelligence territoriale, valutazioni assistite dall'AI, dossier d'investimento multilingua.</p>
-        <p>Nessun modulo superfluo installato di default. Nessuna funzione nascosta dietro un canone che non userai.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow">Indice del sistema</span>
-      <h2>Dieci pacchetti, un solo gestionale</h2>
-      <p>Attivi ciò che serve dalla console di controllo. Il menu si adatta da solo — niente da configurare a mano.</p>
-    </div>
-
-    <div class="ledger reveal">
-      <div class="ledger-row"><div class="ledger-num">Base</div><div class="ledger-name">Opportunità &amp; Clienti<span class="tag">Incluso</span></div><div class="ledger-desc">Portafoglio immobili, schede investitore/venditore, statistiche di agenzia in tempo reale.</div></div>
-      <div class="ledger-row"><div class="ledger-num">01</div><div class="ledger-name">Calendario</div><div class="ledger-desc">Agenda condivisa del team, sincronizzata con Google e iCloud.</div></div>
-      <div class="ledger-row"><div class="ledger-num">02</div><div class="ledger-name">Social</div><div class="ledger-desc">Composer, gestione pubblicità e test A/B su Meta, senza uscire dal gestionale.</div></div>
-      <div class="ledger-row"><div class="ledger-num">03</div><div class="ledger-name">Notifiche</div><div class="ledger-desc">Un messaggio push a tutti gli iscritti — nuovo immobile, evento, o un augurio.</div></div>
-      <div class="ledger-row"><div class="ledger-num">04</div><div class="ledger-name">Discovery<span class="tag">AI</span></div><div class="ledger-desc">Intelligence territoriale: punti di interesse, patrimonio, costa, demografia, turismo.</div></div>
-      <div class="ledger-row"><div class="ledger-num">05</div><div class="ledger-name">Valutazioni<span class="tag">AI</span></div><div class="ledger-desc">Stime immobiliari motivate, dal dato catastale al report pronto per il cliente.</div></div>
-      <div class="ledger-row"><div class="ledger-num">06</div><div class="ledger-name">Comunicazioni</div><div class="ledger-desc">Email mirate, singole o in blocco, verso i profili di clientela giusti.</div></div>
-      <div class="ledger-row"><div class="ledger-num">07</div><div class="ledger-name">Eventi &amp; CRM avanzato</div><div class="ledger-desc">Open house, mandati di ricerca, area riservata per capitale istituzionale.</div></div>
-      <div class="ledger-row"><div class="ledger-num">08</div><div class="ledger-name">Dossier &amp; Report<span class="tag">AI</span></div><div class="ledger-desc">Dossier d'investimento componibile a sezioni, tradotto, pronto per l'invio.</div></div>
-      <div class="ledger-row"><div class="ledger-num">09</div><div class="ledger-name">Portali Immobiliari</div><div class="ledger-desc">Pubblicazione diretta su Immobiliare.it — con diffusione automatica anche su Subito.</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="band">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow">Per chi è pensato</span>
-      <h2>Costruito per chi vende,<br>non per chi programma</h2>
-    </div>
-    <div class="band-grid reveal">
-      <div class="band-item">
-        <span class="mark">Il marchio è tuo</span>
-        <h3>Colori, font, sfondo</h3>
-        <p>Ogni installazione porta il nome, i colori e il carattere tipografico dell'agenzia che la usa — mai il nostro.</p>
-      </div>
-      <div class="band-item">
-        <span class="mark">Nessun vincolo tecnico</span>
-        <h3>Zero manutenzione richiesta</h3>
-        <p>Il team dell'agenzia lavora dal browser. Aggiornamenti, sicurezza e infrastruttura restano fuori dal loro pensiero.</p>
-      </div>
-      <div class="band-item">
-        <span class="mark">Cresce con l'agenzia</span>
-        <h3>Un pacchetto alla volta</h3>
-        <p>Si comincia dal Base. Si aggiunge Discovery, Valutazioni, o Dossier & Report quando il volume lo giustifica — mai prima.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow">Come si comincia</span>
-      <h2>Operativo in tre passaggi</h2>
-    </div>
-    <div class="steps reveal">
-      <div class="step">
-        <div class="step-num">I</div>
-        <div><h3>Attivazione</h3><p>Scegli i pacchetti che servono all'agenzia. Ricevi un codice licenza personale, pronto da inserire alla prima apertura.</p></div>
-      </div>
-      <div class="step">
-        <div class="step-num">II</div>
-        <div><h3>Personalizzazione</h3><p>Colori, tipografia, sfondo, logo: in pochi minuti il gestionale smette di somigliare a un prodotto altrui e diventa il tuo.</p></div>
-      </div>
-      <div class="step">
-        <div class="step-num">III</div>
-        <div><h3>Nel vivo</h3><p>Carichi i primi immobili, inviti il team, il menu mostra solo ciò che hai attivato. Nessuna formazione tecnica necessaria.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="closing" id="contatti">
-  <div class="wrap">
-    <span class="eyebrow">Prossimo passo</span>
-    <h2 style="margin-top:16px">Vediamo se Dominus<br>è la misura giusta</h2>
-    <p>Una conversazione di venti minuti per capire quali pacchetti servono davvero alla tua agenzia — nessun impegno.</p>
-
-    <form class="contact-form" id="demoForm">
-      <div class="field">
-        <label for="f-nome">Nome e cognome</label>
-        <input type="text" id="f-nome" name="nome" required autocomplete="name">
-      </div>
-      <div class="field">
-        <label for="f-agenzia">Agenzia</label>
-        <input type="text" id="f-agenzia" name="agenzia" autocomplete="organization">
-      </div>
-      <div class="field">
-        <label for="f-email">Email</label>
-        <input type="email" id="f-email" name="email" required autocomplete="email">
-      </div>
-      <div class="field">
-        <label for="f-telefono">Telefono</label>
-        <input type="tel" id="f-telefono" name="telefono" autocomplete="tel">
-      </div>
-      <div class="field">
-        <label for="f-messaggio">Messaggio</label>
-        <textarea id="f-messaggio" name="messaggio" placeholder="Raccontaci in breve la tua agenzia e cosa cerchi."></textarea>
-      </div>
-      <button type="submit" class="btn-solid" id="formSubmitBtn">Richiedi una demo</button>
-      <p class="form-status" id="formStatus" role="status"></p>
-    </form>
-
-    <p class="closing-note">Oppure scrivi direttamente a <a href="mailto:contatti@dominus-suite.it">contatti@dominus-suite.it</a></p>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; width:100%;">
-    <div class="footer-mark">
-      <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28" fill="none" stroke="var(--fg-dim)" stroke-width="1.2"/><text x="30" y="39" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="26" fill="var(--fg-dim)">D</text></svg>
-      <span class="footer-word">DOMINVS</span>
-    </div>
-    <span class="fine">Real Estate Intelligence Suite · <a href="admin/login.html" style="color:inherit; opacity:.6;">Accedi</a></span>
-  </div>
-</footer>
-
-<script>
-  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
-  } else {
-    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
-  }
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script>
-  // Chiavi del progetto "pannello centrale" (control plane) — stesso progetto
-  // usato da pannello_centrale/js/cp_config.js. Sostituisci con i valori reali.
-  const CP_SUPABASE_URL = "https://cspzkofhgfrnkhjpfazb.supabase.co";
-  const CP_SUPABASE_ANON_KEY = "sb_publishable_oYbR_A78f8SRKdJbkeZegQ_4gAx-567";
-
-  (function(){
-    var form = document.getElementById('demoForm');
-    var btn = document.getElementById('formSubmitBtn');
-    var status = document.getElementById('formStatus');
-
-    form.addEventListener('submit', async function(ev){
-      ev.preventDefault();
-      status.textContent = '';
-      status.className = 'form-status';
-      btn.disabled = true;
-      btn.textContent = 'Invio in corso…';
-
-      var payload = {
-        nome: form.nome.value.trim(),
-        agenzia: form.agenzia.value.trim() || null,
-        email: form.email.value.trim(),
-        telefono: form.telefono.value.trim() || null,
-        messaggio: form.messaggio.value.trim() || null,
-        origine: 'dominus-suite.it'
-      };
-
-      try{
-        // Chiama la funzione "dominus-lead-intake": registra la richiesta E
-        // crea in automatico il cliente demo + codice licenza pronto,
-        // senza bisogno di aprire il pannello e cliccare "Nuovo cliente".
-        var res = await fetch(CP_SUPABASE_URL + '/functions/v1/dominus-lead-intake', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': CP_SUPABASE_ANON_KEY,
-            'Authorization': 'Bearer ' + CP_SUPABASE_ANON_KEY
-          },
-          body: JSON.stringify(payload)
-        });
-        var data = await res.json();
-        if(!res.ok || !data.success) throw new Error(data.error || 'Errore sconosciuto');
-
-        form.reset();
-        status.textContent = 'Richiesta inviata. Ti risponderemo al più presto.';
-        status.className = 'form-status ok';
-        btn.textContent = 'Richiesta inviata';
-      } catch(err){
-        console.error(err);
-        status.textContent = 'Si è verificato un errore (' + (err && err.message ? err.message : 'sconosciuto') + '). Riprova oppure scrivici a contatti@dominus-suite.it.';
-        status.className = 'form-status err';
-        btn.disabled = false;
-        btn.textContent = 'Richiedi una demo';
-      }
+  function showState(id) {
+    ["ibStatePrompt", "ibStateForm", "ibStateInstructions"].forEach(function (s) {
+      document.getElementById(s).style.display = s === id ? "" : "none";
     });
-  })();
+  }
+
+  function goForm() {
+    showState("ibStateForm");
+  }
+
+  function goInstructions() {
+    showState("ibStateInstructions");
+    if (isIOS()) {
+      document.getElementById("ibIosSteps").style.display = "";
+    } else {
+      document.getElementById("ibAndroidSteps").style.display = "";
+      if (deferredAndroidPrompt) {
+        document.getElementById("ibAndroidInstallBtn").style.display = "";
+      }
+    }
+  }
+
+  function setFormStatus(msg, type) {
+    var el = document.getElementById("ibFormStatus");
+    el.textContent = msg || "";
+    el.className = "ib-status " + (type || "");
+  }
+
+  async function submitLead() {
+    var nome = document.getElementById("ibNome").value.trim();
+    var cognome = document.getElementById("ibCognome").value.trim();
+    var email = document.getElementById("ibEmail").value.trim();
+    var telefono = document.getElementById("ibTelefono").value.trim();
+    var password = document.getElementById("ibPassword").value;
+    var privacyChecked = document.getElementById("ibPrivacyCheck").checked;
+
+    if (!nome || !cognome || !email || !password) {
+      setFormStatus("Compila nome, cognome, email e password.", "error");
+      return;
+    }
+    if (password.length < 8) {
+      setFormStatus("La password deve avere almeno 8 caratteri.", "error");
+      return;
+    }
+    if (!privacyChecked) {
+      setFormStatus("Devi accettare la Privacy Policy per continuare.", "error");
+      return;
+    }
+
+    var btn = document.getElementById("ibSubmitBtn");
+    btn.disabled = true;
+    setFormStatus("Creazione account in corso...", "");
+
+    try {
+      /* Account creato GIÀ CONFERMATO lato server (edge function con service role) --
+         nessuna email di verifica da aspettare, si accede subito con la password appena
+         scelta. Sostituisce il precedente inserimento nella tabella lead, che non creava
+         nessun accesso reale -- ora chi lascia i dati ottiene un vero account attivo. */
+      var createRes = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/immonova-create-account", {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          full_name: nome + " " + cognome,
+          phone: telefono || null
+        })
+      });
+
+      var createData = await createRes.json();
+      if (!createRes.ok || !createData.ok) {
+        throw new Error(createData.error || "Errore durante la creazione dell'account.");
+      }
+
+      var signInRes = await immonovaClient.auth.signInWithPassword({ email: email, password: password });
+      if (signInRes.error) throw signInRes.error;
+
+      setFormStatus("Account creato. Ecco come installare l'app.", "success");
+      setTimeout(goInstructions, 700);
+    } catch (e) {
+      setFormStatus(e.message || "Errore durante la creazione dell'account, riprova.", "error");
+      btn.disabled = false;
+    }
+  }
+
+  function triggerAndroidInstall() {
+    if (!deferredAndroidPrompt) return;
+    deferredAndroidPrompt.prompt();
+    deferredAndroidPrompt.userChoice.finally(function () {
+      deferredAndroidPrompt = null;
+      dismiss();
+    });
+  }
+
+  function init() {
+    if (isStandalone() || !isMobile() || wasDismissedRecently()) return;
+
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault();
+      deferredAndroidPrompt = e;
+    });
+
+    setTimeout(function () {
+      var el = document.getElementById("installBanner");
+      el.style.display = "";
+      requestAnimationFrame(function () {
+        el.classList.add("ib-visible");
+      });
+    }, 3500);
+  }
+
+  return {
+    init: init,
+    dismiss: dismiss,
+    goForm: goForm,
+    goInstructions: goInstructions,
+    submitLead: submitLead,
+    triggerAndroidInstall: triggerAndroidInstall
+  };
+})();
+
+document.addEventListener("DOMContentLoaded", DominusInstallBanner.init);
 </script>
+
+</body>
+</html>

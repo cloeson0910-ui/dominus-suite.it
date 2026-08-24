@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Componi Dossier | Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%}
+body{background:var(--page-bg-color,#f4ecdf);font-family:var(--font-family,"Avenir Next","Helvetica Neue",Arial,sans-serif);color:var(--text-color,#7f6430)}
+
+.header{padding:30px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(166,127,52,.12)}
+.logo{font-size:24px;font-weight:300;letter-spacing:.35em;color:var(--primary-color,#a67f34)}
+.header-actions a{padding:10px 20px;border:1px solid rgba(166,127,52,.25);background:rgba(255,255,255,.25);color:var(--primary-color,#a67f34);text-decoration:none;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-family:inherit}
+
+.container{max-width:720px;margin:auto;padding:44px 40px}
+.title{font-size:32px;font-weight:200;color:var(--primary-color,#a67f34);margin-bottom:8px}
+.subtitle{font-size:13.5px;line-height:1.7;color:#8f7643;margin-bottom:30px}
+
+.presets{display:flex;gap:10px;margin-bottom:26px;flex-wrap:wrap}
+.preset-btn{padding:9px 16px;border:1px solid rgba(166,127,52,.3);background:transparent;color:#8f7643;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;font-family:inherit}
+.preset-btn.active{background:var(--primary-color,#a67f34);color:#fff;border-color:var(--primary-color,#a67f34)}
+
+.section-card{background:rgba(255,255,255,.3);border:1px solid rgba(166,127,52,.15);padding:16px 20px;margin-bottom:12px;display:flex;align-items:flex-start;gap:14px}
+.section-card input{margin-top:3px;width:18px;height:18px;accent-color:var(--primary-color,#a67f34)}
+.section-name{font-size:14.5px;color:#5c4a20;font-weight:600;margin-bottom:3px}
+.section-desc{font-size:12px;color:#9a8a63;line-height:1.5}
+.ai-tag{display:inline-block;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;background:rgba(166,127,52,.15);color:#8f7643;border-radius:8px;margin-left:6px}
+
+.actions{margin-top:28px;display:flex;justify-content:flex-end}
+.btn{padding:12px 26px;border:1px solid var(--primary-color,#a67f34);background:var(--primary-color,#a67f34);color:#fff;cursor:pointer;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-family:inherit}
+</style>
+</head>
+<body>
+
+<header class="header">
+<div class="logo">ADMIN</div>
+<div class="header-actions"><a href="inquiries.html">Richieste</a></div>
+</header>
+
+<div class="container">
+<h1 class="title">Componi il Dossier</h1>
+<p class="subtitle">Scegli cosa mostrare a questo investitore prima di generare il dossier. Un dossier ridotto è più veloce da preparare e più mirato — decidi tu ogni volta quanto mostrare.</p>
+
+<div class="presets">
+  <button class="preset-btn active" onclick="applyPreset('completo', this)">Dossier Completo</button>
+  <button class="preset-btn" onclick="applyPreset('ridotto', this)">Dossier Ridotto</button>
+  <button class="preset-btn" onclick="applyPreset('essenziale', this)">Solo Essenziale</button>
+</div>
+
+<div id="sectionsList"></div>
+
+<div class="actions">
+  <button class="btn" onclick="proceed()">Genera Dossier</button>
+</div>
+
+</div>
+
+<script src="../js/theme-loader.js"></script>
+<script>
+const SECTIONS = [
+  { key: "documenti", name: "Dati immobile e documenti", desc: "Scheda tecnica, planimetrie, documenti allegati.", ai: false },
+  { key: "finanziaria", name: "Analisi finanziaria", desc: "Prezzo, rendimento stimato, dati catastali e di valutazione già calcolati.", ai: false },
+  { key: "demografia", name: "Composizione demografica del territorio", desc: "Fasce d'età e reddito della zona.", ai: true },
+  { key: "foto_destinazione", name: "Foto e contesto territorio", desc: "Galleria fotografica della destinazione.", ai: false },
+  { key: "narrativa", name: "Narrativa descrittiva", desc: "Testo di presentazione dell'opportunità.", ai: false },
+];
+
+const PRESETS = {
+  completo: SECTIONS.map(s => s.key),
+  ridotto: ["documenti", "finanziaria", "narrativa"],
+  essenziale: ["documenti", "finanziaria"],
+};
+
+function esc(v){ return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function render(active){
+  document.getElementById("sectionsList").innerHTML = SECTIONS.map(s => `
+    <label class="section-card">
+      <input type="checkbox" data-key="${s.key}" ${active.includes(s.key) ? "checked" : ""}>
+      <div>
+        <div class="section-name">${esc(s.name)}${s.ai ? '<span class="ai-tag">genera con AI</span>' : ""}</div>
+        <div class="section-desc">${esc(s.desc)}</div>
+      </div>
+    </label>
+  `).join("");
+}
+
+window.applyPreset = function(name, btn){
+  document.querySelectorAll(".preset-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  render(PRESETS[name]);
+};
+
+window.proceed = function(){
+  const selected = Array.from(document.querySelectorAll("#sectionsList input:checked")).map(el => el.dataset.key);
+  const params = new URLSearchParams(window.location.search);
+  params.set("sections", selected.join(","));
+  window.location.href = "dossier-send.html?" + params.toString();
+};
+
+render(PRESETS.completo);
+</script>
+
+</body>
+</html>

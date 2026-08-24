@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aspetto | Admin</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%}
+body{background:var(--page-bg-color,#f4ecdf);font-family:var(--font-family,"Avenir Next","Helvetica Neue",Arial,sans-serif);color:var(--text-color,#7f6430)}
+
+.header{padding:30px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(166,127,52,.12)}
+.logo{font-size:24px;font-weight:300;letter-spacing:.35em;color:var(--primary-color,#a67f34)}
+.header-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.header-actions a,.logout{padding:10px 20px;border:1px solid rgba(166,127,52,.25);background:rgba(255,255,255,.25);cursor:pointer;color:var(--primary-color,#a67f34);text-decoration:none;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-family:inherit}
+
+.container{max-width:760px;margin:auto;padding:40px}
+.title{font-size:38px;font-weight:200;letter-spacing:.05em;color:var(--primary-color,#a67f34);margin-bottom:10px}
+.subtitle{font-size:14px;line-height:1.7;color:#8f7643;max-width:640px;margin-bottom:32px}
+
+.section{background:rgba(255,255,255,.22);border:1px solid rgba(166,127,52,.15);padding:26px 28px;margin-bottom:26px}
+.section-title{font-size:16px;color:var(--primary-color,#a67f34);letter-spacing:.03em;margin-bottom:18px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{margin-bottom:16px}
+label{display:block;margin-bottom:7px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8f7643}
+input,select{width:100%;padding:12px 14px;border:1px solid rgba(166,127,52,.25);background:rgba(255,255,255,.35);color:var(--text-color,#7f6430);font-size:14px;font-family:inherit;outline:none}
+input[type="color"]{padding:4px;height:44px;cursor:pointer}
+.color-row{display:flex;gap:10px;align-items:center}
+.color-row input[type="color"]{width:56px;flex-shrink:0}
+.color-row input[type="text"]{flex:1}
+
+.btn{padding:12px 20px;background:var(--primary-color,#a67f34);color:#fff;border:1px solid var(--primary-color,#a67f34);text-transform:uppercase;letter-spacing:.12em;font-size:11px;cursor:pointer;font-family:inherit}
+.btn:hover{opacity:.9}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+
+.preview{margin-top:6px;padding:20px;border:1px solid rgba(166,127,52,.2);background:var(--page-bg-color,#f4ecdf)}
+.preview-header{padding:14px 18px;background:var(--menu-bg-color,rgba(244,236,223,.72));color:var(--menu-text-color,#a67f34);letter-spacing:.2em;font-size:13px;margin-bottom:14px}
+.preview-btn{display:inline-block;padding:10px 18px;background:var(--primary-color,#a67f34);color:#fff;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-right:10px}
+.preview-text{color:var(--text-color,#7f6430);font-size:13px;margin-top:10px;font-family:var(--font-family)}
+
+.status{margin-top:14px;font-size:13px;min-height:18px}
+.success{color:#4f7f45}
+.error{color:#9c2f2f}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+<div class="logo">ADMIN</div>
+<div class="header-actions">
+<a href="dashboard.html">Dashboard</a>
+<a href="roles-permissions.html">Ruoli e Permessi</a>
+<button class="logout" id="logoutBtn">Logout</button>
+</div>
+</header>
+
+<div class="container">
+
+<h1 class="title">Aspetto</h1>
+<p class="subtitle">
+Colori, font e sfondo di tutto il sito e della dashboard. Le modifiche qui si applicano automaticamente a ogni pagina, senza toccare il codice — pensato per chi personalizza questo prodotto per il proprio brand.
+</p>
+
+<div id="accessDenied" style="display:none" class="status error">Non hai i permessi per modificare l'aspetto del sito.</div>
+
+<div id="themeContent" style="display:none">
+
+<div class="section">
+<div class="section-title">Colori</div>
+<div class="grid">
+<div class="field">
+<label>Colore principale (bottoni, link, accenti)</label>
+<div class="color-row">
+<input type="color" id="primary_color_picker">
+<input type="text" id="primary_color">
+</div>
+</div>
+<div class="field">
+<label>Colore secondario (hover, varianti scure)</label>
+<div class="color-row">
+<input type="color" id="secondary_color_picker">
+<input type="text" id="secondary_color">
+</div>
+</div>
+<div class="field">
+<label>Colore testo</label>
+<div class="color-row">
+<input type="color" id="text_color_picker">
+<input type="text" id="text_color">
+</div>
+</div>
+<div class="field">
+<label>Colore sfondo pagina</label>
+<div class="color-row">
+<input type="color" id="page_bg_color_picker">
+<input type="text" id="page_bg_color">
+</div>
+</div>
+<div class="field">
+<label>Sfondo menu / header</label>
+<input type="text" id="menu_bg_color" placeholder="Es. rgba(244,236,223,.72) oppure #ffffff">
+</div>
+<div class="field">
+<label>Colore testo menu / header</label>
+<div class="color-row">
+<input type="color" id="menu_text_color_picker">
+<input type="text" id="menu_text_color">
+</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Font</div>
+<div class="field">
+<label>Famiglia font (nomi CSS standard, separati da virgola)</label>
+<input type="text" id="font_family" placeholder='Es. "Avenir Next","Helvetica Neue",Arial,sans-serif'>
+</div>
+<div class="field">
+<label>Font personalizzato — nome (opzionale)</label>
+<input type="text" id="font_custom_name" placeholder="Es. MioFontAziendale">
+</div>
+<div class="field">
+<label>Font personalizzato — URL file .woff2 (opzionale)</label>
+<input type="text" id="font_custom_url" placeholder="https://.../mio-font.woff2">
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Sfondo</div>
+<div class="field">
+<label>Modalità sfondo</label>
+<select id="background_mode">
+<option value="pattern">Motivo geometrico (personalizzabile)</option>
+<option value="solid">Tinta unita (solo colore sfondo pagina)</option>
+<option value="image">Immagine</option>
+<option value="none">Nessuno</option>
+</select>
+</div>
+<div class="field" id="patternColorField">
+<label>Colore motivo</label>
+<input type="text" id="background_pattern_color" placeholder="Es. rgba(188,149,78,.23)">
+</div>
+<div class="field" id="patternOpacityField">
+<label>Opacità motivo (0–1)</label>
+<input type="number" id="background_pattern_opacity" min="0" max="1" step="0.05">
+</div>
+<div class="field" id="imageUrlField">
+<label>URL immagine di sfondo</label>
+<input type="text" id="background_image_url" placeholder="https://.../sfondo.jpg">
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Anteprima</div>
+<div class="preview">
+<div class="preview-header">BRAND</div>
+<span class="preview-btn">Bottone di esempio</span>
+<div class="preview-text">Testo di esempio con il font e i colori selezionati.</div>
+</div>
+</div>
+
+<button type="button" class="btn" id="saveBtn">Salva aspetto</button>
+<div id="saveStatus" class="status"></div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/theme-loader.js"></script>
+
+<script>
+const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let currentUser = null;
+let canWrite = false;
+
+function val(id){ return document.getElementById(id).value.trim(); }
+
+async function checkAuth(){
+  const { data:{ session } } = await client.auth.getSession();
+  if(!session){ window.location.href = "login.html"; return false; }
+  currentUser = session.user;
+
+  const permResult = await client.rpc("my_role_and_permissions");
+  if(permResult.error){
+    document.getElementById("accessDenied").style.display = "block";
+    return false;
+  }
+  const info = permResult.data || {};
+  canWrite = !!info.is_super_admin || !!(info.permissions && info.permissions.site_settings && info.permissions.site_settings.write);
+  const canRead = canWrite || !!(info.permissions && info.permissions.site_settings && info.permissions.site_settings.read);
+
+  if(!canRead){
+    document.getElementById("accessDenied").style.display = "block";
+    return false;
+  }
+  return true;
+}
+
+function linkColorInputs(colorId, textId){
+  var colorInput = document.getElementById(colorId);
+  var textInput = document.getElementById(textId);
+  colorInput.addEventListener("input", function(){ textInput.value = colorInput.value; updatePreviewVars(); });
+  textInput.addEventListener("input", function(){
+    if(/^#[0-9a-fA-F]{6}$/.test(textInput.value)) colorInput.value = textInput.value;
+    updatePreviewVars();
+  });
+}
+
+function updatePreviewVars(){
+  document.documentElement.style.setProperty("--primary-color", val("primary_color") || "#a67f34");
+  document.documentElement.style.setProperty("--secondary-color", val("secondary_color") || "#8a682c");
+  document.documentElement.style.setProperty("--text-color", val("text_color") || "#7f6430");
+  document.documentElement.style.setProperty("--page-bg-color", val("page_bg_color") || "#f4ecdf");
+  document.documentElement.style.setProperty("--menu-bg-color", val("menu_bg_color") || "rgba(244,236,223,.72)");
+  document.documentElement.style.setProperty("--menu-text-color", val("menu_text_color") || "#a67f34");
+  document.documentElement.style.setProperty("--font-family", val("font_family") || '"Avenir Next","Helvetica Neue",Arial,sans-serif');
+}
+
+function updateBackgroundFieldsVisibility(){
+  var mode = document.getElementById("background_mode").value;
+  document.getElementById("patternColorField").style.display = mode === "pattern" ? "" : "none";
+  document.getElementById("patternOpacityField").style.display = mode === "pattern" ? "" : "none";
+  document.getElementById("imageUrlField").style.display = mode === "image" ? "" : "none";
+}
+
+async function loadTheme(){
+  const { data, error } = await client.from("immonova_theme_settings").select("*").eq("id", 1).single();
+  if(error || !data) return;
+
+  document.getElementById("primary_color").value = data.primary_color || "#a67f34";
+  document.getElementById("primary_color_picker").value = data.primary_color || "#a67f34";
+  document.getElementById("secondary_color").value = data.secondary_color || "#8a682c";
+  document.getElementById("secondary_color_picker").value = data.secondary_color || "#8a682c";
+  document.getElementById("text_color").value = data.text_color || "#7f6430";
+  document.getElementById("text_color_picker").value = data.text_color || "#7f6430";
+  document.getElementById("page_bg_color").value = data.page_bg_color || "#f4ecdf";
+  document.getElementById("page_bg_color_picker").value = data.page_bg_color || "#f4ecdf";
+  document.getElementById("menu_bg_color").value = data.menu_bg_color || "rgba(244,236,223,.72)";
+  document.getElementById("menu_text_color").value = data.menu_text_color || "#a67f34";
+  document.getElementById("menu_text_color_picker").value = /^#/.test(data.menu_text_color||"") ? data.menu_text_color : "#a67f34";
+  document.getElementById("font_family").value = data.font_family || '"Avenir Next","Helvetica Neue",Arial,sans-serif';
+  document.getElementById("font_custom_name").value = data.font_custom_name || "";
+  document.getElementById("font_custom_url").value = data.font_custom_url || "";
+  document.getElementById("background_mode").value = data.background_mode || "pattern";
+  document.getElementById("background_pattern_color").value = data.background_pattern_color || "rgba(188,149,78,.23)";
+  document.getElementById("background_pattern_opacity").value = data.background_pattern_opacity ?? 0.30;
+  document.getElementById("background_image_url").value = data.background_image_url || "";
+
+  updateBackgroundFieldsVisibility();
+  updatePreviewVars();
+}
+
+async function saveTheme(){
+  if(!canWrite){
+    setStatus("Non hai i permessi di scrittura per l'aspetto del sito.", "error");
+    return;
+  }
+
+  var saveBtn = document.getElementById("saveBtn");
+  saveBtn.disabled = true;
+  setStatus("Salvataggio in corso...", "");
+
+  const payload = {
+    primary_color: val("primary_color") || "#a67f34",
+    secondary_color: val("secondary_color") || "#8a682c",
+    text_color: val("text_color") || "#7f6430",
+    page_bg_color: val("page_bg_color") || "#f4ecdf",
+    menu_bg_color: val("menu_bg_color") || "rgba(244,236,223,.72)",
+    menu_text_color: val("menu_text_color") || "#a67f34",
+    font_family: val("font_family") || '"Avenir Next","Helvetica Neue",Arial,sans-serif',
+    font_custom_name: val("font_custom_name") || null,
+    font_custom_url: val("font_custom_url") || null,
+    background_mode: val("background_mode") || "pattern",
+    background_pattern_color: val("background_pattern_color") || "rgba(188,149,78,.23)",
+    background_pattern_opacity: Number(val("background_pattern_opacity")) || 0.30,
+    background_image_url: val("background_image_url") || null,
+    updated_at: new Date().toISOString(),
+    updated_by: currentUser.id
+  };
+
+  const { error } = await client.from("immonova_theme_settings").update(payload).eq("id", 1);
+
+  saveBtn.disabled = false;
+
+  if(error){
+    setStatus("Errore: " + error.message, "error");
+    return;
+  }
+
+  setStatus("Aspetto salvato correttamente.", "success");
+  if(window.immonovaThemeLoader) window.immonovaThemeLoader.reload();
+}
+
+function setStatus(msg, type){
+  var el = document.getElementById("saveStatus");
+  el.textContent = msg || "";
+  el.className = "status " + (type || "");
+}
+
+["primary_color","secondary_color","text_color","page_bg_color","menu_bg_color","menu_text_color","font_family"]
+  .forEach(function(id){ document.getElementById(id).addEventListener("input", updatePreviewVars); });
+
+linkColorInputs("primary_color_picker","primary_color");
+linkColorInputs("secondary_color_picker","secondary_color");
+linkColorInputs("text_color_picker","text_color");
+linkColorInputs("page_bg_color_picker","page_bg_color");
+linkColorInputs("menu_text_color_picker","menu_text_color");
+
+document.getElementById("background_mode").addEventListener("change", updateBackgroundFieldsVisibility);
+document.getElementById("saveBtn").addEventListener("click", saveTheme);
+
+document.getElementById("logoutBtn").addEventListener("click", async function(){
+  await client.auth.signOut();
+  window.location.href = "login.html";
+});
+
+(async function init(){
+  var ok = await checkAuth();
+  if(!ok) return;
+  document.getElementById("themeContent").style.display = "block";
+  if(!canWrite){
+    document.getElementById("saveBtn").disabled = true;
+    document.getElementById("saveBtn").title = "Sola lettura: il tuo ruolo non può modificare l'aspetto.";
+  }
+  await loadTheme();
+})();
+</script>
+
+</body>
+</html>

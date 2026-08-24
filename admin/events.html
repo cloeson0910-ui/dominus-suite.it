@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Eventi | DOMINUS Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}html,body{width:100%;min-height:100%}body{background:var(--page-bg-color,#f4ecdf);font-family:"Avenir Next","Helvetica Neue",Arial,sans-serif;color:var(--text-color,#7f6430)}body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(circle at center,rgba(255,255,255,.72) 0%,rgba(255,255,255,.34) 38%,rgba(244,236,223,.06) 72%),var(--page-bg-color,#f4ecdf)}body::after{content:"";position:fixed;inset:0;z-index:-1;background:none,none,none;background-size:230px 199px;opacity:.3}.header{padding:28px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(166,127,52,.14);background:rgba(244,236,223,.72);backdrop-filter:blur(14px);position:sticky;top:0;z-index:10}.logo{  text-decoration:none;  display:flex;  flex-direction:column;  align-items:flex-start;}.logo-svg{  width:230px;  height:auto;  display:block;}.logo-fill{  fill:none;  stroke:url(#goldGradientHeader);  stroke-width:3.2;  stroke-linecap:round;  stroke-linejoin:round;}.logo-i{  fill:url(#goldGradientHeader);}.logo-line{  width:78%;  height:1px;  margin:5px auto 0;  background:linear-gradient(to right,transparent,rgba(197,157,72,.78),transparent);}.logo-sub{  margin-top:5px;  color:#a58139;  font-size:8px;  font-weight:700;  letter-spacing:.08em;  text-transform:uppercase;}.nav{display:flex;gap:12px;flex-wrap:wrap}.nav a,.nav button{padding:10px 18px;border:1px solid rgba(166,127,52,.25);background:rgba(255,255,255,.25);color:var(--primary-color,#a67f34);text-decoration:none;font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}.nav a:hover,.nav button:hover{background:var(--primary-color,#a67f34);color:#fff}.container{max-width:1450px;margin:auto;padding:42px 40px 80px}.kicker{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#9a793c;margin-bottom:14px}.title{font-size:44px;font-weight:200;letter-spacing:.07em;color:var(--primary-color,#a67f34);margin-bottom:20px}.subtitle{max-width:820px;font-size:15px;line-height:1.8;color:#8f7643;margin-bottom:30px}.toolbar{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px}.search,.filter{padding:14px 16px;border:1px solid rgba(166,127,52,.22);background:rgba(255,255,255,.25);color:var(--text-color,#7f6430);outline:none}.search{min-width:320px;flex:1}.filter{min-width:210px}.btn{padding:14px 22px;border:1px solid var(--primary-color,#a67f34);background:var(--primary-color,#a67f34);color:white;text-decoration:none;letter-spacing:.17em;text-transform:uppercase;font-size:11px;cursor:pointer}.btn.secondary{background:transparent;color:var(--primary-color,#a67f34)}.table-wrapper{background:rgba(255,255,255,.22);backdrop-filter:blur(8px);border:1px solid rgba(166,127,52,.15);overflow:auto;box-shadow:0 24px 70px rgba(127,100,48,.07)}table{width:100%;border-collapse:collapse;min-width:1120px}th{text-align:left;padding:18px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;border-bottom:1px solid rgba(166,127,52,.15);white-space:nowrap}td{padding:18px;border-bottom:1px solid rgba(166,127,52,.08);vertical-align:middle;font-size:14px;line-height:1.6}.thumb{width:92px;height:62px;object-fit:cover;border:1px solid rgba(166,127,52,.16);background:rgba(166,127,52,.08)}.badge{display:inline-block;padding:7px 10px;border:1px solid rgba(166,127,52,.25);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--primary-color,#a67f34);background:rgba(255,255,255,.22);white-space:nowrap}.badge.sold_party,.badge.sold_event{background:rgba(72,118,72,.12);color:#517a4f}.badge.selling_party{background:rgba(166,127,52,.14);color:var(--secondary-color,#8a682c)}.badge.upcoming_party{background:rgba(60,90,130,.10);color:#4f6380}.badge.past_party{background:rgba(150,92,35,.10);color:#8f5b28}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions a,.actions button{padding:9px 12px;border:1px solid rgba(166,127,52,.25);background:rgba(255,255,255,.25);cursor:pointer;color:var(--primary-color,#a67f34);text-decoration:none;font-size:10px;letter-spacing:.12em;text-transform:uppercase}.actions .danger{color:#9c2f2f;border-color:rgba(156,47,47,.35)}.status{margin-bottom:18px;min-height:20px;font-size:13px}.error{color:#9c2f2f}.success{color:#4f7f45}.empty{padding:40px;text-align:center;opacity:.7}@media(max-width:760px){.header{flex-direction:column;gap:18px}.logo{align-items:center}.logo-svg{width:250px}.container{padding:32px 22px}.search,.filter{min-width:100%}}
+</style>
+</head>
+<body><header class="header"><a href="../index.html" class="logo" aria-label="DOMINUS Home">
+    <svg class="logo-svg" viewBox="0 0 1120 135" xmlns="http://www.w3.org/2000/svg" aria-label="DOMINUS">
+      <defs>
+        <linearGradient id="goldGradientHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#8f6f2c"/>
+          <stop offset="42%" stop-color="#c79c43"/>
+          <stop offset="58%" stop-color="#f1d27a"/>
+          <stop offset="100%" stop-color="#a77d31"/>
+        </linearGradient>
+      </defs>
+
+      <rect class="logo-i" x="35" y="20" width="5" height="95" rx="2.5"/>
+      <path class="logo-fill" d="M105 115 L105 20 L155 115 L205 20 L205 115" />
+      <path class="logo-fill" d="M265 115 L265 20 L315 115 L365 20 L365 115" />
+      <ellipse class="logo-fill" cx="465" cy="67.5" rx="48" ry="48" />
+      <path class="logo-fill" d="M555 115 L555 20 L635 115 L635 20" />
+      <ellipse class="logo-fill" cx="735" cy="67.5" rx="48" ry="48" />
+      <path class="logo-fill" d="M810 20 L860 115 L910 20" />
+      <path class="logo-fill" d="M915 115 L965 20 L1015 115" />
+    </svg>
+
+    <div class="logo-line"></div>
+    
+  </a><nav class="nav"><a href="dashboard.html" data-i18n="nav_dashboard">Dashboard</a><a href="opportunities.html" data-i18n="nav_opportunities">Opportunità</a><a href="event-form.html" data-i18n="nav_new_event">Nuovo Evento</a><button id="logoutBtn" data-i18n="logout">Logout</button></nav></header>
+<main class="container"><div class="kicker" data-i18n="kicker">Area Admin</div><h1 class="title" data-i18n="title">Eventi</h1><p class="subtitle" data-i18n="subtitle">Gestisci eventi conclusi, opportunità vendute, selling party e party in programma con foto, video e collegamento alle opportunità.</p><div id="status" class="status"></div><div class="toolbar"><input id="searchInput" class="search" data-i18n-placeholder="ph_search" placeholder="Cerca per titolo, location, tipo evento..."><select id="typeFilter" class="filter"><option value="" data-i18n="filter_all_types">Tutti i tipi</option><option value="sold_party" data-i18n="type_sold_party">Sold Party</option><option value="past_party" data-i18n="type_past_party_plural">Party avvenuti</option><option value="upcoming_party" data-i18n="type_upcoming_party_plural">Party in programma</option><option value="selling_party" data-i18n="type_selling_party">Selling Party</option></select><select id="publishedFilter" class="filter"><option value="" data-i18n="filter_all_published">Pubblicati e bozze</option><option value="true" data-i18n="filter_published">Pubblicati</option><option value="false" data-i18n="filter_drafts">Bozze</option></select><a class="btn" href="event-form.html" data-i18n="btn_new_event">Nuovo Evento</a><a class="btn secondary" href="../events.html" target="_blank" data-i18n="btn_view_public">Vedi Pubblico</a></div><div class="table-wrapper"><table><thead><tr><th data-i18n="th_media">Media</th><th data-i18n="th_title">Titolo</th><th data-i18n="th_type">Tipo</th><th data-i18n="th_date">Data</th><th data-i18n="th_location">Location</th><th data-i18n="th_published">Pubblicato</th><th data-i18n="th_actions">Azioni</th></tr></thead><tbody id="eventsTable"><tr><td colspan="7" class="empty" data-i18n="loading">Caricamento...</td></tr></tbody></table></div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/config.js"></script>
+<script src="../js/theme-loader.js"></script>
+<script src="../js/site-branding.js"></script><script>
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);const table=document.getElementById('eventsTable');const statusBox=document.getElementById('status');let allEvents=[];let currentUser=null;let currentUserLanguage="it";
+
+/* ---- i18n: stesso meccanismo delle altre pagine admin (vedi users.html). Client Supabase
+   "client" come nelle altre pagine "nav style". checkAuth() qui non caricava un profilo (solo
+   verifica sessione), quindi loadUserLanguage() e' una chiamata dedicata separata, invocata
+   dopo checkAuth() nell'IIFE finale. labels{} (mappa tipo evento -> etichetta) e' ricostruita
+   da T ad ogni cambio lingua invece di restare hardcoded in italiano. ---- */
+var UI_STRINGS = {
+  nav_dashboard:"Dashboard", nav_opportunities:"Opportunità", nav_new_event:"Nuovo Evento", logout:"Logout",
+  kicker:"Area Admin", title:"Eventi",
+  subtitle:"Gestisci eventi conclusi, opportunità vendute, selling party e party in programma con foto, video e collegamento alle opportunità.",
+  ph_search:"Cerca per titolo, location, tipo evento...",
+  filter_all_types:"Tutti i tipi", type_sold_party:"Sold Party", type_past_party_plural:"Party avvenuti",
+  type_upcoming_party_plural:"Party in programma", type_selling_party:"Selling Party",
+  filter_all_published:"Pubblicati e bozze", filter_published:"Pubblicati", filter_drafts:"Bozze",
+  btn_new_event:"Nuovo Evento", btn_view_public:"Vedi Pubblico",
+  th_media:"Media", th_title:"Titolo", th_type:"Tipo", th_date:"Data", th_location:"Location",
+  th_published:"Pubblicato", th_actions:"Azioni",
+  loading:"Caricamento...", loading_error:"Errore caricamento.", empty_none:"Nessun evento presente.",
+  label_sold_party:"Sold Party", label_past_party:"Party avvenuto", label_upcoming_party:"Party in programma",
+  label_selling_party:"Selling Party",
+  yes:"Sì", no:"No",
+  action_edit:"Modifica", action_suspend:"Sospendi", action_publish:"Pubblica", action_delete:"Elimina",
+  confirm_delete_event:"Eliminare evento?"
+};
+
+var LANGUAGE_LABELS = { it:"Italiano", en:"English", fr:"Fran\u00e7ais", de:"Deutsch", es:"Espa\u00f1ol", ar:"\u0627\u0644\u0639\u0631\u0628\u064a\u0629" };
+var T = UI_STRINGS;
+var labels = {};
+function buildLabels(){
+  labels = {sold_party:T.label_sold_party, sold_event:T.label_sold_party, past_party:T.label_past_party, upcoming_party:T.label_upcoming_party, selling_party:T.label_selling_party};
+}
+buildLabels();
+
+function i18nCacheKey(lang){ return "immonova_i18n_events_" + lang + "_v1"; }
+
+async function loadTranslatedStrings(lang){
+  if(lang === "it") return UI_STRINGS;
+  var cacheKey = i18nCacheKey(lang);
+  try{
+    var cached = localStorage.getItem(cacheKey);
+    if(cached){ var parsed = JSON.parse(cached); if(parsed && typeof parsed === "object") return parsed; }
+  }catch(e){}
+
+  var keys = Object.keys(UI_STRINGS);
+  var texts = keys.map(function(k){ return UI_STRINGS[k]; });
+
+  var result = await client.functions.invoke("translate-public-content", {
+    body:{
+      language: lang,
+      source_language: "it",
+      context: "DOMINUS luxury real estate investment website. Admin page listing events (parties, closings): table, filters, status badges, action buttons.",
+      texts: texts
+    }
+  });
+
+  if(result.error || !result.data || !result.data.success || !Array.isArray(result.data.translations)){
+    console.error("Traduzione events non riuscita, uso italiano come fallback:", result.error || result.data);
+    return UI_STRINGS;
+  }
+
+  var translations = result.data.translations;
+  var translated = {};
+  keys.forEach(function(k, i){ translated[k] = translations[i] != null ? translations[i] : UI_STRINGS[k]; });
+  try{ localStorage.setItem(cacheKey, JSON.stringify(translated)); }catch(e){}
+  return translated;
+}
+
+function renderTranslatedStaticText(){
+  document.querySelectorAll("[data-i18n]").forEach(function(el){
+    var key = el.getAttribute("data-i18n");
+    if(T[key]) el.textContent = T[key];
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(function(el){
+    var key = el.getAttribute("data-i18n-placeholder");
+    if(T[key]) el.setAttribute("placeholder", T[key]);
+  });
+}
+
+async function applyLanguage(lang){
+  currentUserLanguage = lang || "it";
+  document.documentElement.lang = currentUserLanguage;
+  T = await loadTranslatedStrings(currentUserLanguage);
+  renderTranslatedStaticText();
+  buildLabels();
+}
+
+async function loadUserLanguage(){
+  var result = await client.from("profiles").select("id,language").eq("id", currentUser.id).single();
+
+  if(result.error){
+    var looksLikeMissingLanguageColumn = /language/i.test(result.error.message || "") || result.error.code === "42703";
+    if(looksLikeMissingLanguageColumn){
+      console.warn("Colonna profiles.language non trovata: esegui la migrazione SQL (alter table profiles add column if not exists language text not null default 'it';). Interfaccia mostrata in italiano nel frattempo.");
+    }
+    await applyLanguage("it");
+    return;
+  }
+
+  await applyLanguage((result.data && result.data.language) || "it");
+}
+
+
+function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}function setStatus(m,t){statusBox.className='status '+(t||'');statusBox.textContent=m||''}function fmtDate(v){if(!v)return '-';return new Date(v+'T12:00:00').toLocaleDateString(currentUserLanguage==='it'?'it-IT':currentUserLanguage)}async function checkAuth(){const {data:{session},error}=await client.auth.getSession();if(error||!session){location.href='login.html';return false}currentUser=session.user;return true}
+async function load(){const {data,error}=await client.from('immonova_events').select('*, immonova_event_media(*)').order('created_at',{ascending:false});if(error){console.error(error);table.innerHTML='<tr><td colspan="7" class="empty">'+esc(T.loading_error)+'</td></tr>';setStatus(error.message,'error');return}allEvents=data||[];render()}
+function render(){const q=document.getElementById('searchInput').value.trim().toLowerCase();const type=document.getElementById('typeFilter').value;const pub=document.getElementById('publishedFilter').value;let rows=allEvents.filter(e=>{const m=[e.title,e.location,e.venue,e.event_type,labels[e.event_type]].some(v=>String(v||'').toLowerCase().includes(q));const mt=!type||e.event_type===type||(type==='sold_party'&&e.event_type==='sold_event');const mp=pub===''||String(e.published)===pub;return m&&mt&&mp});if(!rows.length){table.innerHTML='<tr><td colspan="7" class="empty">'+esc(T.empty_none)+'</td></tr>';return}table.innerHTML=rows.map(e=>'<tr><td>'+(e.cover_image?'<img class="thumb" src="'+esc(e.cover_image)+'">':'<div class="thumb"></div>')+'</td><td><strong>'+esc(e.title)+'</strong><br><small>'+esc(e.short_description||'')+'</small></td><td><span class="badge '+esc(e.event_type)+'">'+esc(labels[e.event_type]||e.event_type)+'</span></td><td>'+esc(fmtDate(e.event_date))+'</td><td>'+esc(e.location||e.venue||'')+'</td><td>'+(e.published?esc(T.yes):esc(T.no))+'</td><td><div class="actions"><a href="event-edit.html?id='+encodeURIComponent(e.id)+'">'+esc(T.action_edit)+'</a><button onclick="togglePublish('+Number(e.id)+','+(!e.published)+')">'+(e.published?esc(T.action_suspend):esc(T.action_publish))+'</button><button class="danger" onclick="deleteEvent('+Number(e.id)+')">'+esc(T.action_delete)+'</button></div></td></tr>').join('')}
+window.togglePublish=async(id,value)=>{const {error}=await client.from('immonova_events').update({published:value}).eq('id',id);if(error){alert(error.message);return}await load()};window.deleteEvent=async(id)=>{if(!confirm(T.confirm_delete_event))return;const {error}=await client.from('immonova_events').delete().eq('id',id);if(error){alert(error.message);return}await load()};
+document.getElementById('searchInput').addEventListener('input',render);document.getElementById('typeFilter').addEventListener('change',render);document.getElementById('publishedFilter').addEventListener('change',render);document.getElementById('logoutBtn').addEventListener('click',async()=>{await client.auth.signOut();location.href='../index.html'});(async()=>{if(await checkAuth()){await loadUserLanguage();await load()}})();
+</script></body></html>

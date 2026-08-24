@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moduli e Pacchetti | Admin</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%}
+body{background:var(--page-bg-color,#f4ecdf);font-family:var(--font-family,"Avenir Next","Helvetica Neue",Arial,sans-serif);color:var(--text-color,#7f6430)}
+
+.header{padding:30px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(166,127,52,.12)}
+.logo{font-size:24px;font-weight:300;letter-spacing:.35em;color:var(--primary-color,#a67f34)}
+.header-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.header-actions a,.logout{padding:10px 20px;border:1px solid rgba(166,127,52,.25);background:rgba(255,255,255,.25);cursor:pointer;color:var(--primary-color,#a67f34);text-decoration:none;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-family:inherit}
+
+.container{max-width:900px;margin:auto;padding:40px}
+.title{font-size:38px;font-weight:200;letter-spacing:.05em;color:var(--primary-color,#a67f34);margin-bottom:10px}
+.subtitle{font-size:14px;line-height:1.7;color:#8f7643;max-width:700px;margin-bottom:32px}
+
+.package{background:rgba(255,255,255,.22);border:1px solid rgba(166,127,52,.15);padding:22px 26px;margin-bottom:20px}
+.package-title{font-size:16px;color:var(--primary-color,#a67f34);letter-spacing:.03em;margin-bottom:4px}
+.package-toggle-all{font-size:10.5px;color:#8f7643;cursor:pointer;text-decoration:underline;margin-bottom:14px;display:inline-block}
+
+.module-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0;border-top:1px solid rgba(166,127,52,.10)}
+.module-row:first-of-type{border-top:none}
+.module-name{font-size:14px;color:#5c4a20}
+.module-desc{font-size:12px;color:#9a8a63;margin-top:2px}
+.module-badge{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;background:rgba(156,47,47,.10);color:#9c2f2f;margin-left:8px}
+
+.switch{position:relative;width:44px;height:24px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:rgba(166,127,52,.25);transition:.2s;border-radius:24px}
+.slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:#fff;transition:.2s;border-radius:50%}
+input:checked + .slider{background:var(--primary-color,#a67f34)}
+input:checked + .slider:before{transform:translateX(20px)}
+input:disabled + .slider{opacity:.4;cursor:not-allowed}
+
+.status{margin-top:14px;font-size:13px;min-height:18px}
+.success{color:#4f7f45}
+.error{color:#9c2f2f}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+<div class="logo">ADMIN</div>
+<div class="header-actions">
+<a href="dashboard.html">Dashboard</a>
+<a href="roles-permissions.html">Ruoli e Permessi</a>
+<button class="logout" id="logoutBtn">Logout</button>
+</div>
+</header>
+
+<div class="container">
+
+<h1 class="title">Moduli e Pacchetti</h1>
+<p class="subtitle">
+Riservato al Super Amministratore. Accendi o spegni ogni modulo per attivare i pacchetti venduti al cliente — il menu della dashboard si aggiorna automaticamente, senza toccare il codice.
+</p>
+
+<div id="accessDenied" style="display:none" class="status error">Questa pagina è riservata al Super Amministratore.</div>
+
+<div id="modulesContent" style="display:none"></div>
+<div id="saveStatus" class="status"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/theme-loader.js"></script>
+
+<script>
+const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let modules = [];
+
+function esc(v){ return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+async function checkAuth(){
+  const { data:{ session } } = await client.auth.getSession();
+  if(!session){ window.location.href = "login.html"; return false; }
+
+  const permResult = await client.rpc("my_role_and_permissions");
+  if(permResult.error || !permResult.data || !permResult.data.is_super_admin){
+    document.getElementById("accessDenied").style.display = "block";
+    return false;
+  }
+  return true;
+}
+
+async function loadModules(){
+  const { data, error } = await client.from("immonova_modules").select("*").order("sort_order");
+  if(error){
+    document.getElementById("modulesContent").innerHTML = '<div class="status error">Errore: '+esc(error.message)+'</div>';
+    return;
+  }
+  modules = data || [];
+  render();
+}
+
+function render(){
+  const packages = {};
+  modules.forEach(m => {
+    if(!packages[m.package_key]) packages[m.package_key] = { label: m.package_label, items: [] };
+    packages[m.package_key].items.push(m);
+  });
+
+  const html = Object.keys(packages).map(pkgKey => {
+    const pkg = packages[pkgKey];
+    const rows = pkg.items.map(m => `
+      <div class="module-row">
+        <div>
+          <div class="module-name">${esc(m.label)}${!m.built ? '<span class="module-badge">non ancora collegato</span>' : ""}</div>
+          <div class="module-desc">${esc(m.description || "")}</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" data-key="${esc(m.key)}" ${m.enabled ? "checked" : ""} ${!m.built ? "disabled" : ""} onchange="toggleModule(this)">
+          <span class="slider"></span>
+        </label>
+      </div>
+    `).join("");
+
+    return `
+      <div class="package">
+        <div class="package-title">${esc(pkg.label)}</div>
+        <span class="package-toggle-all" onclick="toggleAllInPackage('${esc(pkgKey)}', true)">Attiva tutti</span> ·
+        <span class="package-toggle-all" onclick="toggleAllInPackage('${esc(pkgKey)}', false)">Disattiva tutti</span>
+        ${rows}
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("modulesContent").innerHTML = html;
+}
+
+window.toggleModule = async function(checkbox){
+  const key = checkbox.dataset.key;
+  const enabled = checkbox.checked;
+  const statusEl = document.getElementById("saveStatus");
+  statusEl.textContent = "Salvataggio...";
+  statusEl.className = "status";
+
+  const { error } = await client.from("immonova_modules").update({ enabled }).eq("key", key);
+
+  if(error){
+    statusEl.textContent = "Errore: " + error.message;
+    statusEl.className = "status error";
+    checkbox.checked = !enabled;
+    return;
+  }
+
+  const m = modules.find(x => x.key === key);
+  if(m) m.enabled = enabled;
+
+  statusEl.textContent = "Salvato — il menu si aggiorna al prossimo caricamento della dashboard.";
+  statusEl.className = "status success";
+};
+
+window.toggleAllInPackage = async function(pkgKey, enabled){
+  const items = modules.filter(m => m.package_key === pkgKey && m.built);
+  if(!items.length) return;
+
+  const statusEl = document.getElementById("saveStatus");
+  statusEl.textContent = "Salvataggio...";
+  statusEl.className = "status";
+
+  const { error } = await client.from("immonova_modules").update({ enabled }).in("key", items.map(m => m.key));
+
+  if(error){
+    statusEl.textContent = "Errore: " + error.message;
+    statusEl.className = "status error";
+    return;
+  }
+
+  items.forEach(m => m.enabled = enabled);
+  render();
+  statusEl.textContent = "Salvato — il menu si aggiorna al prossimo caricamento della dashboard.";
+  statusEl.className = "status success";
+};
+
+document.getElementById("logoutBtn").addEventListener("click", async function(){
+  await client.auth.signOut();
+  window.location.href = "login.html";
+});
+
+(async function init(){
+  const ok = await checkAuth();
+  if(!ok) return;
+  document.getElementById("modulesContent").style.display = "block";
+  await loadModules();
+})();
+</script>
+
+</body>
+</html>

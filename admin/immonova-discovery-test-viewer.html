@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/theme-loader.js"></script>
+<script src="../js/site-branding.js"></script>
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DOMINUS | Discovery Test Viewer</title>
+<style>
+:root{
+  --bg:var(--page-bg-color,#f4ecdf);--panel:#fffaf1;--ink:#211b14;--muted:#7d6f5d;--gold:var(--primary-color,#a67f34);--gold2:#c7a257;--line:rgba(166,127,52,.25);--bad:#9d2d20;--ok:#317a4b;--warn:#a67510;
+}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,rgba(255,255,255,.7),transparent 42%),var(--bg);font-family:"Avenir Next","Helvetica Neue",Arial,sans-serif;color:var(--ink)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:none;opacity:.55}
+header{position:sticky;top:0;z-index:10;background:rgba(244,236,223,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:18px 28px;display:flex;justify-content:space-between;gap:20px;align-items:center}
+.logo{letter-spacing:.38em;color:var(--gold);font-weight:500;font-size:20px}.sub{font-size:11px;letter-spacing:.22em;color:var(--muted);margin-top:4px}.wrap{max-width:1320px;margin:0 auto;padding:28px}.grid{display:grid;grid-template-columns:380px 1fr;gap:22px}.card{background:rgba(255,250,241,.82);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 18px 50px rgba(75,54,22,.07)}
+h2{font-size:18px;margin:0 0 16px;color:var(--gold);letter-spacing:.06em}h3{font-size:14px;margin:18px 0 10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}label{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}input,textarea,select{width:100%;border:1px solid var(--line);background:#fffdf8;border-radius:13px;padding:11px 12px;font:inherit;color:var(--ink)}textarea{min-height:130px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btns{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}button{border:1px solid var(--gold);background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;border-radius:999px;padding:10px 14px;font-weight:600;cursor:pointer;letter-spacing:.02em}button.secondary{background:transparent;color:var(--gold)}button.danger{border-color:var(--bad);background:transparent;color:var(--bad)}button:disabled{opacity:.45;cursor:not-allowed}.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:12px;color:var(--muted);background:rgba(255,255,255,.45)}.status{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.tab{background:transparent;color:var(--gold);border-color:var(--line);padding:8px 11px}.tab.active{background:var(--gold);color:#fff}.summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.metric{border:1px solid var(--line);border-radius:16px;padding:14px;background:rgba(255,255,255,.55)}.metric .v{font-size:25px;color:var(--gold);font-weight:600}.metric .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em}.section{display:none}.section.active{display:block}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;background:#fffdf8}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{padding:10px 12px;border-bottom:1px solid rgba(166,127,52,.14);text-align:left;vertical-align:top}.data-table th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;background:#fff8e9;position:sticky;top:0}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}.small{font-size:12px;color:var(--muted)}.result-block{margin-bottom:22px}.test-title{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.test-title strong{font-size:18px;color:var(--gold)}pre{white-space:pre-wrap;background:#211b14;color:#fff8e8;border-radius:16px;padding:16px;max-height:420px;overflow:auto;font-size:12px}.poi-nav{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.poi-nav a{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:var(--gold);text-decoration:none;background:rgba(255,255,255,.55);font-size:12px}.poi-category{margin:22px 0 30px;scroll-margin-top:100px}.poi-category-head{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:12px}.poi-category-title{font-size:17px;color:var(--gold);letter-spacing:.08em;text-transform:uppercase}.poi-subgroup{margin:16px 0 22px}.poi-subgroup-title{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}.poi-card{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:8px;background:#fffdf8}.poi-card b{color:var(--gold)}.badge{display:inline-block;border-radius:999px;padding:3px 8px;font-size:11px;border:1px solid var(--line);color:var(--muted);margin:2px}.print-only{display:none}.loader{width:14px;height:14px;border:2px solid rgba(166,127,52,.25);border-top-color:var(--gold);border-radius:50%;display:inline-block;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:980px){.grid{grid-template-columns:1fr}.summary-grid{grid-template-columns:repeat(2,1fr)}}
+@media print{header,.no-print,.grid>.card:first-child,.tabs,.btns{display:none!important}.wrap{padding:0}.grid{display:block}.card{box-shadow:none;border:0;background:white}.section{display:block!important;page-break-inside:auto}.print-only{display:block}body{background:white}.table-wrap{overflow:visible}.data-table{font-size:10px}.data-table th{position:static}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="logo">DOMINUS</div><div class="sub">DISCOVERY TEST VIEWER</div></div>
+  <div class="status"><span id="globalStatus" class="pill">Pronto</span><span class="pill">v1.4 viewer</span></div>
+</header>
+<div class="wrap">
+  <div class="grid">
+    <div class="card no-print">
+      <h2>Test Edge</h2>
+      <label>Edge URL</label>
+      <input id="edgeUrl" value="https://bpzzmitmbavcmcasswbu.supabase.co/functions/v1/immonova-discovery-engine" />
+      <label>Anon key / Bearer token</label>
+      <input id="apiKey" type="password" placeholder="Incolla qui la anon key Supabase" />
+      <div class="row">
+        <div><label>Radius km</label><input id="radius" type="number" value="30" /></div>
+        <div><label>Anno</label><input id="year" type="number" value="2026" /></div>
+      </div>
+      <h3>Località personalizzata</h3>
+      <label>Paese</label><input id="customCountry" placeholder="es. Francia" />
+      <div class="row"><div><label>Codice paese</label><input id="customCountryCode" placeholder="FR" maxlength="3" /></div><div><label>Comune / località</label><input id="customMunicipality" placeholder="es. Annecy" /></div></div>
+      <div class="row"><div><label>Regione</label><input id="customRegion" placeholder="facoltativa" /></div><div><label>Provincia / dipartimento</label><input id="customProvince" placeholder="facoltativa" /></div></div>
+      <div class="btns"><button class="secondary" onclick="generateCustomPayload()">Genera JSON</button><button onclick="generateAndRunCustom()">Genera ed esegui</button></div>
+      <h3>Preset</h3>
+      <div class="btns">
+        <button class="secondary" onclick="loadPreset('paris')">Parigi</button>
+        <button class="secondary" onclick="loadPreset('lecce')">Lecce</button>
+        <button class="secondary" onclick="loadPreset('gallipoli')">Gallipoli</button>
+        <button class="secondary" onclick="loadPreset('colmar')">Colmar</button>
+        <button class="secondary" onclick="loadPreset('chamonix')">Monte Bianco</button>
+      </div>
+      <label>Payload test</label>
+      <textarea id="payload"></textarea>
+      <div class="btns">
+        <button onclick="runSingle()">Esegui test</button>
+        <button class="secondary" onclick="runBatch()">Esegui Parigi + Lecce + Gallipoli</button>
+        <button class="secondary" onclick="clearResults()">Pulisci</button>
+      </div>
+      <h3>Esporta</h3>
+      <div class="btns">
+        <button class="secondary" onclick="copyCompact()">Copia report compatto</button>
+        <button class="secondary" onclick="downloadCompact()">Scarica JSON compatto</button>
+        <button class="secondary" onclick="window.print()">Stampa / Salva PDF</button>
+      </div>
+      <p class="small">Il viewer non salva dati. Tutto resta nel browser. Per inviarmi i risultati usa “Copia report compatto”, molto più leggero del JSON Supabase.</p>
+    </div>
+    <div class="card">
+      <div class="print-only"><h1>DOMINUS – Discovery Test Report</h1><p id="printDate"></p></div>
+      <div class="summary-grid" id="summaryGrid"></div>
+      <div class="tabs no-print" id="tabs"></div>
+      <div id="results"></div>
+    </div>
+  </div>
+</div>
+<script>
+const presets = {
+  paris:{country_code:'FR',country:'France',municipality:'Paris',region:'Île-de-France',radius_km:30,year:2026},
+  lecce:{country_code:'IT',country:'Italy',municipality:'Lecce',region:'Puglia',province:'Lecce',radius_km:30,year:2026},
+  gallipoli:{country_code:'IT',country:'Italy',municipality:'Gallipoli',region:'Puglia',province:'Lecce',radius_km:30,year:2026},
+  colmar:{country_code:'FR',country:'France',municipality:'Colmar',region:'Grand Est',radius_km:30,year:2026},
+  chamonix:{country_code:'FR',country:'France',municipality:'Chamonix-Mont-Blanc',region:'Auvergne-Rhône-Alpes',radius_km:30,year:2026}
+};
+const expectedSections = ['tourism','hospitality','restaurants','beaches','marinas','transport','heritage','nightlife','economy','demography','poi'];
+let runs = [];
+function init(){
+  document.getElementById('printDate').textContent = new Date().toLocaleString('it-IT');
+  const savedKey = localStorage.getItem('immonova_test_key') || '';
+  const savedUrl = localStorage.getItem('immonova_edge_url');
+  if(savedUrl) document.getElementById('edgeUrl').value = savedUrl;
+  if(savedKey) document.getElementById('apiKey').value = savedKey;
+  loadPreset('lecce'); render();
+}
+function loadPreset(name){
+  const p = {...presets[name]};
+  p.radius_km = Number(document.getElementById('radius').value || p.radius_km || 30);
+  p.year = Number(document.getElementById('year').value || p.year || 2026);
+  document.getElementById('payload').value = JSON.stringify(p,null,2);
+}
+function generateCustomPayload(){
+  const country=document.getElementById('customCountry').value.trim();
+  const country_code=document.getElementById('customCountryCode').value.trim().toUpperCase();
+  const municipality=document.getElementById('customMunicipality').value.trim();
+  const region=document.getElementById('customRegion').value.trim();
+  const province=document.getElementById('customProvince').value.trim();
+  if(!country && !country_code){alert('Inserisci il paese o il codice paese.');return null;}
+  if(!municipality){alert('Inserisci il comune o la località.');return null;}
+  const p={country_code,country,municipality,radius_km:Number(document.getElementById('radius').value||30),year:Number(document.getElementById('year').value||new Date().getFullYear())};
+  if(region)p.region=region;if(province)p.province=province;
+  document.getElementById('payload').value=JSON.stringify(p,null,2);return p;
+}
+async function generateAndRunCustom(){const p=generateCustomPayload();if(p)await runPayload(p);}
+function setStatus(txt, cls='') { const el=document.getElementById('globalStatus'); el.innerHTML=txt; el.className='pill '+cls; }
+async function callEdge(payload){
+  const url = document.getElementById('edgeUrl').value.trim();
+  const key = document.getElementById('apiKey').value.trim();
+  localStorage.setItem('immonova_edge_url', url);
+  if(key) localStorage.setItem('immonova_test_key', key);
+  const headers = {'Content-Type':'application/json'};
+  if(key){ headers['Authorization']='Bearer '+key; headers['apikey']=key; }
+  const started = performance.now();
+  const res = await fetch(url,{method:'POST',headers,body:JSON.stringify(payload)});
+  const text = await res.text();
+  let json; try{ json = JSON.parse(text); }catch{ json={ok:false,error:'Risposta non JSON',raw:text}; }
+  return {http_status:res.status, ms:Math.round(performance.now()-started), json};
+}
+async function runSingle(){
+  let payload; try{ payload=JSON.parse(document.getElementById('payload').value); }catch(e){ alert('Payload JSON non valido: '+e.message); return; }
+  await runPayload(payload);
+}
+async function runBatch(){
+  for (const name of ['paris','lecce','gallipoli']) await runPayload({...presets[name], radius_km:Number(radius.value||30), year:Number(year.value||2026)});
+}
+async function runPayload(payload){
+  setStatus('<span class="loader"></span> Test in corso: '+(payload.municipality||payload.city||'località'));
+  try{
+    const out = await callEdge(payload);
+    runs.unshift({id:Date.now()+Math.random(), payload, response:out.json, http_status:out.http_status, ms:out.ms, created_at:new Date().toISOString(), compact:compactRun(payload,out)});
+    setStatus('Completato: '+(payload.municipality||'test'), out.json?.ok===false?'bad':'ok');
+  }catch(e){
+    runs.unshift({id:Date.now()+Math.random(), payload, response:{ok:false,error:String(e)}, http_status:0, ms:0, created_at:new Date().toISOString(), compact:{error:String(e)}});
+    setStatus('Errore fetch', 'bad');
+  }
+  render();
+}
+function getDossier(json){ return json?.dossier_data || {}; }
+function flatDossier(dossier){
+  const rows=[];
+  for(const [section,obj] of Object.entries(dossier||{})){
+    if(!obj || typeof obj!=='object') continue;
+    for(const [key,val] of Object.entries(obj)){
+      if(val && typeof val==='object' && 'value' in val){
+        rows.push({section,key,value:val.value,unit:val.unit||'',year:val.observation_year||val.year||'',period:val.observation_period||'',coverage:val.coverage||{},source:val.source||{},quality:val.quality||{}});
+      }
+    }
+  }
+  return rows;
+}
+function collectPoi(json){
+  const candidates=[]; const d=getDossier(json);
+  function scan(node,path=[]){
+    if(Array.isArray(node)){
+      for(const it of node){
+        if(it && typeof it==='object' && (it.place_id||it.id||it.distance_km!==undefined||it.name||it.title||it.displayName?.text)) candidates.push({...it,_path:path.join('.')||'poi'});
+      }
+    }else if(node && typeof node==='object'){
+      for(const [k,v] of Object.entries(node)) scan(v,path.concat(k));
+    }
+  }
+  scan(d); scan(json?.poi,['poi']);
+  const seen=new Set(), out=[];
+  for(const p of candidates){
+    const name=p.name||p.title||p.displayName?.text||'';
+    const lat=Number(p.lat??p.latitude??p.location?.lat), lng=Number(p.lng??p.longitude??p.location?.lng);
+    const key=String(p.place_id||p.id||`${name.toLowerCase().replace(/\s+/g,' ').trim()}|${Number.isFinite(lat)?lat.toFixed(5):''}|${Number.isFinite(lng)?lng.toFixed(5):''}`);
+    if(!key||seen.has(key))continue;seen.add(key);out.push(p);
+  }
+  return out.sort((a,b)=>Number(a.distance_km??999999)-Number(b.distance_km??999999));
+}
+function sectionCounts(json){
+  const dossier=getDossier(json); const counts={};
+  for(const s of expectedSections){
+    const val=dossier[s] ?? json?.[s];
+    if(Array.isArray(val)) counts[s]=val.length;
+    else if(val && typeof val==='object') counts[s]=Object.keys(val).filter(k=>!k.startsWith('_')).length;
+    else counts[s]=0;
+  }
+  const poi=collectPoi(json); if(poi.length) counts.poi=poi.length;
+  return counts;
+}
+function compactRun(payload,out){
+  const json=out.json||{}; const rows=flatDossier(getDossier(json)); const poi=collectPoi(json); const counts=sectionCounts(json); const poiGroups=groupPoi(poi);
+  const evidence=(json.evidence||[]).slice(0,60).map(e=>({field_key:e.field_key,value:e.value,unit:e.unit,year:e.year,coverage:e.coverage||e.coverage_level,coverage_level:e.coverage_level,coverage_name:e.coverage_name,source_url:e.source_url,provider_name:e.provider_name,confidence:e.confidence,used_for_rating:e.used_for_rating,evidence_role:e.evidence_role}));
+  return {
+    test:{municipality:payload.municipality||payload.city, province:payload.province, region:payload.region, country_code:payload.country_code, radius_km:payload.radius_km, year:payload.year},
+    ok:json.ok, edge:json.edge, version:json.version, http_status:out.http_status, ms:out.ms,
+    execution:json.execution,
+    section_counts:counts,
+    poi_category_counts:Object.fromEntries(Object.entries(poiGroups).map(([cat,subs])=>[cat,Object.values(subs).reduce((n,a)=>n+a.length,0)])),
+    dossier_rows:rows.map(r=>({section:r.section,key:r.key,value:r.value,unit:r.unit,year:r.year,period:r.period,coverage:r.coverage,source:r.source,quality:r.quality})),
+    poi_sample:poi.slice(0,80).map(p=>({section:p._path,name:p.name||p.displayName?.text||p.title,category:p.category||p.type||p.keyword,distance_km:p.distance_km,rating:p.rating,place_id:p.place_id||p.id,address:p.address||p.formatted_address||p.vicinity,lat:p.lat||p.location?.lat,lng:p.lng||p.location?.lng})),
+    evidence_sample:evidence,
+    diagnostics:{documents:json.execution?.documents,tables:json.execution?.tables,verified_sources:json.execution?.verified_sources, errors:(json.diagnostics?.document_errors||[]).slice(0,10)}
+  };
+}
+function render(){
+  renderSummary(); renderTabs(); renderResults();
+}
+function renderSummary(){
+  const totalRuns=runs.length, okRuns=runs.filter(r=>r.response?.ok!==false).length;
+  const last=runs[0]; const counts=last?sectionCounts(last.response):{};
+  const poi=last?collectPoi(last.response).length:0;
+  document.getElementById('summaryGrid').innerHTML = `
+    <div class="metric"><div class="k">Test eseguiti</div><div class="v">${totalRuns}</div></div>
+    <div class="metric"><div class="k">OK</div><div class="v">${okRuns}</div></div>
+    <div class="metric"><div class="k">POI ultimo test</div><div class="v">${poi}</div></div>
+    <div class="metric"><div class="k">Sezioni attive</div><div class="v">${Object.values(counts).filter(Boolean).length}</div></div>`;
+}
+function renderTabs(){
+  const tabs=document.getElementById('tabs');
+  tabs.innerHTML = runs.map((r,i)=>`<button class="tab ${i===0?'active':''}" onclick="activateRun(${i})">${safe(r.payload.municipality||'Test')} <span class="small">${r.response?.version||''}</span></button>`).join('');
+}
+function activateRun(i){
+  const r=runs.splice(i,1)[0]; runs.unshift(r); render();
+}
+function renderResults(){
+  const root=document.getElementById('results');
+  if(!runs.length){ root.innerHTML='<p class="small">Nessun test eseguito.</p>'; return; }
+  root.innerHTML = runs.map((r,i)=>renderRun(r,i)).join('');
+}
+function renderRun(r,i){
+  const json=r.response||{}; const dossier=getDossier(json); const rows=flatDossier(dossier); const counts=sectionCounts(json); const poi=collectPoi(json);
+  return `<div class="result-block section ${i===0?'active':''}">
+    <div class="test-title"><div><strong>${safe(r.payload.municipality||'Test')}</strong><div class="small">${safe(r.payload.region||'')} ${safe(r.payload.country_code||'')} · ${new Date(r.created_at).toLocaleString('it-IT')}</div></div><div><span class="badge">HTTP ${r.http_status}</span><span class="badge">${r.ms} ms</span><span class="badge">v ${safe(json.version||'-')}</span></div></div>
+    <h3>Copertura sezioni</h3>${renderCounts(counts)}
+    <h3>Dossier data</h3>${renderRows(rows)}
+    ${renderInvestmentData(dossier)}
+    <h3>Città principali nel raggio di ricerca</h3>${renderNearbyCities(json)}
+    <h3>POI distinti per categoria</h3>${renderPoiByCategory(dossier,poi)}
+    <h3>Fonti ed evidence</h3>${renderEvidence(json.evidence||[])}
+    <h3>Diagnostica</h3>${renderDiag(json)}
+    <details><summary class="small">JSON compatto</summary><pre>${safe(JSON.stringify(r.compact,null,2))}</pre></details>
+  </div>`;
+}
+function renderCounts(counts){return `<div class="status">${expectedSections.map(s=>`<span class="pill ${counts[s]?'ok':'warn'}">${s}: ${counts[s]||0}</span>`).join('')}</div>`;}
+function renderRows(rows){
+  if(!rows.length) return '<p class="small warn">Nessun dossier_data normalizzato trovato.</p>';
+  return `<div class="table-wrap"><table class="data-table"><thead><tr><th>Sezione</th><th>Dato</th><th>Valore</th><th>Anno</th><th>Copertura</th><th>Fonte</th><th>Conf.</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${safe(r.section)}</td><td>${safe(r.key)}</td><td><b>${safe(formatVal(r.value))}</b> ${safe(r.unit)}</td><td>${safe(r.year||r.period)}</td><td>${safe(r.coverage.used_name||r.coverage.coverage_name||'')}<br><span class="small">${safe(r.coverage.used_level||r.coverage.coverage_level||'')} ${r.coverage.fallback_from_requested?'fallback':''}</span></td><td>${safe(r.source.provider_name||'')}<br><span class="small mono">${safe(r.source.source_url||'')}</span></td><td>${safe(r.quality.confidence??'')}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function poiCategory(p){
+  const path=String(p._path||p.category||p.type||'poi').toLowerCase();
+  const top=path.split('.')[0];
+  if(expectedSections.includes(top)) return top;
+  if(/hotel|resort|b&b|bed|hospitality|lodging/.test(path)) return 'hospitality';
+  if(/restaurant|food|pizzeria|cafe|caff|bar|pub|wine/.test(path)) return 'restaurants';
+  if(/beach|spiaggia|lido|coast/.test(path)) return 'beaches';
+  if(/marina|port|porto|yacht|harbor|harbour/.test(path)) return 'marinas';
+  if(/airport|station|stazione|rail|train|bus|transport|taxi|shuttle/.test(path)) return 'transport';
+  if(/museum|church|chiesa|castle|castello|monument|heritage|unesco|historic|piazza/.test(path)) return 'heritage';
+  if(/nightlife|club|disco/.test(path)) return 'nightlife';
+  return 'other';
+}
+function poiSubcategory(p){
+  const path=String(p._path||p.category||p.type||'items');
+  const parts=path.split('.').filter(Boolean);
+  return parts.length>1?parts.slice(1).join('.'):'items';
+}
+function groupPoi(poi){
+  const groups={};
+  for(const p of poi){
+    const cat=poiCategory(p), sub=poiSubcategory(p);
+    if(!groups[cat]) groups[cat]={};
+    if(!groups[cat][sub]) groups[cat][sub]=[];
+    groups[cat][sub].push(p);
+  }
+  return groups;
+}
+function renderPoiCard(p){
+  return `<div class="poi-card"><b>${safe(p.name||p.displayName?.text||p.title||'POI')}</b> <span class="badge">${safe(poiSubcategory(p))}</span><br><span class="small">${safe(p.address||p.formatted_address||p.vicinity||'')} ${p.distance_km!==undefined?'· '+safe(p.distance_km)+' km':''} · rating ${safe(p.rating??'-')}</span><br><span class="small mono">${safe(p.place_id||p.id||'')}</span></div>`;
+}
+function poiKey(p){
+  const name=p.name||p.title||p.displayName?.text||'';
+  const lat=Number(p.lat??p.latitude??p.location?.lat), lng=Number(p.lng??p.longitude??p.location?.lng);
+  return String(p.place_id||p.id||`${name.toLowerCase().replace(/\s+/g,' ').trim()}|${Number.isFinite(lat)?lat.toFixed(5):''}|${Number.isFinite(lng)?lng.toFixed(5):''}`);
+}
+function uniqueGroup(items,path){
+  const seen=new Set(),out=[];
+  for(const raw of (items||[])){
+    if(!raw||typeof raw!=='object')continue;
+    const k=poiKey(raw); if(!k||seen.has(k))continue; seen.add(k);
+    out.push({...raw,_path:path});
+  }
+  return out.sort((a,b)=>{
+    const ma=Number(a.michelin_stars||0),mb=Number(b.michelin_stars||0); if(mb!==ma)return mb-ma;
+    const ra=Number(a.rating),rb=Number(b.rating); if(Number.isFinite(rb)&&Number.isFinite(ra)&&rb!==ra)return rb-ra;
+    return Number(a.distance_km??999999)-Number(b.distance_km??999999);
+  });
+}
+function groupSpec(dossier){
+  const specs={
+    hospitality:{label:'Hotel e ospitalità',groups:[
+      ['hotels_5_star','★★★★★ Hotel 5 stelle'],['hotels_4_star','★★★★ Hotel 4 stelle'],['hotels_3_star','★★★ Hotel 3 stelle'],['hotels_2_star','★★ Hotel 2 stelle'],['hotels_1_star','★ Hotel 1 stella'],['boutique_hotels','Boutique hotel e relais'],['resorts','Resort'],['bed_and_breakfast','B&B e chambres d’hôtes'],['agriturismi','Agriturismi e masserie'],['camping','Camping'],['residences','Residence e aparthotel'],['hotels_unclassified','Hotel non classificati'],['other_accommodation','Altre strutture'],['specialized_items','Specializzati'],['items','Elenco generale']
+    ]},
+    restaurants:{label:'Ristoranti, bar e locali',groups:[
+      ['michelin_3_star','★★★ Michelin 3 stelle'],['michelin_2_star','★★ Michelin 2 stelle'],['michelin_1_star','★ Michelin 1 stella'],['bib_gourmand','Bib Gourmand'],['fine_dining','Fine dining'],['traditional','Tradizionali'],['seafood','Seafood'],['pizzerias','Pizzerie'],['wine_bars','Wine bar'],['bistros','Bistrot e brasserie'],['street_food','Street food'],['fast_food','Fast food'],['bars_and_pubs','Bar e pub'],['other_restaurants','Altri ristoranti'],['items','Elenco generale']
+    ]},
+    beaches:{label:'Spiagge e lidi',groups:[['blue_flags','Bandiere blu'],['public_beaches','Spiagge pubbliche'],['beach_clubs','Lidi e beach club'],['natural_beaches','Spiagge naturali'],['natural_reserves','Riserve naturali'],['items','Elenco generale']]},
+    marinas:{label:'Porti e marine',groups:[['passenger_ports','Porti passeggeri'],['commercial_ports','Porti commerciali'],['ports','Porti'],['marinas','Marine e porti turistici'],['items','Elenco generale']]},
+    transport:{label:'Trasporti',groups:[['commercial_airports','Aeroporti commerciali attivi'],['international_airports','Aeroporti internazionali'],['regional_airports','Aeroporti regionali'],['railway_stations','Stazioni ferroviarie'],['bus_stations','Autostazioni'],['passenger_ports','Porti passeggeri'],['shuttles','Taxi e shuttle'],['items','Elenco generale']]},
+    heritage:{label:'Musei, monumenti e patrimonio',groups:[['unesco_sites','UNESCO'],['castles','Castelli'],['museums','Musei'],['churches','Chiese'],['historic_palaces','Palazzi storici'],['historic_squares','Piazze storiche'],['archaeological_sites','Siti archeologici'],['monuments','Monumenti'],['items','Elenco generale']]},
+    nightlife:{label:'Nightlife',groups:[['clubs','Club'],['bars','Bar'],['items','Elenco generale']]}
+  };
+  return specs;
+}
+function renderPoiByCategory(dossier,fallbackPoi){
+  const specs=groupSpec(dossier),sections=[];
+  for(const [cat,spec] of Object.entries(specs)){
+    const data=dossier?.[cat]||{}; const already=new Set(),groups=[];
+    for(const [key,label] of spec.groups){
+      const arr=uniqueGroup(data?.[key],`${cat}.${key}`).filter(p=>{
+        const k=poiKey(p); if(already.has(k))return false; already.add(k); return true;
+      });
+      if(arr.length)groups.push({key,label,items:arr});
+    }
+    if(!groups.length)continue;
+    const total=groups.reduce((n,g)=>n+g.items.length,0);
+    const body=groups.map(g=>`<div class="poi-subgroup"><div class="poi-subgroup-title">${safe(g.label)} · ${g.items.length}</div>${g.items.map(renderPoiCard).join('')}</div>`).join('');
+    sections.push(`<section class="poi-category" id="poi-${cat}"><div class="poi-category-head"><div class="poi-category-title">${safe(spec.label)}</div><span class="pill ok">${total} risultati classificati</span></div>${body}</section>`);
+  }
+  if(!sections.length && fallbackPoi?.length){
+    return '<p class="small warn">Il JSON non contiene ancora sottocategorie strutturate; visualizzazione fallback.</p>'+renderFallbackPoi(fallbackPoi);
+  }
+  if(!sections.length)return '<p class="small warn">Nessun POI classificato trovato.</p>';
+  return sections.join('');
+}
+function renderFallbackPoi(poi){
+  const groups=groupPoi(poi); return Object.entries(groups).map(([cat,subs])=>`<section class="poi-category"><div class="poi-category-title">${safe(cat)}</div>${Object.entries(subs).map(([sub,items])=>`<div class="poi-subgroup"><div class="poi-subgroup-title">${safe(sub)} · ${items.length}</div>${items.map(renderPoiCard).join('')}</div>`).join('')}</section>`).join('');
+}
+function metricCard(title,obj,unitFallback=''){
+  const metric=obj&&typeof obj==='object'&&'value'in obj?obj:null;
+  if(!metric)return `<div class="metric"><div class="k">${safe(title)}</div><div class="v small">Non disponibile</div></div>`;
+  return `<div class="metric"><div class="k">${safe(title)}</div><div class="v">${safe(formatVal(metric.value))}</div><div class="small">${safe(metric.unit||unitFallback)} · ${safe(metric.quality?.status||'')}</div></div>`;
+}
+function rangeCard(title,minObj,maxObj,unitFallback=''){
+  const min=minObj&&typeof minObj==='object'&&'value'in minObj?minObj:null;
+  const max=maxObj&&typeof maxObj==='object'&&'value'in maxObj?maxObj:null;
+  if(!min&&!max)return `<div class="metric"><div class="k">${safe(title)}</div><div class="v small">Non disponibile</div></div>`;
+  const unit=safe((min||max).unit||unitFallback);
+  let valueLine;
+  if(min&&max) valueLine=`${safe(formatVal(min.value))} – ${safe(formatVal(max.value))}`;
+  else if(min) valueLine=`da ${safe(formatVal(min.value))}`;
+  else valueLine=`fino a ${safe(formatVal(max.value))}`;
+  const status=(min||max).quality?.status||'';
+  return `<div class="metric"><div class="k">${safe(title)}</div><div class="v">${valueLine}</div><div class="small">${unit} · ${safe(status)}</div></div>`;
+}
+function renderInvestmentData(dossier){
+  const adr=dossier?.adr||{}, market=dossier?.real_estate_market||{};
+  const hasAdr=adr.average_daily_rate_min||adr.average_daily_rate_max||adr.average_daily_rate||adr.summary;
+  const hasMarket=market.summary||market.residential_sale_per_m2_min||market.residential_sale_per_m2_max||market.residential_sale_per_m2;
+  if(!hasAdr&&!hasMarket)return '';
+  return `<h3>ADR e mercato immobiliare</h3><div class="grid">
+    ${rangeCard('ADR (min–max)',adr.average_daily_rate_min,adr.average_daily_rate_max,'€/camera/notte')}
+    ${rangeCard('Valore al m² (min–max)',market.residential_sale_per_m2_min,market.residential_sale_per_m2_max,'€/m²')}
+  </div><div class="status"><span class="pill ${adr.summary?.available?'ok':'warn'}">ADR: ${safe(adr.summary?.status||'non disponibile')}</span><span class="pill ${market.summary?.available?'ok':'warn'}">Mercato: ${safe(market.summary?.status||'non disponibile')}</span></div>${adr.summary?.warning?`<p class="small warn">${safe(adr.summary.warning)}</p>`:''}${market.summary?.missing?.length?`<p class="small warn">${safe(market.summary.missing.join(' '))}</p>`:''}`;
+}
+
+function renderNearbyCities(json){
+  const dossier=getDossier(json);
+  const cities=Array.isArray(dossier?.nearby_major_cities?.items)?dossier.nearby_major_cities.items:[];
+  if(!cities.length) return '<p class="small warn">Nessuna città importante trovata nel raggio impostato (o dataset GeoNames non disponibile).</p>';
+  return `<div class="table-wrap"><table class="data-table"><thead><tr><th>Città</th><th>Paese</th><th>Popolazione</th><th>Distanza</th></tr></thead><tbody>${cities.map(c=>`<tr><td><b>${safe(c.name)}</b></td><td>${safe(c.country_code||'')}</td><td>${safe(formatVal(c.population))}</td><td>${safe(c.distance_km)} km</td></tr>`).join('')}</tbody></table></div>`;
+}
+function renderEvidence(ev){
+  if(!ev.length) return '<p class="small warn">Nessuna evidence.</p>';
+  return `<div class="table-wrap"><table class="data-table"><thead><tr><th>Dato</th><th>Valore</th><th>Coverage</th><th>Fonte</th><th>Rating</th></tr></thead><tbody>${ev.slice(0,80).map(e=>`<tr><td>${safe(e.field_key)}</td><td>${safe(formatVal(e.value))} ${safe(e.unit||'')}</td><td>${safe(e.coverage||e.coverage_level||'')}<br><span class="small">${safe(e.coverage_name||e.geography_name||'')}</span></td><td>${safe(e.provider_name||'')}<br><span class="small mono">${safe(e.source_url||'')}</span></td><td>${e.used_for_rating?'sì':'no'}<br><span class="small">${safe(e.evidence_role||'')}</span></td></tr>`).join('')}</tbody></table></div>`;
+}
+function renderDiag(json){
+  const ex=json.execution||{}; const errs=json.diagnostics?.document_errors||[];
+  const engines=json.diagnostics?.specialized_engines||{};
+  const engineHtml=Object.keys(engines).length?`<h3>Edge specializzate</h3><div class="status">${Object.entries(engines).map(([name,v])=>`<span class="pill ${v.ok?'ok':'bad'}">${safe(name)}: ${v.ok?'OK':'ERRORE'} · HTTP ${safe(v.http_status)} · ${safe(v.ms)} ms</span>`).join('')}</div>${Object.values(engines).some(v=>v.error)?`<pre>${safe(JSON.stringify(engines,null,2))}</pre>`:''}`:'';
+  return `<div class="status"><span class="pill">fonti ${ex.verified_sources??'-'}</span><span class="pill">documenti ${ex.documents??'-'}</span><span class="pill">tabelle ${ex.tables??'-'}</span><span class="pill ${errs.length?'bad':'ok'}">errori ${errs.length}</span></div>${engineHtml}${errs.length?`<pre>${safe(JSON.stringify(errs.slice(0,10),null,2))}</pre>`:''}`;
+}
+function copyCompact(){
+  const txt=JSON.stringify(runs.map(r=>r.compact),null,2);
+  navigator.clipboard.writeText(txt).then(()=>setStatus('Report compatto copiato','ok')).catch(()=>alert(txt));
+}
+function downloadCompact(){
+  const blob=new Blob([JSON.stringify(runs.map(r=>r.compact),null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='immonova-discovery-test-report.json'; a.click(); URL.revokeObjectURL(a.href);
+}
+function clearResults(){ runs=[]; render(); }
+function formatVal(v){ if(typeof v==='number') return v.toLocaleString('it-IT'); return v; }
+function safe(v){ return String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+init();
+</script>
+</body>
+</html>

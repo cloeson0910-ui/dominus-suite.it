@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalogo Videoguide | Dominus Whitelabel</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%}
+body{background:var(--page-bg-color,#f4ecdf);font-family:var(--font-family,"Avenir Next","Helvetica Neue",Arial,sans-serif);color:var(--text-color,#7f6430)}
+
+.header{padding:40px;text-align:center;border-bottom:1px solid rgba(166,127,52,.12)}
+.logo{font-size:26px;font-weight:300;letter-spacing:.35em;color:var(--primary-color,#a67f34);margin-bottom:8px}
+.subtitle{font-size:14px;color:#8f7643;max-width:600px;margin:auto;line-height:1.6}
+
+.filters{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:24px 20px 0}
+.filter-btn{padding:8px 16px;border:1px solid rgba(166,127,52,.3);background:transparent;color:#8f7643;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;font-family:inherit;border-radius:20px}
+.filter-btn.active{background:var(--primary-color,#a67f34);color:#fff;border-color:var(--primary-color,#a67f34)}
+
+.container{max-width:1200px;margin:auto;padding:30px 40px 60px}
+.package-section{margin-bottom:40px}
+.package-title{font-size:20px;font-weight:400;color:var(--primary-color,#a67f34);margin-bottom:4px;padding-bottom:8px;border-bottom:1px solid rgba(166,127,52,.15)}
+.package-count{font-size:11.5px;color:#9a8a63;margin-bottom:16px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.card{background:rgba(255,255,255,.35);border:1px solid rgba(166,127,52,.12);overflow:hidden;display:flex;flex-direction:column}
+.thumb{aspect-ratio:16/9;background:linear-gradient(135deg,rgba(166,127,52,.15),rgba(166,127,52,.05));display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
+.thumb video{width:100%;height:100%;object-fit:cover;display:none}
+.play-icon{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;color:var(--primary-color,#a67f34);font-size:20px}
+.placeholder-label{position:absolute;bottom:8px;right:8px;font-size:9px;letter-spacing:.06em;text-transform:uppercase;background:rgba(156,47,47,.85);color:#fff;padding:3px 8px;border-radius:2px}
+.card.has-video .placeholder-label{display:none}
+.card-body{padding:14px 16px;flex:1;display:flex;flex-direction:column}
+.card-title{font-size:14.5px;color:#5c4a20;margin-bottom:6px;font-weight:600}
+.card-desc{font-size:12px;color:#9a8a63;line-height:1.5;flex:1}
+.card-meta{font-size:10.5px;color:#b0a179;margin-top:10px;text-transform:uppercase;letter-spacing:.04em}
+
+.upcoming-tag{display:inline-block;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;background:rgba(166,127,52,.12);color:#8f7643;border-radius:10px;margin-left:6px}
+
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal-backdrop.open{display:flex}
+.modal-video{max-width:900px;width:100%;background:#000}
+.modal-video video{width:100%;display:block}
+.modal-close{position:absolute;top:20px;right:30px;color:#fff;font-size:28px;cursor:pointer;background:none;border:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">VIDEOGUIDE</div>
+  <p class="subtitle">Una guida video per ogni funzione del gestionale — dal caricamento del primo immobile alla generazione di un dossier professionale.</p>
+</div>
+
+<div class="filters" id="filters"></div>
+
+<div class="container" id="catalogContainer"></div>
+
+<div class="modal-backdrop" id="videoModal">
+  <button class="modal-close" onclick="closeVideoModal()">&times;</button>
+  <div class="modal-video"><video id="modalVideoPlayer" controls></video></div>
+</div>
+
+<script>
+/* ============================================================================
+   CATALOGO — per collegare un video, aggiungi "src" alla voce corrispondente
+   (percorso o URL del file .mp4). Le voci senza "src" mostrano il segnaposto
+   "Video in arrivo" e restano cliccabili solo quando il campo è compilato.
+   ============================================================================ */
+const CATALOG = [
+  { package: "Base", items: [
+    { title: "Opportunità — gestire gli immobili", desc: "Come aggiungere, filtrare e seguire ogni immobile in portafoglio.", duration: "4-5 min", src: "" },
+    { title: "Clienti — Investitori e Venditori", desc: "Come classificare un cliente come investitore, venditore o entrambi.", duration: "4 min", src: "" },
+    { title: "Statistiche", desc: "Il quadro generale del portafoglio a colpo d'occhio.", duration: "2-3 min", src: "" },
+  ]},
+  { package: "Calendario", items: [
+    { title: "Calendario Collaboratori", desc: "Appuntamenti, sincronizzazione Google/iCloud, assegnazione al team.", duration: "5 min", src: "" },
+  ]},
+  { package: "Social", items: [
+    { title: "Composer Social", desc: "Creare e pubblicare post social a partire da un'opportunità.", duration: "4 min", src: "" },
+    { title: "Gestione Pubblicità", desc: "Campagne Meta Ads collegate ai tuoi immobili.", duration: "4 min", src: "" },
+    { title: "Test A/B Meta Ads", desc: "Confrontare due varianti di annuncio prima di investire il budget pieno.", duration: "3 min", src: "" },
+  ]},
+  { package: "Notifiche", items: [
+    { title: "Notifiche Broadcast", desc: "Mandare un messaggio push a tutti gli iscritti in un clic.", duration: "3 min", src: "" },
+  ]},
+  { package: "Discovery", items: [
+    { title: "Fonti Dati", desc: "Le sorgenti automatiche che alimentano le informazioni territoriali.", duration: "3 min", src: "" },
+    { title: "Foto Destinazioni", desc: "La libreria fotografica del territorio per arricchire i dossier.", duration: "2-3 min", src: "" },
+    { title: "Dati Verificati", desc: "Correggere a mano un dato automatico, con priorità permanente.", duration: "3 min", src: "" },
+    { title: "Motore Discovery Intelligence", desc: "Anteprima della suite di 14 motori di analisi territoriale in arrivo.", duration: "2 min", src: "", upcoming: true },
+  ]},
+  { package: "Valutazioni AI", items: [
+    { title: "Valutazioni Immobiliari", desc: "Generare una valutazione assistita dall'AI, dal dato catastale al report finale.", duration: "5 min", src: "" },
+  ]},
+  { package: "Comunicazioni", items: [
+    { title: "Comunicazioni Email", desc: "Inviare email singole o in blocco a clienti selezionati.", duration: "3 min", src: "" },
+  ]},
+  { package: "App", items: [
+    { title: "Anteprima Responsive", desc: "Vedere come appare il sito su telefono, tablet e desktop.", duration: "2 min", src: "" },
+  ]},
+  { package: "Eventi & CRM avanzato", items: [
+    { title: "Eventi", desc: "Organizzare open house e serate investitori, con iscritti automatici.", duration: "3 min", src: "" },
+    { title: "Mandati di Ricerca", desc: "Tracciare le richieste degli investitori e collegarle alle opportunità giuste.", duration: "3-4 min", src: "" },
+    { title: "Capital Partners", desc: "L'area riservata agli investitori istituzionali.", duration: "3 min", src: "" },
+  ]},
+  { package: "Dossier & Report", items: [
+    { title: "Dossier & Report Investimento", desc: "Generare, tradurre e inviare un dossier professionale completo.", duration: "5-6 min", src: "" },
+  ]},
+  { package: "Portali Immobiliari", items: [
+    { title: "Pubblicare su Immobiliare.it e Idealista", desc: "Come collegare le credenziali del portale e pubblicare un'opportunità con un clic. Immobiliare.it copre automaticamente anche Subito.it.", duration: "4 min", src: "" },
+  ]},
+  { package: "Amministrazione", items: [
+    { title: "Utenti e Collaboratori", desc: "Creare account per colleghi e collaboratori.", duration: "3 min", src: "" },
+    { title: "Ruoli e Permessi", desc: "Decidere chi vede e chi modifica ogni area del gestionale.", duration: "4 min", src: "" },
+    { title: "Impostazioni Sito e Aspetto", desc: "Personalizzare colori, font e sfondo con il proprio brand.", duration: "4 min", src: "" },
+    { title: "Moduli e Pacchetti", desc: "Accendere e spegnere le funzioni in base a cosa è stato attivato.", duration: "3 min", src: "" },
+    { title: "Richieste", desc: "Gestire le richieste di contatto arrivate dal sito pubblico.", duration: "2 min", src: "" },
+    { title: "Attivazione Licenza", desc: "Il primo passo alla prima apertura del sito.", duration: "2 min", src: "" },
+  ]},
+];
+
+function esc(v){ return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function render(activePackage){
+  const container = document.getElementById("catalogContainer");
+  container.innerHTML = CATALOG
+    .filter(section => activePackage === "Tutti" || section.package === activePackage)
+    .map(section => `
+      <div class="package-section">
+        <div class="package-title">${esc(section.package)}</div>
+        <div class="package-count">${section.items.length} video</div>
+        <div class="grid">
+          ${section.items.map(item => `
+            <div class="card ${item.src ? "has-video" : ""}">
+              <div class="thumb" ${item.src ? `onclick="playVideo('${esc(item.src)}')"` : ""}>
+                <div class="play-icon">&#9658;</div>
+                ${!item.src ? '<div class="placeholder-label">Video in arrivo</div>' : ""}
+              </div>
+              <div class="card-body">
+                <div class="card-title">${esc(item.title)}${item.upcoming ? '<span class="upcoming-tag">Funzione futura</span>' : ""}</div>
+                <div class="card-desc">${esc(item.desc)}</div>
+                <div class="card-meta">${esc(item.duration)}</div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `).join("");
+}
+
+function renderFilters(){
+  const packages = ["Tutti", ...CATALOG.map(s => s.package)];
+  document.getElementById("filters").innerHTML = packages.map((p,i) =>
+    `<button class="filter-btn ${i===0?"active":""}" onclick="setFilter('${esc(p)}', this)">${esc(p)}</button>`
+  ).join("");
+}
+
+window.setFilter = function(pkg, btn){
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  render(pkg);
+};
+
+window.playVideo = function(src){
+  const modal = document.getElementById("videoModal");
+  const player = document.getElementById("modalVideoPlayer");
+  player.src = src;
+  modal.classList.add("open");
+  player.play();
+};
+
+window.closeVideoModal = function(){
+  const modal = document.getElementById("videoModal");
+  const player = document.getElementById("modalVideoPlayer");
+  player.pause();
+  player.src = "";
+  modal.classList.remove("open");
+};
+
+renderFilters();
+render("Tutti");
+</script>
+
+</body>
+</html>

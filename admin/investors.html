@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investitori | DOMINUS Admin</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%}
+body{
+  background:var(--page-bg-color,#f4ecdf);
+  font-family:"Avenir Next","Helvetica Neue",Arial,sans-serif;
+  color:var(--text-color,#7f6430);
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  background:
+    radial-gradient(circle at center,rgba(255,255,255,.72) 0%,rgba(255,255,255,.34) 38%,rgba(244,236,223,.06) 72%),
+    var(--page-bg-color,#f4ecdf);
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:
+    none,
+    none,
+    none;
+  background-size:230px 199px;
+  opacity:.30;
+}
+.header{
+  padding:30px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(166,127,52,.12);
+  background:rgba(244,236,223,.72);
+  backdrop-filter:blur(14px);
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+.logo{
+  text-decoration:none;
+  color:var(--primary-color,#a67f34);
+}
+.logo-main{
+  font-size:24px;
+  font-weight:600;
+  letter-spacing:.35em;
+}
+.logo-sub{
+  margin-top:6px;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.18em;
+  color:#a58139;
+}
+.header-actions{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.header-actions a,
+.logout{
+  padding:10px 20px;
+  border:1px solid rgba(166,127,52,.25);
+  background:rgba(255,255,255,.25);
+  cursor:pointer;
+  color:var(--primary-color,#a67f34);
+  text-decoration:none;
+  font-size:12px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.header-actions a:hover,
+.logout:hover{
+  background:var(--primary-color,#a67f34);
+  color:#fff;
+}
+.container{
+  max-width:1500px;
+  margin:auto;
+  padding:40px;
+}
+.kicker{
+  font-size:11px;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:#9a793c;
+  margin-bottom:12px;
+}
+.title-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:22px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+.title{
+  font-size:42px;
+  font-weight:200;
+  letter-spacing:.05em;
+  color:var(--primary-color,#a67f34);
+}
+.subtitle{
+  font-size:15px;
+  line-height:1.8;
+  color:#8f7643;
+  max-width:860px;
+  margin-bottom:28px;
+}
+.primary-link{
+  display:inline-block;
+  padding:14px 22px;
+  border:1px solid rgba(166,127,52,.42);
+  background:var(--primary-color,#a67f34);
+  color:#fffaf0;
+  text-decoration:none;
+  text-transform:uppercase;
+  font-size:11px;
+  letter-spacing:.18em;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:28px;
+}
+.stat{
+  min-height:130px;
+  padding:22px;
+  border:1px solid rgba(166,127,52,.18);
+  background:rgba(255,255,255,.22);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.stat-label{
+  font-size:10px;
+  line-height:1.5;
+  letter-spacing:.20em;
+  text-transform:uppercase;
+  color:#8f7643;
+}
+.stat-value{
+  font-size:44px;
+  line-height:1;
+  font-weight:200;
+  color:var(--primary-color,#a67f34);
+}
+.toolbar{
+  display:grid;
+  grid-template-columns:1.4fr repeat(4,.8fr);
+  gap:12px;
+  margin-bottom:24px;
+}
+.search,
+.filter{
+  padding:14px 16px;
+  border:1px solid rgba(166,127,52,.22);
+  background:rgba(255,255,255,.25);
+  color:var(--text-color,#7f6430);
+  outline:none;
+  font-size:14px;
+  font-family:inherit;
+}
+.table-wrapper{
+  background:rgba(255,255,255,.20);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(166,127,52,.15);
+  overflow:auto;
+  box-shadow:0 24px 70px rgba(127,100,48,.07);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:1280px;
+}
+th{
+  text-align:left;
+  padding:18px;
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  border-bottom:1px solid rgba(166,127,52,.15);
+  white-space:nowrap;
+}
+td{
+  padding:18px;
+  border-bottom:1px solid rgba(166,127,52,.08);
+  vertical-align:top;
+  font-size:14px;
+  line-height:1.6;
+}
+.name{
+  color:var(--primary-color,#a67f34);
+  font-size:17px;
+  margin-bottom:4px;
+}
+.muted{
+  color:#8f7643;
+  font-size:12px;
+  line-height:1.6;
+}
+.badge{
+  display:inline-block;
+  padding:7px 10px;
+  border:1px solid rgba(166,127,52,.25);
+  background:rgba(255,255,255,.22);
+  color:var(--primary-color,#a67f34);
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin:2px 4px 2px 0;
+  white-space:nowrap;
+}
+.badge.vip{color:#1f1a12;border-color:rgba(166,127,52,.55);background:linear-gradient(135deg,rgba(166,127,52,.24),rgba(255,255,255,.28))}
+.badge.active{color:#4f7f45;border-color:rgba(79,127,69,.34);background:rgba(79,127,69,.08)}
+.badge.inactive{color:#9c2f2f;border-color:rgba(156,47,47,.35);background:rgba(156,47,47,.07)}
+.badge.optin{color:#4f7f45;border-color:rgba(79,127,69,.34);background:rgba(79,127,69,.08)}
+.badge.noopt{color:#8f5b28;border-color:rgba(143,91,40,.34);background:rgba(143,91,40,.08)}
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.actions a,
+.actions button{
+  padding:9px 12px;
+  border:1px solid rgba(166,127,52,.25);
+  background:rgba(255,255,255,.25);
+  cursor:pointer;
+  color:var(--primary-color,#a67f34);
+  text-decoration:none;
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.actions .danger{
+  color:#9c2f2f;
+  border-color:rgba(156,47,47,.35);
+}
+.status{
+  margin-bottom:18px;
+  min-height:20px;
+  font-size:13px;
+}
+.success{color:#4f7f45}
+.error{color:#9c2f2f}
+.empty{
+  padding:40px;
+  text-align:center;
+  opacity:.7;
+}
+@media(max-width:1050px){
+  .stats{grid-template-columns:1fr 1fr}
+  .toolbar{grid-template-columns:1fr 1fr}
+}
+@media(max-width:700px){
+  .header{flex-direction:column;gap:18px}
+  .header-actions{justify-content:center}
+  .container{padding:28px 22px}
+  .stats,.toolbar{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <a href="../index.html" class="logo">
+    <div class="logo-main">DOMINUS</div>
+    
+  </a>
+
+  <div class="header-actions">
+    <a href="dashboard.html" data-i18n="nav_dashboard">Dashboard</a>
+    <a href="opportunities.html" data-i18n="nav_opportunities">Opportunità</a>
+    <a href="events.html" data-i18n="nav_events">Eventi</a>
+    <a href="investors.html" data-i18n="nav_investors">Investitori</a>
+    <a href="capital-partners.html" data-i18n="nav_capital_partners" id="capitalPartnersLink" style="display:none">Capital Partners</a>
+    <a href="users.html" id="usersLink" data-i18n="nav_users">Utenti</a>
+    <button class="logout" id="logoutBtn" data-i18n="logout">Logout</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="kicker" data-i18n="kicker">Investor Relationship Management</div>
+
+  <div class="title-row">
+    <div>
+      <h1 class="title" data-i18n="title">Investitori</h1>
+    </div>
+    <a class="primary-link" href="investor-form.html" data-i18n="btn_new_investor">Nuovo Investitore</a>
+  </div>
+
+  <p class="subtitle" data-i18n="subtitle">
+    Anagrafica investitori DOMINUS con preferenze di budget, aree, categorie, lingua e consenso per inviti email / WhatsApp.
+  </p>
+
+  <div id="status" class="status"></div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label" data-i18n="stat_total">Investitori<br>Totali</div>
+      <div class="stat-value" id="totalCount">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label" data-i18n="stat_email_optin">Email<br>Opt-in</div>
+      <div class="stat-value" id="emailCount">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label" data-i18n="stat_whatsapp_optin">WhatsApp<br>Opt-in</div>
+      <div class="stat-value" id="whatsappCount">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label" data-i18n="stat_vip_pipeline">VIP / Active<br>Pipeline</div>
+      <div class="stat-value" id="vipCount">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label" data-i18n="stat_sellers">Venditori</div>
+      <div class="stat-value" id="sellerCount">0</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input id="searchInput" class="search" data-i18n-placeholder="ph_search" placeholder="Cerca nome, email, società, paese, zona...">
+
+    <select id="statusFilter" class="filter">
+      <option value="" data-i18n="filter_all_status">Tutti gli stati</option>
+      <option value="active" data-i18n="filter_active">Attivi</option>
+      <option value="vip" data-i18n="filter_vip">VIP</option>
+      <option value="inactive" data-i18n="filter_inactive">Inattivi</option>
+    </select>
+
+    <select id="categoryFilter" class="filter">
+      <option value="" data-i18n="filter_all_categories">Tutte le categorie</option>
+    </select>
+
+    <select id="areaFilter" class="filter">
+      <option value="" data-i18n="filter_all_areas">Tutte le aree</option>
+    </select>
+
+    <select id="channelFilter" class="filter">
+      <option value="" data-i18n="filter_all_consents">Tutti i consensi</option>
+      <option value="email" data-i18n="filter_email_optin">Email opt-in</option>
+      <option value="whatsapp" data-i18n="filter_whatsapp_optin">WhatsApp opt-in</option>
+      <option value="both" data-i18n="filter_email_whatsapp">Email + WhatsApp</option>
+    </select>
+
+    <select id="clientTypeFilter" class="filter">
+      <option value="" data-i18n="filter_all_client_types">Tutti i tipi cliente</option>
+      <option value="investor" data-i18n="filter_investor_only">Solo investitore</option>
+      <option value="seller" data-i18n="filter_seller_only">Solo venditore</option>
+      <option value="both" data-i18n="filter_investor_seller">Investitore + Venditore</option>
+    </select>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="th_investor">Investitore</th>
+          <th data-i18n="th_contacts">Contatti</th>
+          <th data-i18n="th_profile">Profilo</th>
+          <th data-i18n="th_budget">Budget</th>
+          <th data-i18n="th_areas">Aree</th>
+          <th data-i18n="th_categories">Categorie</th>
+          <th data-i18n="th_consents">Consensi</th>
+          <th data-i18n="th_actions">Azioni</th>
+        </tr>
+      </thead>
+      <tbody id="investorsTable">
+        <tr><td colspan="8" class="empty" data-i18n="loading">Caricamento investitori...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/theme-loader.js"></script>
+<script src="../js/site-branding.js"></script>
+
+<script>
+const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const table = document.getElementById("investorsTable");
+const statusBox = document.getElementById("status");
+const searchInput = document.getElementById("searchInput");
+const statusFilter = document.getElementById("statusFilter");
+const categoryFilter = document.getElementById("categoryFilter");
+const areaFilter = document.getElementById("areaFilter");
+const channelFilter = document.getElementById("channelFilter");
+const clientTypeFilter = document.getElementById("clientTypeFilter");
+
+let currentUser = null;
+let currentProfile = null;
+let allInvestors = [];
+let currentUserLanguage = "it";
+
+/* ---- i18n: stesso meccanismo delle altre pagine admin (vedi users.html). loadProfile() qui
+   caricava gia' il profilo per il controllo ruolo admin; estesa per includere anche "language"
+   invece di una chiamata separata. categoryFilter/areaFilter sono ricostruiti dinamicamente da
+   buildFilters() con dati reali (nomi di categorie/aree salvati dagli investitori), quindi NON
+   sono nel dizionario tradotto -- sono dati, non interfaccia. ---- */
+var UI_STRINGS = {
+  nav_dashboard:"Dashboard", nav_opportunities:"Opportunità", nav_events:"Eventi", nav_investors:"Investitori",
+  nav_capital_partners:"Capital Partners",
+  nav_users:"Utenti", logout:"Logout",
+  kicker:"Investor Relationship Management", title:"Investitori", btn_new_investor:"Nuovo Investitore",
+  subtitle:"Anagrafica investitori DOMINUS con preferenze di budget, aree, categorie, lingua e consenso per inviti email / WhatsApp.",
+  stat_total:"Investitori<br>Totali", stat_email_optin:"Email<br>Opt-in", stat_whatsapp_optin:"WhatsApp<br>Opt-in",
+  stat_vip_pipeline:"VIP / Active<br>Pipeline", stat_sellers:"Venditori",
+  ph_search:"Cerca nome, email, società, paese, zona...",
+  filter_all_status:"Tutti gli stati", filter_active:"Attivi", filter_vip:"VIP", filter_inactive:"Inattivi",
+  filter_all_categories:"Tutte le categorie", filter_all_areas:"Tutte le aree",
+  filter_all_consents:"Tutti i consensi", filter_email_optin:"Email opt-in", filter_whatsapp_optin:"WhatsApp opt-in",
+  filter_email_whatsapp:"Email + WhatsApp",
+  filter_all_client_types:"Tutti i tipi cliente", filter_investor_only:"Solo investitore", filter_seller_only:"Solo venditore",
+  filter_investor_seller:"Investitore + Venditore",
+  client_type_investor:"Investitore", client_type_seller:"Venditore",
+  seller_status_da_contattare:"Da contattare", seller_status_in_trattativa:"In trattativa",
+  seller_status_mandato_firmato:"Mandato firmato", seller_status_venduto:"Venduto",
+  th_investor:"Investitore", th_contacts:"Contatti", th_profile:"Profilo", th_budget:"Budget",
+  th_areas:"Aree", th_categories:"Categorie", th_consents:"Consensi", th_actions:"Azioni",
+  loading:"Caricamento investitori...",
+  budget_from:"Da ", budget_to:"Fino a ", budget_not_indicated:"Non indicato",
+  type_private:"Private Investor", type_family_office:"Family Office", type_real_estate_operator:"Real Estate Operator",
+  type_hospitality_group:"Hospitality Group", type_fund:"Investment Fund", type_advisor:"Advisor", type_other:"Altro",
+  type_default:"Investor",
+  status_active:"Attivo", status_vip:"VIP", status_inactive:"Inattivo",
+  msg_profile_not_found:"Profilo utente non trovato.",
+  msg_access_denied:"Accesso riservato agli admin.", empty_unauthorized:"Accesso non autorizzato.",
+  loading_error:"Errore caricamento investitori.",
+  empty_none:"Nessun investitore trovato.",
+  lang_prefix:"Lingua: ",
+  action_edit:"Modifica", action_email:"Email", action_whatsapp:"WhatsApp", action_delete:"Elimina",
+  confirm_delete_investor:"Eliminare definitivamente questo investitore?",
+  msg_deleting:"Eliminazione investitore...", msg_deleted:"Investitore eliminato."
+};
+
+var LANGUAGE_LABELS = { it:"Italiano", en:"English", fr:"Fran\u00e7ais", de:"Deutsch", es:"Espa\u00f1ol", ar:"\u0627\u0644\u0639\u0631\u0628\u064a\u0629" };
+var T = UI_STRINGS;
+
+function i18nCacheKey(lang){ return "immonova_i18n_investors_" + lang + "_v1"; }
+
+async function loadTranslatedStrings(lang){
+  if(lang === "it") return UI_STRINGS;
+  var cacheKey = i18nCacheKey(lang);
+  try{
+    var cached = localStorage.getItem(cacheKey);
+    if(cached){ var parsed = JSON.parse(cached); if(parsed && typeof parsed === "object") return parsed; }
+  }catch(e){}
+
+  var keys = Object.keys(UI_STRINGS);
+  var texts = keys.map(function(k){ return UI_STRINGS[k]; });
+
+  var result = await client.functions.invoke("translate-public-content", {
+    body:{
+      language: lang,
+      source_language: "it",
+      context: "DOMINUS luxury real estate investment website. Admin page listing investor CRM profiles: stats, filters, table headers, badges, action buttons.",
+      texts: texts
+    }
+  });
+
+  if(result.error || !result.data || !result.data.success || !Array.isArray(result.data.translations)){
+    console.error("Traduzione investors non riuscita, uso italiano come fallback:", result.error || result.data);
+    return UI_STRINGS;
+  }
+
+  var translations = result.data.translations;
+  var translated = {};
+  keys.forEach(function(k, i){ translated[k] = translations[i] != null ? translations[i] : UI_STRINGS[k]; });
+  try{ localStorage.setItem(cacheKey, JSON.stringify(translated)); }catch(e){}
+  return translated;
+}
+
+function renderTranslatedStaticText(){
+  document.querySelectorAll("[data-i18n]").forEach(function(el){
+    var key = el.getAttribute("data-i18n");
+    if(T[key]) el.innerHTML = T[key];
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(function(el){
+    var key = el.getAttribute("data-i18n-placeholder");
+    if(T[key]) el.setAttribute("placeholder", T[key]);
+  });
+}
+
+async function applyLanguage(lang){
+  currentUserLanguage = lang || "it";
+  document.documentElement.lang = currentUserLanguage;
+  T = await loadTranslatedStrings(currentUserLanguage);
+  renderTranslatedStaticText();
+}
+
+
+function esc(v){
+  return String(v ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function setStatus(message,type){
+  statusBox.className = "status " + (type || "");
+  statusBox.textContent = message || "";
+}
+
+function fmtBudget(min,max){
+  const f = n => new Intl.NumberFormat(currentUserLanguage === "it" ? "it-IT" : currentUserLanguage, {
+    style:"currency",
+    currency:"EUR",
+    maximumFractionDigits:0
+  }).format(Number(n));
+
+  if(min && max) return f(min) + " - " + f(max);
+  if(min) return T.budget_from + f(min);
+  if(max) return T.budget_to + f(max);
+  return T.budget_not_indicated;
+}
+
+function typeLabel(type){
+  const map = {
+    private:T.type_private,
+    private_investor:T.type_private,
+    family_office:T.type_family_office,
+    real_estate_operator:T.type_real_estate_operator,
+    hospitality_group:T.type_hospitality_group,
+    fund:T.type_fund,
+    advisor:T.type_advisor,
+    other:T.type_other
+  };
+  return map[type] || type || T.type_default;
+}
+
+function statusLabel(status){
+  const map = {
+    active:T.status_active,
+    vip:T.status_vip,
+    inactive:T.status_inactive
+  };
+  return map[status] || status || T.status_active;
+}
+
+function sellerStatusLabel(status){
+  const map = {
+    da_contattare:T.seller_status_da_contattare,
+    in_trattativa:T.seller_status_in_trattativa,
+    mandato_firmato:T.seller_status_mandato_firmato,
+    venduto:T.seller_status_venduto
+  };
+  return map[status] || status || "";
+}
+
+async function checkAuth(){
+  const { data:{ session }, error } = await client.auth.getSession();
+
+  if(error || !session){
+    window.location.href = "login.html";
+    return false;
+  }
+
+  currentUser = session.user;
+  return true;
+}
+
+async function loadProfile(){
+  var result = await client
+    .from("profiles")
+    .select("id,email,full_name,role,language")
+    .eq("id", currentUser.id)
+    .single();
+
+  if(result.error){
+    /* Stesso fix delle altre pagine admin: se la colonna "language" non e' stata ancora
+       migrata su Supabase, non trattare l'errore come fatale -- riprova senza quella colonna. */
+    var looksLikeMissingLanguageColumn = /language/i.test(result.error.message || "") || result.error.code === "42703";
+    if(looksLikeMissingLanguageColumn){
+      console.warn("Colonna profiles.language non trovata: esegui la migrazione SQL (alter table profiles add column if not exists language text not null default 'it';). Interfaccia mostrata in italiano nel frattempo.");
+      result = await client.from("profiles").select("id,email,full_name,role").eq("id", currentUser.id).single();
+    }
+  }
+
+  if(result.error || !result.data){
+    await applyLanguage("it");
+    setStatus(T.msg_profile_not_found, "error");
+    return false;
+  }
+
+  currentProfile = result.data;
+  await applyLanguage(currentProfile.language || "it");
+
+  if(currentProfile.role !== "admin"){
+    setStatus(T.msg_access_denied, "error");
+    table.innerHTML = '<tr><td colspan="8" class="empty">'+esc(T.empty_unauthorized)+'</td></tr>';
+    return false;
+  }
+
+  return true;
+}
+
+async function loadInvestors(){
+  setStatus("", "");
+
+  const { data, error } = await client
+    .from("investors")
+    .select("*, investor_categories(category), investor_areas(area), investor_seller_properties(opportunity_id)")
+    .order("created_at", { ascending:false });
+
+  if(error){
+    console.error(error);
+    table.innerHTML = '<tr><td colspan="8" class="empty">'+esc(T.loading_error)+'</td></tr>';
+    setStatus(error.message, "error");
+    return;
+  }
+
+  allInvestors = data || [];
+  buildFilters();
+  renderStats();
+  applyFilters();
+}
+
+function buildFilters(){
+  const categories = new Set();
+  const areas = new Set();
+
+  allInvestors.forEach(inv => {
+    (inv.investor_categories || []).forEach(row => {
+      if(row.category) categories.add(row.category);
+    });
+    (inv.investor_areas || []).forEach(row => {
+      if(row.area) areas.add(row.area);
+    });
+  });
+
+  categoryFilter.innerHTML = '<option value="">'+esc(T.filter_all_categories)+'</option>' +
+    [...categories].sort().map(v => '<option value="'+esc(v)+'">'+esc(v)+'</option>').join("");
+
+  areaFilter.innerHTML = '<option value="">'+esc(T.filter_all_areas)+'</option>' +
+    [...areas].sort().map(v => '<option value="'+esc(v)+'">'+esc(v)+'</option>').join("");
+}
+
+function renderStats(){
+  document.getElementById("totalCount").textContent = allInvestors.length;
+  document.getElementById("emailCount").textContent = allInvestors.filter(i => i.email_opt_in).length;
+  document.getElementById("whatsappCount").textContent = allInvestors.filter(i => i.whatsapp_opt_in).length;
+  document.getElementById("vipCount").textContent = allInvestors.filter(i => i.status === "vip" || i.status === "active").length;
+  document.getElementById("sellerCount").textContent = allInvestors.filter(i => i.is_seller).length;
+}
+
+function investorSearchText(inv){
+  const categories = (inv.investor_categories || []).map(x => x.category).join(" ");
+  const areas = (inv.investor_areas || []).map(x => x.area).join(" ");
+
+  return [
+    inv.first_name,
+    inv.last_name,
+    inv.company,
+    inv.email,
+    inv.phone,
+    inv.whatsapp,
+    inv.country,
+    inv.city,
+    inv.preferred_language,
+    inv.investor_type,
+    inv.status,
+    inv.seller_status,
+    categories,
+    areas,
+    inv.notes
+  ].join(" ").toLowerCase();
+}
+
+function applyFilters(){
+  const query = searchInput.value.trim().toLowerCase();
+  const status = statusFilter.value;
+  const category = categoryFilter.value;
+  const area = areaFilter.value;
+  const channel = channelFilter.value;
+  const clientType = clientTypeFilter.value;
+
+  const filtered = allInvestors.filter(inv => {
+    const matchesSearch = !query || investorSearchText(inv).includes(query);
+    const matchesStatus = !status || inv.status === status;
+
+    const categories = (inv.investor_categories || []).map(x => x.category);
+    const areas = (inv.investor_areas || []).map(x => x.area);
+
+    const matchesCategory = !category || categories.includes(category);
+    const matchesArea = !area || areas.includes(area);
+
+    let matchesChannel = true;
+    if(channel === "email") matchesChannel = !!inv.email_opt_in;
+    if(channel === "whatsapp") matchesChannel = !!inv.whatsapp_opt_in;
+    if(channel === "both") matchesChannel = !!inv.email_opt_in && !!inv.whatsapp_opt_in;
+
+    const isInvestor = inv.is_investor !== false;
+    const isSeller = !!inv.is_seller;
+    let matchesClientType = true;
+    if(clientType === "investor") matchesClientType = isInvestor && !isSeller;
+    if(clientType === "seller") matchesClientType = isSeller && !isInvestor;
+    if(clientType === "both") matchesClientType = isInvestor && isSeller;
+
+    return matchesSearch && matchesStatus && matchesCategory && matchesArea && matchesChannel && matchesClientType;
+  });
+
+  renderTable(filtered);
+}
+
+function renderBadges(values){
+  if(!values || !values.length){
+    return '<span class="muted">-</span>';
+  }
+
+  return values.map(v => '<span class="badge">'+esc(v)+'</span>').join("");
+}
+
+function renderTable(data){
+  if(!data.length){
+    table.innerHTML = '<tr><td colspan="8" class="empty">'+esc(T.empty_none)+'</td></tr>';
+    return;
+  }
+
+  table.innerHTML = data.map(inv => {
+    const categories = (inv.investor_categories || []).map(x => x.category).filter(Boolean);
+    const areas = (inv.investor_areas || []).map(x => x.area).filter(Boolean);
+    const statusClass = inv.status === "vip" ? "vip" : (inv.status === "inactive" ? "inactive" : "active");
+
+    return `
+      <tr>
+        <td>
+          <div class="name">${esc((inv.first_name || "") + " " + (inv.last_name || ""))}</div>
+          <div class="muted">${esc(inv.company || "")}</div>
+          <span class="badge ${statusClass}">${esc(statusLabel(inv.status))}</span>
+          ${inv.is_investor !== false ? '<span class="badge">'+esc(T.client_type_investor)+'</span>' : ""}
+          ${inv.is_seller ? '<span class="badge">'+esc(T.client_type_seller)+(inv.seller_status ? " · "+esc(sellerStatusLabel(inv.seller_status)) : "")+'</span>' : ""}
+        </td>
+
+        <td>
+          <div>${esc(inv.email || "-")}</div>
+          <div class="muted">${esc(inv.phone || "")}</div>
+          <div class="muted">${inv.whatsapp ? "WA: " + esc(inv.whatsapp) : ""}</div>
+        </td>
+
+        <td>
+          <span class="badge">${esc(typeLabel(inv.investor_type))}</span>
+          <div class="muted">${esc(inv.country || "")}${inv.city ? " · " + esc(inv.city) : ""}</div>
+          <div class="muted">${esc(T.lang_prefix)}${esc((inv.preferred_language || "it").toUpperCase())}</div>
+        </td>
+
+        <td>${esc(fmtBudget(inv.budget_min, inv.budget_max))}</td>
+
+        <td>${renderBadges(areas)}</td>
+
+        <td>${renderBadges(categories)}</td>
+
+        <td>
+          <span class="badge ${inv.email_opt_in ? "optin" : "noopt"}">Email ${inv.email_opt_in ? "OK" : "NO"}</span>
+          <span class="badge ${inv.whatsapp_opt_in ? "optin" : "noopt"}">WA ${inv.whatsapp_opt_in ? "OK" : "NO"}</span>
+        </td>
+
+        <td>
+          <div class="actions">
+            <a href="investor-form.html?id=${encodeURIComponent(inv.id)}">${esc(T.action_edit)}</a>
+            <a href="mailto:${encodeURIComponent(inv.email || "")}">${esc(T.action_email)}</a>
+            ${inv.whatsapp ? `<a href="https://wa.me/${encodeURIComponent(String(inv.whatsapp).replace(/[^0-9]/g,""))}" target="_blank">${esc(T.action_whatsapp)}</a>` : ""}
+            <button class="danger" onclick="deleteInvestor('${inv.id}')">${esc(T.action_delete)}</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+window.deleteInvestor = async function(id){
+  if(!confirm(T.confirm_delete_investor)){
+    return;
+  }
+
+  setStatus(T.msg_deleting, "");
+
+  const { error } = await client
+    .from("investors")
+    .delete()
+    .eq("id", id);
+
+  if(error){
+    setStatus(error.message, "error");
+    return;
+  }
+
+  setStatus(T.msg_deleted, "success");
+  await loadInvestors();
+};
+
+searchInput.addEventListener("input", applyFilters);
+statusFilter.addEventListener("change", applyFilters);
+categoryFilter.addEventListener("change", applyFilters);
+areaFilter.addEventListener("change", applyFilters);
+channelFilter.addEventListener("change", applyFilters);
+clientTypeFilter.addEventListener("change", applyFilters);
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await client.auth.signOut();
+  window.location.href = "../index.html";
+});
+
+/* ---- Il link "Capital Partners" è nascosto di default: compare solo se
+   questo utente ha accesso alla sezione riservata (proprietario o admin a
+   cui è stato concesso esplicitamente il permesso). Stesso controllo
+   applicato lato RLS su Supabase, qui serve solo per la UI. ---- */
+async function revealCapitalPartnersLinkIfAllowed(){
+  try{
+    const { data, error } = await client.rpc("has_capital_partners_access");
+    if(!error && data){
+      document.getElementById("capitalPartnersLink").style.display = "";
+    }
+  }catch(e){
+    console.warn("Verifica accesso Capital Partners non riuscita (non bloccante):", e);
+  }
+}
+
+(async function init(){
+  if(await checkAuth()){
+    const ok = await loadProfile();
+    if(ok){
+      await loadInvestors();
+      await revealCapitalPartnersLinkIfAllowed();
+    }
+  }
+})();
+</script>
+</body>
+</html>

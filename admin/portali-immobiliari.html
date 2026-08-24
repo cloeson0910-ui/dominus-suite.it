@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portali Immobiliari | Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%}
+body{background:var(--page-bg-color,#f4ecdf);font-family:var(--font-family,"Avenir Next","Helvetica Neue",Arial,sans-serif);color:var(--text-color,#7f6430)}
+
+.header{padding:30px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(166,127,52,.12)}
+.logo{font-size:24px;font-weight:300;letter-spacing:.35em;color:var(--primary-color,#a67f34)}
+.header-actions a{padding:10px 20px;border:1px solid rgba(166,127,52,.25);background:rgba(255,255,255,.25);color:var(--primary-color,#a67f34);text-decoration:none;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-family:inherit}
+
+.container{max-width:900px;margin:auto;padding:40px}
+.title{font-size:34px;font-weight:200;color:var(--primary-color,#a67f34);margin-bottom:8px}
+.subtitle{font-size:13.5px;line-height:1.7;color:#8f7643;max-width:700px;margin-bottom:30px}
+
+.note{background:rgba(166,127,52,.08);border-left:3px solid var(--primary-color,#a67f34);padding:14px 18px;font-size:12.5px;line-height:1.7;color:#7f6430;margin-bottom:28px}
+
+.portal-card{background:rgba(255,255,255,.25);border:1px solid rgba(166,127,52,.15);padding:22px 26px;margin-bottom:20px}
+.portal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.portal-title{font-size:17px;color:var(--primary-color,#a67f34)}
+.portal-status{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 9px;border-radius:10px}
+.portal-status.attivo{background:rgba(79,127,69,.15);color:#4f7f45}
+.portal-status.non-attivo{background:rgba(120,120,120,.12);color:#666}
+.portal-desc{font-size:12px;color:#9a8a63;margin-bottom:16px}
+
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#8f7643;margin-bottom:5px}
+.field input{width:100%;padding:9px 10px;border:1px solid rgba(166,127,52,.25);background:#fff;font-family:inherit;font-size:13px}
+
+.switch{position:relative;width:44px;height:24px;display:inline-block;vertical-align:middle;margin-right:10px}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:rgba(166,127,52,.25);transition:.2s;border-radius:24px}
+.slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:#fff;transition:.2s;border-radius:50%}
+input:checked + .slider{background:var(--primary-color,#a67f34)}
+input:checked + .slider:before{transform:translateX(20px)}
+
+.btn{padding:9px 18px;border:1px solid var(--primary-color,#a67f34);background:var(--primary-color,#a67f34);color:#fff;cursor:pointer;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-family:inherit}
+
+.log-table{width:100%;border-collapse:collapse;margin-top:10px}
+.log-table th,.log-table td{padding:8px 10px;text-align:left;font-size:12px;border-bottom:1px solid rgba(166,127,52,.1)}
+.log-table th{font-size:10px;text-transform:uppercase;color:#8f7643}
+.log-successo{color:#4f7f45}
+.log-errore{color:#9c2f2f}
+
+.status{margin-top:10px;font-size:13px;min-height:18px}
+.success{color:#4f7f45}
+.error{color:#9c2f2f}
+#accessDenied{display:none}
+</style>
+</head>
+<body>
+
+<header class="header">
+<div class="logo">ADMIN</div>
+<div class="header-actions"><a href="dashboard.html">Dashboard</a></div>
+</header>
+
+<div class="container">
+<h1 class="title">Portali Immobiliari</h1>
+<p class="subtitle">Collega il sito ai portali di annunci. Ogni agenzia usa il proprio contratto/credenziali — non sono condivise tra siti diversi.</p>
+
+<div class="note">
+<strong>Nota su Subito.it:</strong> non serve un'integrazione separata. Da aprile 2026, gli annunci pubblicati su Immobiliare.it vengono ripubblicati automaticamente anche su Subito, in 9 regioni (Lombardia, Lazio, Veneto, Piemonte, Emilia-Romagna, Toscana, Campania, Liguria, Umbria). Attivando Immobiliare.it qui sotto, copri anche Subito in quelle regioni.
+</div>
+
+<div id="accessDenied" class="status error">Questa pagina è riservata al super amministratore.</div>
+
+<div id="mainContent" style="display:none">
+
+  <div class="portal-card">
+    <div class="portal-head">
+      <div class="portal-title">Immobiliare.it <span style="font-size:11px;color:#9a8a63">(copre anche Subito.it)</span></div>
+      <span class="portal-status" id="statusImmobiliare">—</span>
+    </div>
+    <p class="portal-desc">Richiede username, password ed endpoint forniti dal supporto Immobiliare.it dopo l'attivazione del contratto agenzia.</p>
+    <label class="switch"><input type="checkbox" id="enabledImmobiliare" onchange="toggleEnabled('immobiliare_it', this.checked)"><span class="slider"></span></label>
+    <span style="font-size:12px">Attiva pubblicazione</span>
+    <div class="field" style="margin-top:14px"><label>Username</label><input id="immUsername"></div>
+    <div class="field"><label>Password</label><input id="immPassword" type="password"></div>
+    <div class="field"><label>Endpoint API (fornito da Immobiliare.it)</label><input id="immEndpoint" placeholder="https://..."></div>
+    <div class="field"><label>X-IMMO-SOURCE</label><input id="immSourceId"></div>
+    <div class="field"><label>Email agenzia (contatto annunci)</label><input id="immAgencyEmail" type="email"></div>
+    <button class="btn" onclick="saveCredentials('immobiliare_it')">Salva</button>
+    <div id="statusImm" class="status"></div>
+  </div>
+
+  <div class="portal-card">
+    <div class="portal-head">
+      <div class="portal-title">Idealista</div>
+      <span class="portal-status" id="statusIdealista">—</span>
+    </div>
+    <p class="portal-desc">Idealista non ha un'API self-service: bisogna richiedere l'attivazione al loro supporto tecnico, che fornisce le credenziali specifiche per l'agenzia. Finché non le hai, lascia questa sezione disattivata.</p>
+    <label class="switch"><input type="checkbox" id="enabledIdealista" onchange="toggleEnabled('idealista', this.checked)"><span class="slider"></span></label>
+    <span style="font-size:12px">Attiva pubblicazione (quando disponibile)</span>
+    <div class="field" style="margin-top:14px"><label>Credenziali (JSON fornito da Idealista)</label><input id="ideCredentials" placeholder='{"api_key":"...", "api_secret":"..."}'></div>
+    <button class="btn" onclick="saveCredentials('idealista')">Salva</button>
+    <div id="statusIde" class="status"></div>
+  </div>
+
+  <h3 style="margin:26px 0 10px;color:var(--primary-color,#a67f34);font-weight:400;font-size:16px">Ultime pubblicazioni</h3>
+  <table class="log-table">
+    <thead><tr><th>Opportunità</th><th>Portale</th><th>Esito</th><th>Quando</th></tr></thead>
+    <tbody id="logBody"></tbody>
+  </table>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/theme-loader.js"></script>
+
+<script>
+const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function esc(v){ return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+async function checkAuth(){
+  const { data:{ session } } = await client.auth.getSession();
+  if(!session){ window.location.href = "login.html"; return false; }
+  const permResult = await client.rpc("my_role_and_permissions");
+  if(permResult.error || !permResult.data || !permResult.data.is_super_admin){
+    document.getElementById("accessDenied").style.display = "block";
+    return false;
+  }
+  return true;
+}
+
+async function loadSettings(){
+  const { data, error } = await client.from("immonova_portal_settings").select("*");
+  if(error || !data) return;
+
+  const imm = data.find(d => d.portal_key === "immobiliare_it");
+  const ide = data.find(d => d.portal_key === "idealista");
+
+  if(imm){
+    document.getElementById("enabledImmobiliare").checked = imm.enabled;
+    document.getElementById("statusImmobiliare").textContent = imm.enabled ? "attivo" : "non attivo";
+    document.getElementById("statusImmobiliare").className = "portal-status " + (imm.enabled ? "attivo" : "non-attivo");
+    const c = imm.credentials || {};
+    document.getElementById("immUsername").value = c.username || "";
+    document.getElementById("immPassword").value = c.password || "";
+    document.getElementById("immEndpoint").value = c.endpoint || "";
+    document.getElementById("immSourceId").value = c.source_id || "";
+    document.getElementById("immAgencyEmail").value = c.agency_email || "";
+  }
+  if(ide){
+    document.getElementById("enabledIdealista").checked = ide.enabled;
+    document.getElementById("statusIdealista").textContent = ide.enabled ? "attivo" : "non attivo";
+    document.getElementById("statusIdealista").className = "portal-status " + (ide.enabled ? "attivo" : "non-attivo");
+    document.getElementById("ideCredentials").value = JSON.stringify(ide.credentials || {});
+  }
+}
+
+window.toggleEnabled = async function(portalKey, enabled){
+  await client.from("immonova_portal_settings").update({ enabled }).eq("portal_key", portalKey);
+  await loadSettings();
+};
+
+window.saveCredentials = async function(portalKey){
+  let credentials = {};
+  let statusEl;
+
+  if(portalKey === "immobiliare_it"){
+    statusEl = document.getElementById("statusImm");
+    credentials = {
+      username: document.getElementById("immUsername").value.trim(),
+      password: document.getElementById("immPassword").value,
+      endpoint: document.getElementById("immEndpoint").value.trim(),
+      source_id: document.getElementById("immSourceId").value.trim(),
+      agency_email: document.getElementById("immAgencyEmail").value.trim(),
+    };
+  } else {
+    statusEl = document.getElementById("statusIde");
+    try{ credentials = JSON.parse(document.getElementById("ideCredentials").value || "{}"); }
+    catch(e){ statusEl.textContent = "JSON non valido"; statusEl.className = "status error"; return; }
+  }
+
+  const { error } = await client.from("immonova_portal_settings").update({ credentials, updated_at: new Date().toISOString() }).eq("portal_key", portalKey);
+  if(error){ statusEl.textContent = "Errore: " + error.message; statusEl.className = "status error"; return; }
+  statusEl.textContent = "Salvato.";
+  statusEl.className = "status success";
+};
+
+async function loadLog(){
+  const { data, error } = await client
+    .from("immonova_portal_sync_log")
+    .select("*, opportunities(title)")
+    .order("synced_at", { ascending: false })
+    .limit(30);
+  if(error || !data){ return; }
+  document.getElementById("logBody").innerHTML = data.map(row => `
+    <tr>
+      <td>${esc(row.opportunities?.title || row.opportunity_id)}</td>
+      <td>${esc(row.portal_key)}</td>
+      <td class="log-${row.status}">${esc(row.status)}${row.message ? " — "+esc(row.message) : ""}</td>
+      <td>${new Date(row.synced_at).toLocaleString("it-IT")}</td>
+    </tr>
+  `).join("") || '<tr><td colspan="4">Nessuna pubblicazione ancora.</td></tr>';
+}
+
+(async function init(){
+  const ok = await checkAuth();
+  if(!ok) return;
+  document.getElementById("mainContent").style.display = "block";
+  await loadSettings();
+  await loadLog();
+})();
+</script>
+
+</body>
+</html>

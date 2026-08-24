@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruoli e Permessi | Admin</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%}
+body{background:var(--page-bg-color,#f4ecdf);font-family:var(--font-family,"Avenir Next","Helvetica Neue",Arial,sans-serif);color:var(--text-color,#7f6430)}
+
+.header{padding:30px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(166,127,52,.12)}
+.logo{font-size:24px;font-weight:300;letter-spacing:.35em;color:var(--primary-color,#a67f34)}
+.header-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.header-actions a,.logout{padding:10px 20px;border:1px solid rgba(166,127,52,.25);background:rgba(255,255,255,.25);cursor:pointer;color:var(--primary-color,#a67f34);text-decoration:none;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-family:inherit}
+
+.container{max-width:1000px;margin:auto;padding:40px}
+.title{font-size:38px;font-weight:200;letter-spacing:.05em;color:var(--primary-color,#a67f34);margin-bottom:10px}
+.subtitle{font-size:14px;line-height:1.7;color:#8f7643;max-width:700px;margin-bottom:32px}
+
+.section{background:rgba(255,255,255,.22);border:1px solid rgba(166,127,52,.15);padding:26px 28px;margin-bottom:26px}
+.section-title{font-size:16px;color:var(--primary-color,#a67f34);letter-spacing:.03em;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
+
+.btn{padding:10px 18px;background:var(--primary-color,#a67f34);color:#fff;border:1px solid var(--primary-color,#a67f34);text-transform:uppercase;letter-spacing:.1em;font-size:11px;cursor:pointer;font-family:inherit}
+.btn:hover{opacity:.9}
+.btn.small{padding:7px 12px;font-size:10px}
+.btn.danger{background:#fff;color:#9c2f2f;border-color:rgba(156,47,47,.35)}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid rgba(166,127,52,.12)}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:#8f7643}
+.perm-check{display:flex;gap:14px;align-items:center;font-size:11px}
+.perm-check label{display:flex;align-items:center;gap:5px;cursor:pointer;text-transform:none;letter-spacing:0}
+.role-badge{display:inline-block;padding:3px 10px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;background:rgba(166,127,52,.12);color:var(--primary-color,#a67f34)}
+.role-badge.system{background:rgba(156,47,47,.1);color:#9c2f2f}
+
+.new-role-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.new-role-row input{padding:10px 12px;border:1px solid rgba(166,127,52,.25);background:rgba(255,255,255,.35);font-size:13px;font-family:inherit}
+
+.status{margin-top:14px;font-size:13px;min-height:18px}
+.success{color:#4f7f45}
+.error{color:#9c2f2f}
+.muted{color:#9a8a63;font-size:12px}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+<div class="logo">ADMIN</div>
+<div class="header-actions">
+<a href="dashboard.html">Dashboard</a>
+<a href="theme-settings.html">Aspetto</a>
+<button class="logout" id="logoutBtn">Logout</button>
+</div>
+</header>
+
+<div class="container">
+
+<h1 class="title">Ruoli e Permessi</h1>
+<p class="subtitle">
+Riservato al Super Amministratore. Definisci quali sezioni della piattaforma ogni ruolo può vedere (lettura) e modificare (scrittura). Il ruolo Super Amministratore ha sempre accesso completo e non è modificabile.
+</p>
+
+<div id="accessDenied" style="display:none" class="status error">Questa pagina è riservata al Super Amministratore.</div>
+
+<div id="rolesContent" style="display:none">
+
+<div class="section">
+<div class="section-title">Ruoli</div>
+<table>
+<thead><tr><th>Ruolo</th><th>Nome interno</th><th></th></tr></thead>
+<tbody id="rolesTable"></tbody>
+</table>
+
+<div class="new-role-row">
+<input type="text" id="newRoleName" placeholder="nome_interno (es. agente_vendite)">
+<input type="text" id="newRoleLabel" placeholder="Nome visibile (es. Agente Vendite)">
+<button type="button" class="btn small" id="addRoleBtn">+ Nuovo ruolo</button>
+</div>
+<div class="muted" style="margin-top:8px">I ruoli di prodotto (non di sistema) possono essere rinominati, eliminati e avere permessi personalizzati per ciascuna sezione qui sotto.</div>
+</div>
+
+<div class="section">
+<div class="section-title">Permessi per sezione</div>
+<div class="muted" style="margin-bottom:14px">Lettura = può vedere la sezione. Scrittura = può anche creare/modificare/eliminare. La scrittura implica sempre la lettura.</div>
+<div style="overflow-x:auto">
+<table>
+<thead><tr><th>Sezione</th><th id="permHeaders"></th></tr></thead>
+<tbody id="permissionsTable"></tbody>
+</table>
+</div>
+<button type="button" class="btn" id="savePermsBtn" style="margin-top:18px">Salva permessi</button>
+<div id="permsStatus" class="status"></div>
+</div>
+
+<div class="section">
+<div class="section-title">Utenti e ruolo assegnato</div>
+<table>
+<thead><tr><th>Utente</th><th>Ruolo attuale</th><th>Assegna</th></tr></thead>
+<tbody id="usersTable"></tbody>
+</table>
+<div id="usersStatus" class="status"></div>
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/theme-loader.js"></script>
+
+<script>
+const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let currentUser = null;
+let roles = [];
+let permissionRows = {}; // resource_key -> { role_id: {read,write} }
+
+var RESOURCES = [
+  { key:"opportunities", label:"Opportunità" },
+  { key:"investors", label:"Clienti (Investitori/Venditori)" },
+  { key:"calendar", label:"Calendario" },
+  { key:"statistics", label:"Statistiche" },
+  { key:"site_settings", label:"Impostazioni sito / Aspetto" },
+  { key:"users", label:"Utenti" },
+  { key:"broadcast_notifications", label:"Notifiche broadcast" },
+  { key:"communications", label:"Comunicazioni" }
+];
+
+function esc(v){ return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+async function checkAuth(){
+  const { data:{ session } } = await client.auth.getSession();
+  if(!session){ window.location.href = "login.html"; return false; }
+  currentUser = session.user;
+
+  const permResult = await client.rpc("my_role_and_permissions");
+  if(permResult.error || !permResult.data || !permResult.data.is_super_admin){
+    document.getElementById("accessDenied").style.display = "block";
+    return false;
+  }
+  return true;
+}
+
+async function loadRoles(){
+  const { data, error } = await client.from("immonova_roles").select("*").order("id");
+  if(error){ console.error(error); return; }
+  roles = data || [];
+  renderRolesTable();
+  renderPermissionsTable();
+}
+
+function renderRolesTable(){
+  document.getElementById("rolesTable").innerHTML = roles.map(r => `
+    <tr>
+      <td><span class="role-badge ${r.is_system ? "system" : ""}">${esc(r.label)}</span></td>
+      <td>${esc(r.name)}</td>
+      <td>${r.is_system ? "" : `<button class="btn danger small" onclick="deleteRole(${r.id})">Elimina</button>`}</td>
+    </tr>
+  `).join("");
+}
+
+async function loadPermissions(){
+  const { data, error } = await client.from("immonova_role_permissions").select("*");
+  if(error){ console.error(error); return; }
+
+  permissionRows = {};
+  RESOURCES.forEach(res => { permissionRows[res.key] = {}; });
+
+  (data || []).forEach(row => {
+    if(!permissionRows[row.resource_key]) permissionRows[row.resource_key] = {};
+    permissionRows[row.resource_key][row.role_id] = { read: row.can_read, write: row.can_write };
+  });
+
+  renderPermissionsTable();
+}
+
+function renderPermissionsTable(){
+  const productRoles = roles.filter(r => !r.is_system);
+  if(!productRoles.length) return;
+
+  document.getElementById("permHeaders").innerHTML = "";
+  const thead = document.querySelector("#permissionsTable").closest("table").querySelector("thead tr");
+  thead.innerHTML = "<th>Sezione</th>" + productRoles.map(r => `<th>${esc(r.label)}</th>`).join("");
+
+  document.getElementById("permissionsTable").innerHTML = RESOURCES.map(res => {
+    const cells = productRoles.map(r => {
+      const perm = (permissionRows[res.key] && permissionRows[res.key][r.id]) || { read:false, write:false };
+      return `
+        <td>
+          <div class="perm-check">
+            <label><input type="checkbox" data-resource="${res.key}" data-role="${r.id}" data-kind="read" ${perm.read ? "checked" : ""}> Lettura</label>
+            <label><input type="checkbox" data-resource="${res.key}" data-role="${r.id}" data-kind="write" ${perm.write ? "checked" : ""}> Scrittura</label>
+          </div>
+        </td>
+      `;
+    }).join("");
+    return `<tr><td>${esc(res.label)}</td>${cells}</tr>`;
+  }).join("");
+
+  // Scrittura implica sempre lettura.
+  document.querySelectorAll('#permissionsTable input[data-kind="write"]').forEach(input => {
+    input.addEventListener("change", function(){
+      if(this.checked){
+        var readInput = document.querySelector('input[data-resource="'+this.dataset.resource+'"][data-role="'+this.dataset.role+'"][data-kind="read"]');
+        if(readInput) readInput.checked = true;
+      }
+    });
+  });
+}
+
+async function savePermissions(){
+  var statusEl = document.getElementById("permsStatus");
+  statusEl.textContent = "Salvataggio...";
+  statusEl.className = "status";
+
+  const rows = [];
+  document.querySelectorAll('#permissionsTable input[type="checkbox"][data-kind="read"]').forEach(readInput => {
+    var resource = readInput.dataset.resource;
+    var roleId = Number(readInput.dataset.role);
+    var writeInput = document.querySelector('input[data-resource="'+resource+'"][data-role="'+roleId+'"][data-kind="write"]');
+    rows.push({
+      role_id: roleId,
+      resource_key: resource,
+      can_read: readInput.checked || (writeInput && writeInput.checked),
+      can_write: writeInput ? writeInput.checked : false
+    });
+  });
+
+  const { error } = await client.from("immonova_role_permissions").upsert(rows, { onConflict: "role_id,resource_key" });
+
+  if(error){
+    statusEl.textContent = "Errore: " + error.message;
+    statusEl.className = "status error";
+    return;
+  }
+
+  statusEl.textContent = "Permessi salvati correttamente.";
+  statusEl.className = "status success";
+  await loadPermissions();
+}
+
+window.deleteRole = async function(roleId){
+  if(!confirm("Eliminare questo ruolo? Gli utenti che lo hanno assegnato dovranno essere riassegnati a un altro ruolo.")) return;
+  const { error } = await client.from("immonova_roles").delete().eq("id", roleId);
+  if(error){ alert("Errore: " + error.message); return; }
+  await loadRoles();
+  await loadPermissions();
+};
+
+document.getElementById("addRoleBtn").addEventListener("click", async function(){
+  var name = document.getElementById("newRoleName").value.trim();
+  var label = document.getElementById("newRoleLabel").value.trim();
+  if(!name || !label){ alert("Inserisci sia il nome interno che il nome visibile."); return; }
+
+  const { error } = await client.from("immonova_roles").insert({ name, label, is_system:false });
+  if(error){ alert("Errore: " + error.message); return; }
+
+  document.getElementById("newRoleName").value = "";
+  document.getElementById("newRoleLabel").value = "";
+  await loadRoles();
+  await loadPermissions();
+});
+
+document.getElementById("savePermsBtn").addEventListener("click", savePermissions);
+
+async function loadUsers(){
+  const { data, error } = await client.from("profiles").select("id, email, full_name, role_id").order("email");
+  if(error){ console.error(error); return; }
+
+  document.getElementById("usersTable").innerHTML = (data || []).map(u => {
+    var currentRole = roles.find(r => r.id === u.role_id);
+    return `
+      <tr>
+        <td>${esc(u.full_name || u.email || u.id)}</td>
+        <td>${currentRole ? esc(currentRole.label) : '<span class="muted">Nessuno</span>'}</td>
+        <td>
+          <select data-user="${u.id}" onchange="assignRole('${u.id}', this.value)">
+            <option value="">—</option>
+            ${roles.map(r => `<option value="${r.id}" ${r.id === u.role_id ? "selected" : ""}>${esc(r.label)}</option>`).join("")}
+          </select>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+window.assignRole = async function(userId, roleId){
+  var statusEl = document.getElementById("usersStatus");
+  const { error } = await client.from("profiles").update({ role_id: roleId ? Number(roleId) : null }).eq("id", userId);
+  if(error){
+    statusEl.textContent = "Errore: " + error.message;
+    statusEl.className = "status error";
+    return;
+  }
+  statusEl.textContent = "Ruolo aggiornato.";
+  statusEl.className = "status success";
+  await loadUsers();
+};
+
+document.getElementById("logoutBtn").addEventListener("click", async function(){
+  await client.auth.signOut();
+  window.location.href = "login.html";
+});
+
+(async function init(){
+  var ok = await checkAuth();
+  if(!ok) return;
+  document.getElementById("rolesContent").style.display = "block";
+  await loadRoles();
+  await loadPermissions();
+  await loadUsers();
+})();
+</script>
+
+</body>
+</html>

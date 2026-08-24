@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/theme-loader.js"></script>
+<script src="js/site-branding.js"></script>
+<script src="js/site-analytics.js"></script>
+
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1748507966184581');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel Code -->
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MBN70QWN3X"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-MBN70QWN3X');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ | DOMINUS</title>
+<meta name="description" content="Domande frequenti su DOMINUS: acquisto immobiliare off-market, valutazioni, residenza in Italia, costituzione società e servizi di international advisory." />
+<link rel="canonical" href="https://dominus-suite.it/faq.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="DOMINUS" />
+<meta property="og:title" content="FAQ | DOMINUS" />
+<meta property="og:description" content="Tutte le risposte alle domande più frequenti su DOMINUS." />
+<meta property="og:url" content="https://dominus-suite.it/faq.html" />
+<meta name="twitter:card" content="summary" />
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%}
+body{background:var(--page-bg-color,#f4ecdf);font-family:"Avenir Next","Helvetica Neue",Arial,sans-serif;color:var(--text-color,#7f6430);overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(circle at center,rgba(255,255,255,.72) 0%,rgba(255,255,255,.34) 38%,rgba(244,236,223,.06) 72%),var(--page-bg-color,#f4ecdf)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;background:none,none,none;background-size:230px 199px;opacity:.30}
+.header{padding:34px 52px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(166,127,52,.10);background:rgba(244,236,223,.62);backdrop-filter:blur(14px);position:sticky;top:0;z-index:20}
+.logo{font-size:24px;font-weight:300;letter-spacing:.35em;color:var(--primary-color,#a67f34);text-decoration:none}
+.nav{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.nav a{text-decoration:none;color:var(--primary-color,#a67f34);font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+.language-select{position:relative}
+.language-button{border:1px solid rgba(166,127,52,.28);background:rgba(255,255,255,.20);color:var(--primary-color,#a67f34);padding:9px 12px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;font-family:inherit}
+.language-menu{position:absolute;right:0;top:calc(100% + 10px);min-width:150px;border:1px solid rgba(166,127,52,.24);background:rgba(244,236,223,.96);backdrop-filter:blur(14px);box-shadow:0 22px 60px rgba(127,100,48,.12);display:none;z-index:30}
+.language-menu.open{display:block}
+.language-menu button{width:100%;border:0;border-bottom:1px solid rgba(166,127,52,.12);background:transparent;color:var(--primary-color,#a67f34);padding:12px 14px;text-align:left;font-size:11px;letter-spacing:.13em;text-transform:uppercase;cursor:pointer;font-family:inherit}
+.language-menu button:last-child{border-bottom:0}
+
+.hero{max-width:820px;margin:0 auto;padding:70px 24px 10px;text-align:center}
+.kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#9a793c;margin-bottom:16px}
+.title{font-size:clamp(32px,5vw,50px);font-weight:200;letter-spacing:.05em;color:var(--primary-color,#a67f34);font-family:Georgia,serif;margin-bottom:18px}
+.subtitle{font-size:14.5px;line-height:1.9;color:#8f7643}
+
+/* ---- search ---- */
+.search-wrap{max-width:680px;margin:38px auto 0;position:relative}
+.search-input{
+  width:100%;padding:18px 52px 18px 22px;border:1px solid rgba(166,127,52,.32);
+  background:rgba(255,255,255,.55);color:#5c4a20;font-size:15px;font-family:inherit;outline:none;
+}
+.search-input:focus{border-color:var(--primary-color,#a67f34)}
+.search-icon{position:absolute;right:20px;top:50%;transform:translateY(-50%);color:var(--primary-color,#a67f34);font-size:16px;pointer-events:none}
+.search-meta{margin-top:12px;font-size:11.5px;letter-spacing:.06em;color:#9a793c;text-align:center;min-height:16px}
+.search-clear{background:none;border:0;color:var(--primary-color,#a67f34);text-decoration:underline;cursor:pointer;font-size:11.5px;font-family:inherit;letter-spacing:.06em}
+
+/* ---- faq body ---- */
+.faq-section{max-width:880px;margin:0 auto;padding:40px 24px 100px}
+.category{margin-bottom:44px}
+.category-title{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#9a793c;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid rgba(166,127,52,.20)}
+.faq-item{background:rgba(255,255,255,.28);border:1px solid rgba(166,127,52,.18);box-shadow:0 14px 40px rgba(127,100,48,.05);margin-bottom:12px}
+.faq-item summary{list-style:none;cursor:pointer;padding:19px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:14px;color:#6b5628;font-weight:500}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"+";font-size:19px;color:#c3a15f;flex-shrink:0}
+.faq-item[open] summary::after{content:"–"}
+.faq-answer{padding:0 24px 22px;font-size:13.5px;line-height:1.85;color:#8f7643}
+.faq-item mark{background:rgba(198,161,95,.35);color:#5c4a20;border-radius:2px}
+.no-results{text-align:center;padding:60px 20px;color:#a1885a;font-size:14px;display:none}
+
+.cta-block{max-width:680px;margin:0 auto;text-align:center;padding:20px 24px 0}
+.cta-block p{font-size:13.5px;line-height:1.8;color:#8f7643;margin-bottom:20px}
+.btn-gold{display:inline-block;padding:15px 34px;border:1px solid rgba(166,127,52,.42);background:var(--primary-color,#a67f34);color:#fff;text-transform:uppercase;font-size:12px;letter-spacing:.2em;cursor:pointer;font-family:inherit;text-decoration:none}
+.btn-gold:hover{background:#8f6c2c}
+
+.footer{border-top:1px solid rgba(166,127,52,.14);padding:40px 24px;text-align:center;font-size:11px;letter-spacing:.08em;color:#a1885a}
+
+body[dir="rtl"] .header,body[dir="rtl"] .faq-item summary{direction:rtl}
+body[dir="rtl"] .search-icon{right:auto;left:20px}
+body[dir="rtl"] .search-input{padding:18px 22px 18px 52px}
+
+@media(max-width:700px){
+  .header{padding:26px 22px;flex-direction:column;gap:16px}
+  .hero{padding:50px 20px 10px}
+  .faq-section{padding:30px 20px 80px}
+}
+
+/* ---- Mobile hamburger menu (DOMINUS standard) ---- */
+.nav-toggle{display:none;background:none;border:1px solid rgba(166,127,52,.35);color:var(--primary-color,#a67f34);font-size:22px;line-height:1;padding:8px 13px;cursor:pointer;font-family:inherit;flex-shrink:0}
+@media(max-width:900px){
+  .header{position:relative;flex-wrap:nowrap}
+  .nav-toggle{display:block}
+  .nav{
+    display:none;
+    position:absolute;
+    top:100%;left:0;right:0;
+    flex-direction:column;
+    align-items:stretch;
+    gap:0;
+    background:rgba(244,236,223,.98);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(166,127,52,.18);
+    box-shadow:0 24px 50px rgba(127,100,48,.14);
+    padding:8px 24px 22px;
+    max-height:80vh;
+    overflow-y:auto;
+    z-index:25;
+  }
+  .nav.open{display:flex}
+  .nav a{padding:14px 0;border-bottom:1px solid rgba(166,127,52,.10);width:100%}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <a href="index.html" class="logo">DOMINUS</a>
+  <button type="button" class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">&#9776;</button>
+  <nav class="nav">
+    <a href="index.html" data-i18n="nav_home">Home</a>
+    <a href="opportunities.html" data-i18n="nav_opportunities">Opportunities</a>
+    <a href="success-stories.html" data-i18n="nav_success_stories">Success Stories</a>
+    <a href="events.html" data-i18n="nav_events">Events</a>
+    <a href="relocation-services.html" data-i18n="nav_relocation">International Advisory</a>
+    <a href="faq.html" data-i18n="nav_faq" style="opacity:.6">FAQ</a>
+    <a href="join-us.html" data-i18n="nav_join_us">Lavora con Noi</a>
+    <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    <div class="language-select">
+      <button type="button" class="language-button" id="languageButton">IT</button>
+      <div class="language-menu" id="languageMenu">
+        <button type="button" data-lang="it">Italiano</button>
+        <button type="button" data-lang="en">English</button>
+        <button type="button" data-lang="fr">Français</button>
+        <button type="button" data-lang="de">Deutsch</button>
+        <button type="button" data-lang="es">Español</button>
+        <button type="button" data-lang="ar">العربية</button>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="kicker" data-i18n="hero_kicker">Domande Frequenti</div>
+  <h1 class="title" data-i18n="hero_title">Come Possiamo Aiutarti?</h1>
+  <p class="subtitle" data-i18n="hero_subtitle">Cerca per parola chiave o sfoglia le domande più frequenti su acquisto immobiliare, residenza, società e servizi DOMINUS.</p>
+
+  <div class="search-wrap">
+    <input type="text" id="faqSearch" class="search-input" data-i18n-placeholder="search_placeholder" placeholder="Cerca per parola chiave, es. reciprocità, visto, SRL...">
+    <span class="search-icon">&#128269;</span>
+  </div>
+  <div class="search-meta" id="searchMeta"></div>
+</div>
+
+<div class="faq-section" id="faqSection"></div>
+
+<div class="no-results" id="noResults">
+  <p data-i18n="no_results_text">Nessun risultato per questa ricerca. Prova con un'altra parola chiave o contattaci direttamente.</p>
+</div>
+
+<div class="cta-block">
+  <p data-i18n="cta_text">Non hai trovato quello che cercavi? Il nostro team è a disposizione per rispondere a qualsiasi domanda specifica sul tuo progetto.</p>
+  <a href="contact.html" class="btn-gold" data-i18n="cta_btn">Contattaci</a>
+  <p style="font-size:11px;line-height:1.9;color:#a1885a;margin-top:26px" data-i18n="fiscal_disclaimer">Le informazioni fiscali e legali riportate in questa pagina, incluse quelle relative alla fiscalità internazionale, hanno scopo puramente informativo, sono soggette a modifiche normative e non costituiscono consulenza fiscale, legale o notarile personalizzata. Aliquote, soglie e trattati possono variare nel tempo: raccomandiamo sempre una verifica con un commercialista o avvocato tributarista abilitato nel proprio Paese di residenza, oltre che con un notaio italiano, prima di assumere decisioni.</p>
+</div>
+
+<footer class="footer">
+  © <span id="year"></span> DOMINUS — <span data-i18n="footer_text">Off Market Consulting</span>
+</footer>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+
+/* ============ FAQ DATA (per lingua) ============ */
+var FAQ_DATA = {
+it: [
+  { cat:"Generale su DOMINUS", items:[
+    { q:"Cos'è DOMINUS e di cosa si occupa?", a:"DOMINUS è una società di consulenza immobiliare specializzata in opportunità off-market in Italia. Affianchiamo clienti italiani e internazionali nella ricerca, valutazione e acquisizione di immobili, oltre a servizi dedicati di trasferimento di residenza e costituzione societaria per chi vuole insediarsi in Italia." },
+    { q:"Cosa significa \"off-market\"?", a:"Un'opportunità off-market è un immobile non pubblicizzato sui portali tradizionali: la vendita avviene tramite rete relazionale diretta, spesso con condizioni di riservatezza per il venditore e maggiore margine di negoziazione per l'acquirente." },
+    { q:"Come funziona la valutazione immobiliare gratuita?", a:"Attraverso il nostro valutatore online raccogliamo i dati dell'immobile (ubicazione, superficie, stato, caratteristiche) e produciamo una stima di valore basata su dati di mercato comparabili, oltre al calcolo del valore catastale ai fini fiscali." },
+    { q:"Quanto costano i servizi di DOMINUS?", a:"I costi variano in base al servizio richiesto (ricerca immobiliare, consulenza per residenza, costituzione società). La prima consulenza e la valutazione preliminare sono gratuite: i dettagli economici vengono definiti dopo la fase di profilazione, in base al progetto." }
+  ]},
+  { cat:"Acquisto Immobiliare", items:[
+    { q:"Uno straniero può acquistare casa in Italia?", a:"Sì. I cittadini dell'Unione Europea possono acquistare liberamente. I cittadini extra-UE devono verificare la cosiddetta condizione di reciprocità con il proprio Paese d'origine, salvo trattati bilaterali che la escludono (es. USA, Canada, Regno Unito in molti casi)." },
+    { q:"Cos'è la condizione di reciprocità?", a:"È il principio secondo cui un cittadino extra-UE può acquistare un immobile in Italia solo se il suo Paese d'origine consente lo stesso diritto ai cittadini italiani. Viene verificata caso per caso in base alla nazionalità dell'acquirente." },
+    { q:"Quali sono le fasi di acquisto di un immobile in Italia?", a:"Tipicamente: proposta d'acquisto con caparra, compromesso (contratto preliminare) registrato, e infine rogito notarile con trascrizione nei registri immobiliari. DOMINUS assiste il cliente in ogni fase, coordinando notaio e altri professionisti." },
+    { q:"Quali costi aggiuntivi ci sono oltre al prezzo dell'immobile?", a:"Vanno considerate le imposte di acquisto (registro, ipotecaria e catastale, variabili tra prima e seconda casa), l'onorario notarile e, se richiesta, la traduzione asseverata dei documenti. DOMINUS offre consulenza e affiancamento nella ricerca dell'immobile, non attività di mediazione immobiliare, quindi non applica commissioni di intermediazione sull'acquisto." }
+  ]},
+  { cat:"Residenza e Trasferimento", items:[
+    { q:"Comprare casa in Italia dà automaticamente diritto alla residenza?", a:"No. L'acquisto di un immobile non attribuisce automaticamente il diritto di soggiorno. Per i cittadini extra-UE, ingresso, soggiorno e residenza devono essere ottenuti tramite un percorso separato (visto e permesso di soggiorno)." },
+    { q:"Cos'è il visto di residenza elettiva?", a:"È un visto nazionale italiano pensato per chi dispone di redditi stabili e autonomi (non da lavoro dipendente) e vuole trasferirsi in Italia senza svolgere attività lavorativa. Richiede prova di alloggio, assicurazione sanitaria e risorse economiche adeguate." },
+    { q:"Quali requisiti economici servono per la residenza elettiva?", a:"La soglia indicativa è di circa 31.000 € annui per il richiedente principale, con maggiorazioni per coniuge e familiari a carico. Le risorse devono derivare da fonti stabili e non da lavoro dipendente (pensioni, rendite, patrimonio)." },
+    { q:"Quanto tempo ci vuole per ottenere il permesso di soggiorno?", a:"Dopo l'ottenimento del visto, la richiesta del permesso di soggiorno va presentata entro 8 giorni dall'arrivo in Italia. I tempi di rilascio variano in base alla Questura competente, generalmente alcune settimane o mesi." }
+  ]},
+  { cat:"Società e Investimento", items:[
+    { q:"Posso costituire una società in Italia da straniero?", a:"Sì, sia cittadini UE che extra-UE possono costituire società italiane. Serve un codice fiscale italiano per ciascun socio/amministratore; per i cittadini extra-UE può essere richiesto un permesso di soggiorno o l'applicazione di un accordo bilaterale." },
+    { q:"Qual è il capitale minimo per una SRL italiana?", a:"Una SRL semplificata (SRLS) può essere costituita con capitale simbolico da 1 €, riservata a persone fisiche. Una SRL ordinaria richiede generalmente un capitale minimo di 10.000 €, con maggiore flessibilità statutaria." },
+    { q:"Serve un permesso di soggiorno per essere socio di una società italiana?", a:"Per essere semplicemente socio (senza ruolo di amministratore che richieda soggiorno stabile in Italia) spesso non è necessario un permesso di soggiorno; per ricoprire cariche operative o extra-UE senza accordi bilaterali può essere richiesto. Va sempre verificato caso per caso con un notaio." },
+    { q:"Una società italiana può acquistare immobili per conto dei soci?", a:"Sì, è una struttura frequentemente utilizzata per patrimoni immobiliari articolati, con vantaggi in termini di gestione, successione e talvolta fiscalità. La scelta tra acquisto personale o societario dipende dal progetto specifico del cliente." }
+  ]},
+  { cat:"Fiscalità per Investitori Esteri (focus Francia–Italia)", items:[
+    { q:"Il bene immobiliare acquistato in Italia rientra nel patrimonio imponibile IFI del cliente francese? Come si valorizza e si deducono le passività?", a:"Sì. Se sei fiscalmente residente in Francia, l'IFI (Impôt sur la Fortune Immobilière) si applica al tuo patrimonio immobiliare netto mondiale, quindi anche all'immobile detenuto in Italia, qualora il valore netto complessivo superi la soglia di 1.300.000 €. L'immobile va valorizzato al suo valore venale reale (di mercato) al 1° gennaio dell'anno di imposizione; dal valore lordo si possono dedurre i debiti direttamente collegati al bene stesso (ad esempio il capitale residuo di un mutuo contratto per l'acquisto, la ristrutturazione o il mantenimento dell'immobile), a condizione che siano debiti effettivi ed esistenti alla data di riferimento — non sono deducibili debiti generici non collegati all'immobile. Se il bene è detenuto tramite una società, va dichiarato \"in trasparenza\", valorizzando le quote in proporzione al valore dell'immobile sottostante, salvo eccezioni per società con reale attività operativa. Consigliamo sempre una verifica puntuale con un commercialista abilitato in Francia, poiché le regole di deduzione (in particolare sui debiti infra-familiari) sono soggette a un controllo antiabuso rigoroso." },
+    { q:"Quale regime fiscale si applica ai redditi da locazione, sia in Italia che in Francia?", a:"L'Italia, come Stato in cui si trova l'immobile, ha il diritto primario di tassare i canoni di locazione (art. 6 della Convenzione contro le doppie imposizioni Francia-Italia del 1989). Il proprietario non residente può scegliere tra la cedolare secca (aliquota fissa del 21%, o 26% per locazioni brevi/turistiche oltre determinate soglie) oppure la tassazione IRPEF ordinaria progressiva (fino al 43%) con le relative addizionali. In Francia, essendo lo Stato di residenza, questi redditi vanno comunque dichiarati e concorrono al calcolo del \"taux effectif\" (l'aliquota media applicata al reddito complessivo), ma la doppia imposizione viene eliminata tramite un credito d'imposta pari all'imposta francese teoricamente dovuta su quello stesso reddito: in pratica l'imposta italiana già versata neutralizza quella francese sullo stesso reddito, senza tuttavia generare un rimborso se l'imposta italiana fosse superiore." },
+    { q:"In caso di rivendita con plusvalenza, quale imposizione si applica in Italia, quale in Francia, e come si coordinano per evitare la doppia imposizione?", a:"In Italia la plusvalenza da rivendita è interamente esente da tassazione se l'immobile è posseduto da più di 5 anni (art. 67 del TUIR); se la vendita avviene entro i 5 anni, la plusvalenza è tassata, con opzione per l'imposta sostitutiva del 26% in alternativa alla tassazione IRPEF progressiva. In Francia la stessa plusvalenza è generalmente soggetta all'imposta al 19% più il 17,2% di prelievi sociali (36,2% totale), con una sovrattassa aggiuntiva dal 2% al 6% per plusvalenze superiori a 50.000 €; sono però previsti abbattimenti progressivi in base alla durata di possesso, con esenzione totale dall'imposta sul reddito dopo 22 anni e dai prelievi sociali dopo 30 anni. Punto essenziale: la Convenzione Francia-Italia elimina la doppia imposizione, ma non garantisce l'assenza totale di imposizione. Se vendi entro 5 anni e paghi l'imposta italiana, ottieni un credito d'imposta in Francia; se vendi dopo 5 anni (esente in Italia), l'amministrazione fiscale francese può comunque tassare la plusvalenza secondo le proprie regole, poiché il credito d'imposta si applica solo in presenza di un'imposta italiana effettivamente versata." },
+    { q:"Come viene trattata la successione: quale Stato tassa, secondo quale barème, e quale meccanismo di credito d'imposta si applica in Francia?", a:"In base alla Convenzione Francia-Italia del 1990 in materia di successioni, l'Italia ha il diritto di tassare i beni immobili situati sul proprio territorio, indipendentemente dalla residenza del defunto o degli eredi. L'imposta di successione italiana è particolarmente contenuta: franchigie ampie per coniuge e figli (1.000.000 € ciascuno) con aliquota del 4% sull'eccedenza, franchigia di 100.000 € per fratelli/sorelle con aliquota del 6%, aliquota del 6% (senza franchigia) o 8% per altri parenti/estranei, oltre a imposte ipotecarie e catastali (rispettivamente 2% e 1% del valore) sempre dovute. Se gli eredi sono fiscalmente residenti in Francia, l'amministrazione francese applica la propria imposta di successione (con aliquote ben più elevate, fino al 45% per i figli oltre determinate soglie) sul valore mondiale dell'eredità, compreso l'immobile italiano, ma concede un credito d'imposta pari all'imposta italiana già versata su quel bene, per evitare la doppia imposizione. Attenzione: le imposte locali italiane (IMU, TARI) restano dovute separatamente e non rientrano nel meccanismo di credito convenzionale; la dichiarazione di successione italiana va inoltre presentata entro 12 mesi dal decesso." },
+    { q:"È preferibile acquistare a titolo personale o tramite una società (tipo SCI), e quali sono le conseguenze fiscali di ciascuna opzione ad acquisto, possesso, rivendita e trasmissione?", a:"Va chiarito subito un punto: la SCI francese non esiste come istituto in Italia. Chi desidera una struttura societaria deve ricorrere a un veicolo italiano equivalente (tipicamente una società semplice immobiliare o una S.r.l.); una SCI francese che acquistasse direttamente un immobile in Italia sarebbe comunque trattata dal fisco italiano come società \"opaca\" estera, con conseguenze specifiche da valutare caso per caso. In generale: all'acquisto la struttura societaria non riduce le imposte di trasferimento, che restano sostanzialmente equivalenti; durante il possesso, la proprietà diretta consente di beneficiare dei regimi agevolati sui redditi locativi (cedolare secca) riservati alle persone fisiche, mentre una società italiana tassa i canoni come reddito d'impresa con aliquote diverse (IRES/IRAP); alla rivendita, la proprietà diretta beneficia dell'esenzione dopo 5 anni descritta sopra, mentre la cessione di quote societarie segue regole proprie (spesso tassazione al 26% sulla plusvalenza da cessione, indipendentemente dagli anni di possesso); alla trasmissione, una struttura societaria può facilitare la pianificazione successoria (cessione di quote anziché frazionamento della proprietà, possibili patti di famiglia), ma comporta costi di gestione ricorrenti (contabilità, bilanci) che la proprietà diretta non richiede. Per un uso personale o familiare, la proprietà diretta resta generalmente la soluzione più semplice; una struttura societaria trova più spesso giustificazione per portafogli immobiliari più ampi o strategie di trasmissione patrimoniale complesse. Questa è una panoramica generale: la scelta va sempre validata con un commercialista e un notaio, sia lato italiano che lato francese, in base alla situazione patrimoniale e familiare specifica." }
+  ]},
+  { cat:"Altre Domande degli Investitori Esteri", items:[
+    { q:"Posso ottenere un mutuo in Italia essendo un acquirente straniero non residente?", a:"Sì, diverse banche italiane e alcuni istituti internazionali erogano mutui a cittadini stranieri non residenti, generalmente con un rapporto loan-to-value più prudente (spesso 50-60% del valore dell'immobile anziché l'80% tipico dei residenti) e una documentazione reddituale più estesa (dichiarazioni dei redditi estere, tracciabilità bancaria). DOMINUS può mettervi in contatto con istituti di credito abituati a operare con clientela internazionale." },
+    { q:"Come trasferisco i fondi dall'estero per l'acquisto, e quali obblighi di tracciabilità antiriciclaggio si applicano?", a:"I pagamenti devono avvenire tramite bonifico bancario tracciabile, generalmente verso il conto del notaio o direttamente al venditore secondo le modalità concordate nel compromesso. La normativa antiriciclaggio italiana impone al notaio di verificare la provenienza dei fondi e l'identità delle parti (adeguata verifica della clientela); è quindi opportuno predisporre in anticipo la documentazione che attesti l'origine lecita delle somme (buste paga, atti di vendita precedenti, estratti conto)." },
+    { q:"Devo aprire un conto corrente bancario italiano?", a:"Non è sempre obbligatorio per il solo acquisto, ma è fortemente consigliato per gestire con semplicità le utenze, le imposte locali (IMU, TARI) e gli eventuali canoni di locazione incassati in Italia. Molte banche richiedono la residenza fiscale italiana o quantomeno un codice fiscale e una prima documentazione; DOMINUS supporta i clienti anche in questa fase." },
+    { q:"Posso affittare l'immobile a turisti tramite locazione breve, e quali obblighi comporta?", a:"Sì, la locazione turistica breve (fino a 30 giorni) è consentita, ma richiede la comunicazione del CIN (Codice Identificativo Nazionale) rilasciato dal Ministero del Turismo, l'iscrizione al portale regionale competente, l'invio dei dati degli ospiti alla Questura (schedina di pubblica sicurezza) e, dal punto di vista fiscale, l'applicazione della cedolare secca al 21% (26% dalla seconda unità immobiliare locata) oppure la tassazione ordinaria." },
+    { q:"Se acquisto un immobile di nuova costruzione, pago IVA o imposta di registro?", a:"Dipende dal venditore: se l'immobile è venduto direttamente dall'impresa costruttrice entro 5 anni dal fine lavori, si applica l'IVA (generalmente 10%, o 22% per immobili di lusso, con aliquota agevolata al 4% se si tratta di prima casa) più imposte di registro, ipotecaria e catastale in misura fissa; se il venditore è un privato o un'impresa che vende oltre i 5 anni senza optare per l'IVA, si applica invece l'imposta di registro proporzionale (2% prima casa, 9% altrimenti) più imposte ipotecaria e catastale fisse." },
+    { q:"Devo dichiarare l'immobile italiano anche nel mio Paese di residenza fiscale?", a:"Nella maggior parte dei Paesi sì: la detenzione di un bene immobiliare all'estero comporta generalmente obblighi dichiarativi specifici nel Paese di residenza fiscale del proprietario (ad esempio, per i residenti francesi, l'eventuale dichiarazione IFI descritta sopra; altri Paesi prevedono moduli dedicati per il monitoraggio fiscale dei beni esteri). Questi obblighi si aggiungono, e non sostituiscono, quelli italiani (dichiarazione dei redditi locativi, IMU). Raccomandiamo sempre di verificare la normativa specifica del proprio Paese con un consulente fiscale locale." }
+  ]},
+  { cat:"Dossier e Processo DOMINUS", items:[
+    { q:"Cos'è il dossier DOMINUS?", a:"È un documento riservato che raccoglie tutte le informazioni su un'opportunità immobiliare off-market: descrizione, planimetrie, dati catastali, foto, valore di mercato e fonti dei dati utilizzati per la valutazione." },
+    { q:"Come richiedo una valutazione o un dossier?", a:"Puoi compilare il modulo nella pagina Contact oppure nella pagina International Advisory, indicando il tuo obiettivo (acquisto, valutazione, residenza, società). Un consulente ti risponde personalmente entro 24 ore." },
+    { q:"Quanto tempo richiede l'intero processo di acquisto?", a:"Dipende dalla complessità del progetto: una compravendita semplice può concludersi in 2-3 mesi dalla proposta al rogito; percorsi che includono profilazione, residenza o costituzione societaria richiedono tempi più lunghi, generalmente alcuni mesi." }
+  ]},
+  { cat:"Contatti", items:[
+    { q:"Come posso contattare DOMINUS?", a:"Tramite il modulo nella pagina Contact, il modulo dedicato nella pagina International Advisory, oppure scrivendo direttamente a amministrazione@dominus-suite.it. Rispondiamo personalmente entro 24 ore." },
+    { q:"In quali lingue lavorate?", a:"Il sito e i nostri servizi sono disponibili in italiano, inglese, francese, tedesco, spagnolo e arabo, per seguire al meglio una clientela internazionale." }
+  ]}
+],
+en: [
+  { cat:"General about DOMINUS", items:[
+    { q:"What is DOMINUS and what does it do?", a:"DOMINUS is a real estate advisory firm specialized in off-market opportunities in Italy. We support Italian and international clients in searching for, evaluating and acquiring properties, alongside dedicated services for relocating residence and setting up companies for those who want to settle in Italy." },
+    { q:"What does \"off-market\" mean?", a:"An off-market opportunity is a property not advertised on traditional listing portals: the sale happens through a direct relationship network, often with confidentiality for the seller and greater negotiating margin for the buyer." },
+    { q:"How does the free property valuation work?", a:"Through our online valuator we collect the property's data (location, size, condition, features) and produce a value estimate based on comparable market data, together with the cadastral value calculation for tax purposes." },
+    { q:"How much do DOMINUS's services cost?", a:"Costs vary depending on the service requested (property search, residence consulting, company formation). The first consultation and preliminary valuation are free: economic details are defined after the profiling phase, based on the project." }
+  ]},
+  { cat:"Property Purchase", items:[
+    { q:"Can a foreigner buy a home in Italy?", a:"Yes. EU citizens can buy freely. Non-EU citizens must check the so-called reciprocity condition with their home country, unless bilateral treaties exclude it (e.g. USA, Canada, UK in many cases)." },
+    { q:"What is the reciprocity condition?", a:"It's the principle that a non-EU citizen can buy a property in Italy only if their home country grants the same right to Italian citizens. It is verified case by case based on the buyer's nationality." },
+    { q:"What are the stages of buying a property in Italy?", a:"Typically: a purchase offer with a deposit, a registered preliminary contract (compromesso), and finally the notarial deed with land registry transcription. DOMINUS assists the client at every stage, coordinating the notary and other professionals." },
+    { q:"What additional costs are there beyond the property price?", a:"You should account for purchase taxes (registration, mortgage and cadastral, which vary between primary and secondary residence), the notary's fee and, if needed, sworn translation of documents. DOMINUS provides advisory support in the property search, not real estate brokerage, so it does not charge brokerage commissions on the purchase." }
+  ]},
+  { cat:"Residence and Relocation", items:[
+    { q:"Does buying a home in Italy automatically grant residence rights?", a:"No. Buying a property does not automatically grant the right to stay. For non-EU citizens, entry, stay and residence must be obtained through a separate path (visa and residence permit)." },
+    { q:"What is the elective residence visa?", a:"It's an Italian national visa designed for those with stable, independent income (not from employment) who want to relocate to Italy without working. It requires proof of accommodation, health insurance and adequate financial resources." },
+    { q:"What financial requirements are needed for elective residence?", a:"The indicative threshold is around €31,000 per year for the main applicant, with increases for spouse and dependents. The resources must come from stable, non-employment sources (pensions, annuities, wealth)." },
+    { q:"How long does it take to get a residence permit?", a:"After obtaining the visa, the residence permit application must be submitted within 8 days of arrival in Italy. Issuance times vary by the competent police headquarters (Questura), generally a few weeks to a few months." }
+  ]},
+  { cat:"Company and Investment", items:[
+    { q:"Can I set up a company in Italy as a foreigner?", a:"Yes, both EU and non-EU citizens can incorporate Italian companies. Each shareholder/director needs an Italian tax code; for non-EU citizens a residence permit or the application of a bilateral agreement may be required." },
+    { q:"What is the minimum capital for an Italian SRL?", a:"A simplified SRL (SRLS) can be set up with symbolic capital from €1, reserved for individuals. An ordinary SRL generally requires a minimum capital of €10,000, with greater bylaw flexibility." },
+    { q:"Do I need a residence permit to be a shareholder of an Italian company?", a:"To simply be a shareholder (without a director role requiring stable residence in Italy), a residence permit is often not required; for operational roles or non-EU citizens without bilateral agreements it may be required. Always to be verified case by case with a notary." },
+    { q:"Can an Italian company buy properties on behalf of the shareholders?", a:"Yes, this is a structure frequently used for more complex real estate holdings, with advantages in terms of management, succession and sometimes taxation. The choice between personal or corporate purchase depends on the client's specific project." }
+  ]},
+  { cat:"Taxation for Foreign Investors (France–Italy focus)", items:[
+    { q:"Does the property purchased in Italy fall within a French client's taxable IFI wealth base? How is it valued and how are liabilities deducted?", a:"Yes. If you are a French tax resident, the IFI (Impôt sur la Fortune Immobilière) applies to your worldwide net real estate assets, including the property held in Italy, once the combined net value exceeds the €1,300,000 threshold. The property must be valued at its real market value as of January 1st of the tax year; from the gross value you may deduct debts directly linked to the asset itself (for example the outstanding balance of a mortgage taken out to purchase, renovate or maintain the property), provided they are genuine, existing debts as of the reference date — generic debts unrelated to the property are not deductible. If the property is held through a company, it must still be declared \"in transparency\", valuing the shares in proportion to the value of the underlying property, subject to exceptions for companies with genuine operating activity. We always recommend a specific review with a licensed French accountant, since deduction rules (particularly on intra-family debts) are subject to strict anti-abuse scrutiny." },
+    { q:"What tax regime applies to rental income, both in Italy and in France?", a:"Italy, as the country where the property is located, has the primary right to tax rental income (Article 6 of the 1989 France-Italy double tax treaty). The non-resident owner can choose between the flat-rate \"cedolare secca\" (a fixed 21% rate, or 26% for short-term/tourist lets above certain thresholds) or ordinary progressive income tax (up to 43%) plus surtaxes. In France, as the state of residence, this income must still be declared and factors into the \"taux effectif\" (average rate applied to overall income), but double taxation is eliminated through a tax credit equal to the French tax theoretically due on that same income: in practice, the Italian tax already paid neutralizes the French tax on that income, though it does not generate a refund if the Italian tax was higher." },
+    { q:"In case of resale with a capital gain, what taxation applies in Italy, what in France, and how is double taxation eliminated?", a:"In Italy, the capital gain on resale is entirely tax-exempt if the property has been owned for more than 5 years (Article 67 of the TUIR); if sold within 5 years, the gain is taxed, with the option of a 26% substitute tax instead of progressive income tax. In France, the same gain is generally subject to a 19% tax plus 17.2% social contributions (36.2% total), with an additional surtax of 2% to 6% for gains above €50,000; however, progressive allowances apply based on holding period, with full exemption from income tax after 22 years and from social contributions after 30 years. Key point: the France-Italy treaty eliminates double taxation, but does not guarantee no taxation at all. If you sell within 5 years and pay the Italian tax, you get a tax credit in France; if you sell after 5 years (exempt in Italy), the French tax authorities can still tax the gain under their own rules, since the tax credit only applies where an Italian tax was actually paid." },
+    { q:"How is inheritance treated: which state taxes it, under what scale, and what tax credit mechanism applies in France?", a:"Under the 1990 France-Italy inheritance tax treaty, Italy has the right to tax real estate located in its territory, regardless of the residence of the deceased or the heirs. Italian inheritance tax is notably contained: generous allowances for spouse and children (€1,000,000 each) with a 4% rate on the excess, a €100,000 allowance for siblings with a 6% rate, and a 6% (no allowance) or 8% rate for other relatives/unrelated parties, plus mortgage and cadastral taxes (2% and 1% of value respectively) always due. If the heirs are French tax residents, the French administration applies its own inheritance tax (with much higher rates, up to 45% for children above certain thresholds) on the worldwide value of the estate, including the Italian property, but grants a tax credit equal to the Italian tax already paid on that asset, to avoid double taxation. Note: Italian local taxes (IMU, TARI) remain separately due and fall outside the treaty credit mechanism; the Italian inheritance declaration must also be filed within 12 months of death." },
+    { q:"Is it better to buy in your own name or through a company (such as an SCI), and what are the tax consequences of each option at purchase, holding, resale and transfer?", a:"One point must be clarified upfront: the French SCI does not exist as a legal form in Italy. Those wanting a corporate structure must use an equivalent Italian vehicle (typically a società semplice immobiliare or an S.r.l.); a French SCI directly purchasing a property in Italy would still be treated by Italian tax authorities as an opaque foreign company, with specific consequences to assess case by case. In general: at purchase, a corporate structure does not reduce transfer taxes, which remain substantially equivalent; during ownership, direct ownership allows individuals to benefit from favorable rental income regimes (cedolare secca) reserved for natural persons, while an Italian company taxes rent as business income at different rates (IRES/IRAP); at resale, direct ownership benefits from the 5-year exemption described above, while the transfer of company shares follows its own rules (often a 26% tax on the capital gain from the transfer, regardless of holding period); at transfer/succession, a corporate structure can facilitate estate planning (transferring shares instead of fractioning property ownership, possible family pacts), but involves recurring management costs (bookkeeping, financial statements) that direct ownership does not require. For personal or family use, direct ownership generally remains the simplest solution; a corporate structure is more often justified for larger real estate portfolios or complex wealth transfer strategies. This is a general overview: the choice should always be validated with an accountant and a notary, on both the Italian and French sides, based on the specific estate and family situation." }
+  ]},
+  { cat:"Other Questions from Foreign Investors", items:[
+    { q:"Can I get a mortgage in Italy as a non-resident foreign buyer?", a:"Yes, several Italian banks and some international institutions grant mortgages to non-resident foreign citizens, generally with a more conservative loan-to-value ratio (often 50-60% of the property value instead of the 80% typical for residents) and more extensive income documentation (foreign tax returns, bank traceability). DOMINUS can put you in touch with lenders accustomed to working with international clients." },
+    { q:"How do I transfer funds from abroad for the purchase, and what anti-money-laundering traceability obligations apply?", a:"Payments must be made via traceable bank transfer, generally to the notary's account or directly to the seller as agreed in the preliminary contract. Italian anti-money-laundering rules require the notary to verify the source of funds and the identity of the parties (customer due diligence); it is therefore advisable to prepare in advance documentation proving the lawful origin of the funds (payslips, prior sale deeds, bank statements)." },
+    { q:"Do I need to open an Italian bank account?", a:"It's not always mandatory for the purchase alone, but it is strongly recommended to easily manage utilities, local taxes (IMU, TARI) and any rental income collected in Italy. Many banks require Italian tax residency or at least a tax code and initial documentation; DOMINUS also supports clients through this step." },
+    { q:"Can I rent out the property to tourists via short-term letting, and what obligations does this involve?", a:"Yes, short-term tourist letting (up to 30 days) is allowed, but requires the CIN (National Identification Code) issued by the Ministry of Tourism, registration with the relevant regional portal, submission of guest data to the local police (public security form) and, for tax purposes, applying the 21% flat tax (26% from the second rented unit) or ordinary taxation." },
+    { q:"If I buy a newly built property, do I pay VAT or registration tax?", a:"It depends on the seller: if the property is sold directly by the construction company within 5 years of completion, VAT applies (generally 10%, or 22% for luxury properties, with a reduced 4% rate for a primary residence) plus fixed registration, mortgage and cadastral taxes; if the seller is a private individual or a company selling after 5 years without opting for VAT, the proportional registration tax applies instead (2% primary residence, 9% otherwise) plus fixed mortgage and cadastral taxes." },
+    { q:"Do I need to declare the Italian property in my own country of tax residence too?", a:"In most countries, yes: owning real estate abroad generally triggers specific declaration obligations in the owner's country of tax residence (for example, for French residents, the IFI declaration described above; other countries have dedicated forms for monitoring foreign assets). These obligations are in addition to, not instead of, the Italian ones (rental income declaration, IMU). We always recommend checking your own country's specific rules with a local tax advisor." }
+  ]},
+  { cat:"Dossier and DOMINUS Process", items:[
+    { q:"What is the DOMINUS dossier?", a:"It's a confidential document that gathers all the information about an off-market opportunity: description, floor plans, cadastral data, photos, market value and the sources used for the valuation." },
+    { q:"How do I request a valuation or a dossier?", a:"You can fill in the form on the Contact page or on the International Advisory page, indicating your goal (purchase, valuation, residence, company). An advisor will personally respond within 24 hours." },
+    { q:"How long does the entire purchase process take?", a:"It depends on the complexity of the project: a simple purchase can be completed in 2-3 months from offer to deed; paths that include profiling, residence or company formation take longer, generally a few months." }
+  ]},
+  { cat:"Contacts", items:[
+    { q:"How can I contact DOMINUS?", a:"Through the form on the Contact page, the dedicated form on the International Advisory page, or by writing directly to amministrazione@dominus-suite.it. We respond personally within 24 hours." },
+    { q:"What languages do you work in?", a:"The website and our services are available in Italian, English, French, German, Spanish and Arabic, to best serve an international clientele." }
+  ]}
+]
+};
+FAQ_DATA.fr = [
+  { cat:"À propos d'DOMINUS", items:[
+    { q:"Qu'est-ce qu'DOMINUS et que fait la société ?", a:"DOMINUS est une société de conseil immobilier spécialisée dans les opportunités off-market en Italie. Nous accompagnons une clientèle italienne et internationale dans la recherche, l'évaluation et l'acquisition de biens, ainsi que dans des services dédiés de transfert de résidence et de constitution de société pour ceux qui souhaitent s'installer en Italie." },
+    { q:"Que signifie \"off-market\" ?", a:"Une opportunité off-market est un bien immobilier non annoncé sur les portails traditionnels : la vente se fait via un réseau relationnel direct, souvent avec une confidentialité pour le vendeur et une marge de négociation plus importante pour l'acheteur." },
+    { q:"Comment fonctionne l'évaluation immobilière gratuite ?", a:"Grâce à notre outil d'évaluation en ligne, nous recueillons les données du bien (localisation, surface, état, caractéristiques) et produisons une estimation de valeur basée sur des données de marché comparables, ainsi que le calcul de la valeur cadastrale à des fins fiscales." },
+    { q:"Combien coûtent les services d'DOMINUS ?", a:"Les coûts varient selon le service demandé (recherche immobilière, conseil en résidence, constitution de société). La première consultation et l'évaluation préliminaire sont gratuites : les détails économiques sont définis après la phase de profilage, selon le projet." }
+  ]},
+  { cat:"Achat Immobilier", items:[
+    { q:"Un étranger peut-il acheter un bien immobilier en Italie ?", a:"Oui. Les citoyens de l'Union européenne peuvent acheter librement. Les citoyens hors UE doivent vérifier la condition dite de réciprocité avec leur pays d'origine, sauf traités bilatéraux qui l'excluent (ex. États-Unis, Canada, Royaume-Uni dans de nombreux cas)." },
+    { q:"Qu'est-ce que la condition de réciprocité ?", a:"C'est le principe selon lequel un citoyen hors UE ne peut acheter un bien immobilier en Italie que si son pays d'origine accorde le même droit aux citoyens italiens. Elle est vérifiée au cas par cas selon la nationalité de l'acheteur." },
+    { q:"Quelles sont les étapes d'achat d'un bien immobilier en Italie ?", a:"Généralement : une offre d'achat avec dépôt de garantie, un compromis (contrat préliminaire) enregistré, et enfin l'acte notarié avec transcription au registre foncier. DOMINUS accompagne le client à chaque étape, en coordonnant le notaire et les autres professionnels." },
+    { q:"Quels sont les coûts supplémentaires au-delà du prix du bien ?", a:"Il faut prévoir les taxes d'acquisition (droits d'enregistrement, taxe hypothécaire et cadastrale, qui varient entre résidence principale et secondaire), les honoraires du notaire et, si nécessaire, la traduction assermentée des documents. DOMINUS propose du conseil et un accompagnement dans la recherche du bien, non une activité d'agence immobilière : elle ne facture donc aucune commission d'intermédiation sur l'achat." }
+  ]},
+  { cat:"Résidence et Installation", items:[
+    { q:"Acheter un bien en Italie donne-t-il automatiquement droit à la résidence ?", a:"Non. L'achat d'un bien immobilier n'accorde pas automatiquement le droit de séjour. Pour les citoyens hors UE, l'entrée, le séjour et la résidence doivent être obtenus via une démarche distincte (visa et titre de séjour)." },
+    { q:"Qu'est-ce que le visa de résidence élective ?", a:"C'est un visa national italien conçu pour les personnes disposant de revenus stables et autonomes (non issus d'un emploi salarié) souhaitant s'installer en Italie sans y exercer d'activité professionnelle. Il exige une preuve de logement, une assurance maladie et des ressources économiques suffisantes." },
+    { q:"Quelles ressources financières sont nécessaires pour la résidence élective ?", a:"Le seuil indicatif est d'environ 31 000 € par an pour le demandeur principal, avec des majorations pour le conjoint et les personnes à charge. Les ressources doivent provenir de sources stables et non salariales (pensions, rentes, patrimoine)." },
+    { q:"Combien de temps faut-il pour obtenir le titre de séjour ?", a:"Après obtention du visa, la demande de titre de séjour doit être déposée dans les 8 jours suivant l'arrivée en Italie. Les délais de délivrance varient selon la Questura compétente, généralement de quelques semaines à quelques mois." }
+  ]},
+  { cat:"Société et Investissement", items:[
+    { q:"Puis-je créer une société en Italie en tant qu'étranger ?", a:"Oui, les citoyens UE comme hors UE peuvent constituer des sociétés italiennes. Un code fiscal italien est nécessaire pour chaque associé/administrateur ; pour les citoyens hors UE, un titre de séjour ou l'application d'un accord bilatéral peut être requis." },
+    { q:"Quel est le capital minimum pour une SRL italienne ?", a:"Une SRL simplifiée (SRLS) peut être constituée avec un capital symbolique à partir de 1 €, réservée aux personnes physiques. Une SRL ordinaire nécessite généralement un capital minimum de 10 000 €, avec une plus grande flexibilité statutaire." },
+    { q:"Faut-il un titre de séjour pour être associé d'une société italienne ?", a:"Pour être simplement associé (sans fonction de gérant nécessitant une résidence stable en Italie), un titre de séjour n'est souvent pas requis ; pour occuper des fonctions opérationnelles ou pour les citoyens hors UE sans accord bilatéral, cela peut être exigé. À vérifier systématiquement au cas par cas avec un notaire." },
+    { q:"Une société italienne peut-elle acheter des biens pour le compte des associés ?", a:"Oui, c'est une structure fréquemment utilisée pour des patrimoines immobiliers plus complexes, avec des avantages en matière de gestion, de succession et parfois de fiscalité. Le choix entre acquisition personnelle ou par société dépend du projet spécifique du client." }
+  ]},
+  { cat:"Fiscalité pour Investisseurs Étrangers (focus France–Italie)", items:[
+    { q:"Le bien immobilier acquis en Italie entre-t-il dans l'assiette de l'IFI du client français ? Selon quelles modalités de valorisation et de déduction du passif ?", a:"Oui. Si vous êtes résident fiscal français, l'IFI (Impôt sur la Fortune Immobilière) s'applique à votre patrimoine immobilier net mondial, donc également au bien détenu en Italie, dès lors que la valeur nette globale dépasse le seuil de 1 300 000 €. Le bien doit être valorisé à sa valeur vénale réelle (de marché) au 1er janvier de l'année d'imposition ; de la valeur brute peuvent être déduites les dettes directement liées au bien lui-même (par exemple le capital restant dû d'un prêt contracté pour l'acquisition, la rénovation ou l'entretien du bien), à condition qu'il s'agisse de dettes réelles et existantes à la date de référence — les dettes génériques non liées au bien ne sont pas déductibles. Si le bien est détenu via une société, il doit être déclaré \"en transparence\", en valorisant les parts au prorata de la valeur du bien sous-jacent, sauf exception pour les sociétés ayant une réelle activité opérationnelle. Nous recommandons toujours une vérification précise avec un expert-comptable habilité en France, car les règles de déduction (notamment sur les dettes intrafamiliales) font l'objet d'un contrôle anti-abus strict." },
+    { q:"Quel est le régime fiscal applicable aux revenus locatifs, côté italien et côté français ?", a:"L'Italie, en tant qu'État où se trouve le bien, dispose du droit primaire d'imposer les revenus locatifs (article 6 de la convention franco-italienne de 1989 contre les doubles impositions). Le propriétaire non résident peut opter pour la \"cedolare secca\" (taux fixe de 21 %, ou 26 % pour les locations courte durée/touristiques au-delà de certains seuils) ou pour l'imposition IRPEF ordinaire progressive (jusqu'à 43 %) majorée des additionnelles. En France, en tant qu'État de résidence, ces revenus doivent néanmoins être déclarés et entrent dans le calcul du \"taux effectif\" (le taux moyen appliqué au revenu global), mais la double imposition est éliminée grâce à un crédit d'impôt égal à l'impôt français théoriquement dû sur ce même revenu : en pratique, l'impôt italien déjà payé neutralise l'impôt français sur ce revenu, sans toutefois générer de remboursement si l'impôt italien était supérieur." },
+    { q:"En cas de revente avec plus-value, pour un résident fiscal français : quelle imposition en Italie, quelle imposition en France, et comment s'articule l'élimination de la double imposition ?", a:"En Italie, la plus-value de revente est entièrement exonérée d'impôt si le bien est détenu depuis plus de 5 ans (article 67 du TUIR) ; en cas de vente dans les 5 ans, la plus-value est imposée, avec possibilité d'opter pour un impôt de substitution de 26 % au lieu de l'IRPEF progressif. En France, la même plus-value est en principe soumise à un impôt de 19 % plus 17,2 % de prélèvements sociaux (36,2 % au total), avec une surtaxe additionnelle de 2 % à 6 % pour les plus-values supérieures à 50 000 € ; des abattements progressifs sont toutefois prévus selon la durée de détention, avec exonération totale d'impôt sur le revenu après 22 ans et des prélèvements sociaux après 30 ans. Point essentiel : la convention franco-italienne élimine la double imposition, mais ne garantit pas une absence totale d'imposition. Si vous vendez dans les 5 ans et payez l'impôt italien, vous obtenez un crédit d'impôt en France ; si vous vendez après 5 ans (exonéré en Italie), l'administration fiscale française peut néanmoins imposer la plus-value selon ses propres règles, le crédit d'impôt ne s'appliquant qu'en présence d'un impôt italien effectivement acquitté." },
+    { q:"Quel est le traitement en cas de succession : quel État impose, selon quel barème, et quel mécanisme de crédit d'impôt en France ?", a:"En vertu de la convention franco-italienne de 1990 en matière de successions, l'Italie a le droit d'imposer les biens immobiliers situés sur son territoire, indépendamment de la résidence du défunt ou des héritiers. L'impôt de succession italien est particulièrement contenu : abattements généreux pour le conjoint et les enfants (1 000 000 € chacun) avec un taux de 4 % sur l'excédent, abattement de 100 000 € pour les frères et sœurs avec un taux de 6 %, taux de 6 % (sans abattement) ou 8 % pour les autres parents/tiers, plus les taxes hypothécaire et cadastrale (respectivement 2 % et 1 % de la valeur) toujours dues. Si les héritiers sont résidents fiscaux français, l'administration française applique son propre impôt de succession (avec des taux nettement plus élevés, jusqu'à 45 % pour les enfants au-delà de certains seuils) sur la valeur mondiale de la succession, y compris le bien italien, mais accorde un crédit d'impôt égal à l'impôt italien déjà acquitté sur ce bien, afin d'éviter la double imposition. Attention : les taxes locales italiennes (IMU, TARI) restent dues séparément et ne rentrent pas dans le mécanisme de crédit conventionnel ; la déclaration de succession italienne doit par ailleurs être déposée dans les 12 mois suivant le décès." },
+    { q:"Vaut-il mieux acquérir en nom propre ou via une société de type SCI, et quelles sont les conséquences fiscales de chaque option à l'acquisition, à la détention, à la revente et à la transmission ?", a:"Un point doit être clarifié d'emblée : la SCI française n'existe pas en tant que forme juridique en Italie. Ceux qui souhaitent une structure sociétaire doivent recourir à un véhicule italien équivalent (typiquement une société civile immobilière italienne ou une S.r.l.) ; une SCI française qui acquerrait directement un bien en Italie serait de toute façon traitée par le fisc italien comme une société étrangère \"opaque\", avec des conséquences spécifiques à évaluer au cas par cas. En général : à l'acquisition, la structure sociétaire ne réduit pas les droits de mutation, qui restent sensiblement équivalents ; pendant la détention, la propriété directe permet de bénéficier des régimes favorables sur les revenus locatifs (cedolare secca) réservés aux personnes physiques, tandis qu'une société italienne impose les loyers comme revenu d'entreprise à des taux différents (IRES/IRAP) ; à la revente, la propriété directe bénéficie de l'exonération après 5 ans décrite ci-dessus, tandis que la cession de parts sociales suit ses propres règles (souvent une imposition à 26 % sur la plus-value de cession, indépendamment de la durée de détention) ; à la transmission, une structure sociétaire peut faciliter la planification successorale (cession de parts plutôt que fractionnement de la propriété, pactes de famille possibles), mais implique des coûts de gestion récurrents (comptabilité, bilans) que la propriété directe ne requiert pas. Pour un usage personnel ou familial, la propriété directe reste généralement la solution la plus simple ; une structure sociétaire se justifie plus souvent pour des patrimoines immobiliers plus importants ou des stratégies de transmission complexes. Il s'agit d'un aperçu général : le choix doit toujours être validé avec un expert-comptable et un notaire, côté italien comme côté français, en fonction de la situation patrimoniale et familiale spécifique." }
+  ]},
+  { cat:"Autres Questions des Investisseurs Étrangers", items:[
+    { q:"Puis-je obtenir un prêt immobilier en Italie en tant qu'acheteur étranger non résident ?", a:"Oui, plusieurs banques italiennes et certains établissements internationaux accordent des prêts à des citoyens étrangers non résidents, généralement avec un ratio prêt/valeur plus prudent (souvent 50-60 % de la valeur du bien au lieu des 80 % habituels pour les résidents) et une documentation de revenus plus étoffée (déclarations fiscales étrangères, traçabilité bancaire). DOMINUS peut vous mettre en relation avec des établissements habitués à travailler avec une clientèle internationale." },
+    { q:"Comment transférer les fonds depuis l'étranger pour l'achat, et quelles obligations de traçabilité anti-blanchiment s'appliquent ?", a:"Les paiements doivent s'effectuer par virement bancaire traçable, généralement vers le compte du notaire ou directement au vendeur selon les modalités convenues dans le compromis. La réglementation italienne anti-blanchiment impose au notaire de vérifier l'origine des fonds et l'identité des parties (vigilance client) ; il est donc conseillé de préparer à l'avance les documents attestant de l'origine licite des sommes (bulletins de salaire, actes de vente antérieurs, relevés bancaires)." },
+    { q:"Dois-je ouvrir un compte bancaire italien ?", a:"Ce n'est pas toujours obligatoire pour le seul achat, mais c'est fortement recommandé pour gérer facilement les charges, les taxes locales (IMU, TARI) et d'éventuels loyers perçus en Italie. De nombreuses banques exigent la résidence fiscale italienne ou au moins un code fiscal et une première documentation ; DOMINUS accompagne également les clients dans cette étape." },
+    { q:"Puis-je louer le bien à des touristes en location courte durée, et quelles obligations cela implique-t-il ?", a:"Oui, la location touristique courte durée (jusqu'à 30 jours) est autorisée, mais requiert la communication du CIN (Code d'Identification National) délivré par le ministère du Tourisme, l'inscription au portail régional compétent, la transmission des données des hôtes à la police locale (fiche de sécurité publique) et, sur le plan fiscal, l'application de la cedolare secca à 21 % (26 % à partir du deuxième bien loué) ou de l'imposition ordinaire." },
+    { q:"Si j'achète un bien neuf, dois-je payer la TVA ou les droits d'enregistrement ?", a:"Cela dépend du vendeur : si le bien est vendu directement par le promoteur-constructeur dans les 5 ans suivant la fin des travaux, la TVA s'applique (généralement 10 %, ou 22 % pour les biens de luxe, avec un taux réduit de 4 % pour une résidence principale) plus des droits d'enregistrement, une taxe hypothécaire et cadastrale à taux fixe ; si le vendeur est un particulier ou une entreprise vendant après 5 ans sans opter pour la TVA, c'est le droit d'enregistrement proportionnel qui s'applique (2 % résidence principale, 9 % sinon) plus des taxes hypothécaire et cadastrale fixes." },
+    { q:"Dois-je déclarer le bien italien également dans mon propre pays de résidence fiscale ?", a:"Dans la plupart des pays, oui : la détention d'un bien immobilier à l'étranger entraîne généralement des obligations déclaratives spécifiques dans le pays de résidence fiscale du propriétaire (par exemple, pour les résidents français, la déclaration IFI décrite ci-dessus ; d'autres pays prévoient des formulaires dédiés au suivi fiscal des avoirs étrangers). Ces obligations s'ajoutent, et ne se substituent pas, à celles applicables en Italie (déclaration des revenus locatifs, IMU). Nous recommandons toujours de vérifier la réglementation spécifique de votre pays avec un conseiller fiscal local." }
+  ]},
+  { cat:"Dossier et Processus DOMINUS", items:[
+    { q:"Qu'est-ce que le dossier DOMINUS ?", a:"C'est un document confidentiel qui rassemble toutes les informations sur une opportunité off-market : description, plans, données cadastrales, photos, valeur de marché et sources des données utilisées pour l'évaluation." },
+    { q:"Comment demander une évaluation ou un dossier ?", a:"Vous pouvez remplir le formulaire sur la page Contact ou sur la page International Advisory, en indiquant votre objectif (achat, évaluation, résidence, société). Un conseiller vous répondra personnellement sous 24 heures." },
+    { q:"Combien de temps dure l'ensemble du processus d'achat ?", a:"Cela dépend de la complexité du projet : un achat simple peut se conclure en 2-3 mois entre l'offre et l'acte ; les parcours incluant profilage, résidence ou constitution de société prennent plus de temps, généralement quelques mois." }
+  ]},
+  { cat:"Contacts", items:[
+    { q:"Comment puis-je contacter DOMINUS ?", a:"Via le formulaire de la page Contact, le formulaire dédié de la page International Advisory, ou en écrivant directement à amministrazione@dominus-suite.it. Nous répondons personnellement sous 24 heures." },
+    { q:"Dans quelles langues travaillez-vous ?", a:"Le site et nos services sont disponibles en italien, anglais, français, allemand, espagnol et arabe, pour mieux servir une clientèle internationale." }
+  ]}
+];
+FAQ_DATA.de = [
+  { cat:"Allgemein über DOMINUS", items:[
+    { q:"Was ist DOMINUS und womit beschäftigt sich das Unternehmen?", a:"DOMINUS ist eine Immobilienberatungsgesellschaft, spezialisiert auf Off-Market-Gelegenheiten in Italien. Wir begleiten italienische und internationale Kunden bei der Suche, Bewertung und dem Erwerb von Immobilien sowie mit eigenen Dienstleistungen für Wohnsitzverlegung und Firmengründung für alle, die sich in Italien niederlassen möchten." },
+    { q:"Was bedeutet \"Off-Market\"?", a:"Eine Off-Market-Gelegenheit ist eine Immobilie, die nicht auf traditionellen Portalen beworben wird: Der Verkauf erfolgt über ein direktes Beziehungsnetzwerk, oft mit Vertraulichkeit für den Verkäufer und größerem Verhandlungsspielraum für den Käufer." },
+    { q:"Wie funktioniert die kostenlose Immobilienbewertung?", a:"Über unser Online-Bewertungstool erfassen wir die Daten der Immobilie (Lage, Fläche, Zustand, Merkmale) und erstellen eine Wertschätzung auf Basis vergleichbarer Marktdaten, zusammen mit der Berechnung des Katasterwerts für steuerliche Zwecke." },
+    { q:"Wie viel kosten die Dienstleistungen von DOMINUS?", a:"Die Kosten variieren je nach angefragter Dienstleistung (Immobiliensuche, Wohnsitzberatung, Firmengründung). Die Erstberatung und die vorläufige Bewertung sind kostenlos: die wirtschaftlichen Details werden nach der Profilierungsphase je nach Projekt festgelegt." }
+  ]},
+  { cat:"Immobilienkauf", items:[
+    { q:"Kann ein Ausländer eine Immobilie in Italien kaufen?", a:"Ja. EU-Bürger können frei kaufen. Nicht-EU-Bürger müssen die sogenannte Gegenseitigkeitsbedingung mit ihrem Heimatland prüfen, sofern nicht bilaterale Abkommen sie ausschließen (z.B. USA, Kanada, Vereinigtes Königreich in vielen Fällen)." },
+    { q:"Was ist die Gegenseitigkeitsbedingung?", a:"Es ist der Grundsatz, dass ein Nicht-EU-Bürger eine Immobilie in Italien nur kaufen kann, wenn sein Heimatland italienischen Staatsbürgern das gleiche Recht gewährt. Sie wird von Fall zu Fall anhand der Staatsangehörigkeit des Käufers geprüft." },
+    { q:"Was sind die Phasen beim Kauf einer Immobilie in Italien?", a:"Typischerweise: ein Kaufangebot mit Anzahlung, ein registrierter Vorvertrag (compromesso) und schließlich die notarielle Urkunde mit Eintragung in das Grundbuch. DOMINUS begleitet den Kunden in jeder Phase und koordiniert Notar und andere Fachleute." },
+    { q:"Welche zusätzlichen Kosten fallen über den Immobilienpreis hinaus an?", a:"Zu berücksichtigen sind die Erwerbssteuern (Register-, Hypotheken- und Katastersteuer, die zwischen Erst- und Zweitwohnsitz variieren), das Notarhonorar und, falls erforderlich, die beglaubigte Übersetzung der Dokumente. DOMINUS bietet Beratung und Begleitung bei der Immobiliensuche, keine Immobilienmaklertätigkeit, und berechnet daher keine Vermittlungsprovisionen auf den Kauf." }
+  ]},
+  { cat:"Wohnsitz und Ansiedlung", items:[
+    { q:"Verleiht der Kauf einer Immobilie in Italien automatisch das Aufenthaltsrecht?", a:"Nein. Der Kauf einer Immobilie verleiht nicht automatisch das Aufenthaltsrecht. Für Nicht-EU-Bürger müssen Einreise, Aufenthalt und Wohnsitz über einen separaten Weg erlangt werden (Visum und Aufenthaltstitel)." },
+    { q:"Was ist das Residenza-Elettiva-Visum?", a:"Es ist ein italienisches nationales Visum für Personen mit stabilem, unabhängigem Einkommen (nicht aus unselbständiger Arbeit), die nach Italien ziehen möchten, ohne dort zu arbeiten. Es erfordert einen Nachweis der Unterkunft, eine Krankenversicherung und ausreichende finanzielle Mittel." },
+    { q:"Welche finanziellen Voraussetzungen sind für die Residenza Elettiva erforderlich?", a:"Die Richtschwelle liegt bei etwa 31.000 € jährlich für den Hauptantragsteller, mit Erhöhungen für Ehepartner und unterhaltsberechtigte Angehörige. Die Mittel müssen aus stabilen, nicht arbeitsbezogenen Quellen stammen (Renten, Kapitalerträge, Vermögen)." },
+    { q:"Wie lange dauert es, den Aufenthaltstitel zu erhalten?", a:"Nach Erhalt des Visums muss der Antrag auf den Aufenthaltstitel innerhalb von 8 Tagen nach Ankunft in Italien gestellt werden. Die Ausstellungszeiten variieren je nach zuständiger Questura, in der Regel einige Wochen bis Monate." }
+  ]},
+  { cat:"Gesellschaft und Investition", items:[
+    { q:"Kann ich als Ausländer eine Gesellschaft in Italien gründen?", a:"Ja, sowohl EU- als auch Nicht-EU-Bürger können italienische Gesellschaften gründen. Für jeden Gesellschafter/Geschäftsführer ist eine italienische Steuernummer erforderlich; für Nicht-EU-Bürger kann ein Aufenthaltstitel oder die Anwendung eines bilateralen Abkommens erforderlich sein." },
+    { q:"Was ist das Mindestkapital für eine italienische SRL?", a:"Eine vereinfachte SRL (SRLS) kann mit symbolischem Kapital ab 1 € gegründet werden, vorbehalten natürlichen Personen. Eine ordentliche SRL erfordert in der Regel ein Mindestkapital von 10.000 €, mit größerer Satzungsflexibilität." },
+    { q:"Ist ein Aufenthaltstitel erforderlich, um Gesellschafter einer italienischen Gesellschaft zu sein?", a:"Um einfach Gesellschafter zu sein (ohne Geschäftsführerrolle, die einen stabilen Wohnsitz in Italien erfordert), ist oft kein Aufenthaltstitel erforderlich; für operative Funktionen oder Nicht-EU-Bürger ohne bilaterale Abkommen kann er verlangt werden. Immer von Fall zu Fall mit einem Notar zu prüfen." },
+    { q:"Kann eine italienische Gesellschaft Immobilien im Namen der Gesellschafter erwerben?", a:"Ja, dies ist eine häufig verwendete Struktur für komplexere Immobilienvermögen, mit Vorteilen bei Verwaltung, Nachfolge und teilweise Besteuerung. Die Wahl zwischen persönlichem oder gesellschaftlichem Erwerb hängt vom spezifischen Projekt des Kunden ab." }
+  ]},
+  { cat:"Besteuerung für Ausländische Investoren (Schwerpunkt Frankreich–Italien)", items:[
+    { q:"Fällt die in Italien erworbene Immobilie in die steuerpflichtige IFI-Vermögensbasis des französischen Kunden? Wie wird sie bewertet und wie werden Verbindlichkeiten abgezogen?", a:"Ja. Wenn Sie in Frankreich steuerlich ansässig sind, gilt die IFI (Impôt sur la Fortune Immobilière) für Ihr weltweites Nettoimmobilienvermögen, also auch für die in Italien gehaltene Immobilie, sobald der kombinierte Nettowert die Schwelle von 1.300.000 € übersteigt. Die Immobilie muss zu ihrem tatsächlichen Marktwert zum 1. Januar des Steuerjahres bewertet werden; vom Bruttowert können Schulden abgezogen werden, die direkt mit dem Vermögenswert selbst verbunden sind (zum Beispiel der Restbetrag eines Darlehens für Kauf, Renovierung oder Instandhaltung der Immobilie), sofern es sich um tatsächliche, zum Stichtag bestehende Schulden handelt — allgemeine, nicht mit der Immobilie verbundene Schulden sind nicht abzugsfähig. Wird die Immobilie über eine Gesellschaft gehalten, muss sie weiterhin \"transparent\" deklariert werden, wobei die Anteile im Verhältnis zum Wert der zugrunde liegenden Immobilie bewertet werden, vorbehaltlich Ausnahmen für Gesellschaften mit echter operativer Tätigkeit. Wir empfehlen stets eine gezielte Prüfung mit einem zugelassenen Steuerberater in Frankreich, da die Abzugsregeln (insbesondere bei familieninternen Schulden) einer strengen Missbrauchskontrolle unterliegen." },
+    { q:"Welches Steuerregime gilt für Mieteinkünfte, sowohl in Italien als auch in Frankreich?", a:"Italien hat als Belegenheitsstaat der Immobilie das primäre Besteuerungsrecht für Mieteinkünfte (Artikel 6 des französisch-italienischen Doppelbesteuerungsabkommens von 1989). Der gebietsfremde Eigentümer kann zwischen der \"cedolare secca\" (fester Satz von 21 %, oder 26 % für Kurzzeit-/Touristenvermietungen oberhalb bestimmter Schwellen) oder der ordentlichen progressiven IRPEF-Besteuerung (bis zu 43 %) zuzüglich Zuschlägen wählen. In Frankreich müssen diese Einkünfte als Wohnsitzstaat dennoch erklärt werden und fließen in die Berechnung des \"taux effectif\" (des auf das Gesamteinkommen angewandten Durchschnittssatzes) ein, aber die Doppelbesteuerung wird durch eine Steuergutschrift in Höhe der theoretisch auf dasselbe Einkommen geschuldeten französischen Steuer beseitigt: praktisch neutralisiert die bereits gezahlte italienische Steuer die französische Steuer auf dieses Einkommen, erzeugt jedoch keine Erstattung, falls die italienische Steuer höher wäre." },
+    { q:"Bei Weiterverkauf mit Wertzuwachs: Welche Besteuerung gilt in Italien, welche in Frankreich, und wie wird die Doppelbesteuerung vermieden?", a:"In Italien ist der Wertzuwachs beim Weiterverkauf vollständig steuerfrei, wenn die Immobilie länger als 5 Jahre gehalten wurde (Art. 67 TUIR); bei Verkauf innerhalb von 5 Jahren wird der Gewinn besteuert, mit der Option einer Ersatzsteuer von 26 % anstelle der progressiven IRPEF-Besteuerung. In Frankreich unterliegt derselbe Gewinn in der Regel einer Steuer von 19 % zuzüglich 17,2 % Sozialabgaben (insgesamt 36,2 %), mit einem zusätzlichen Zuschlag von 2 % bis 6 % für Gewinne über 50.000 €; es sind jedoch progressive Freibeträge je nach Haltedauer vorgesehen, mit vollständiger Befreiung von der Einkommensteuer nach 22 Jahren und von den Sozialabgaben nach 30 Jahren. Wesentlicher Punkt: Das Abkommen zwischen Frankreich und Italien beseitigt die Doppelbesteuerung, garantiert aber keine völlige Steuerfreiheit. Wenn Sie innerhalb von 5 Jahren verkaufen und die italienische Steuer zahlen, erhalten Sie eine Steuergutschrift in Frankreich; wenn Sie nach 5 Jahren verkaufen (in Italien steuerfrei), kann die französische Finanzverwaltung den Gewinn dennoch nach ihren eigenen Regeln besteuern, da die Steuergutschrift nur bei tatsächlich gezahlter italienischer Steuer greift." },
+    { q:"Wie wird der Erbfall behandelt: welcher Staat besteuert, nach welchem Tarif, und welcher Steuergutschriftmechanismus gilt in Frankreich?", a:"Gemäß dem französisch-italienischen Erbschaftsteuerabkommen von 1990 hat Italien das Recht, auf seinem Gebiet gelegene Immobilien zu besteuern, unabhängig vom Wohnsitz des Verstorbenen oder der Erben. Die italienische Erbschaftsteuer ist besonders moderat: großzügige Freibeträge für Ehepartner und Kinder (jeweils 1.000.000 €) mit 4 % Satz auf den überschießenden Betrag, Freibetrag von 100.000 € für Geschwister mit 6 % Satz, 6 % (ohne Freibetrag) oder 8 % Satz für andere Verwandte/Dritte, zuzüglich stets fälliger Hypotheken- und Katastersteuern (2 % bzw. 1 % des Wertes). Sind die Erben in Frankreich steuerlich ansässig, wendet die französische Verwaltung ihre eigene Erbschaftsteuer (mit deutlich höheren Sätzen, bis zu 45 % für Kinder oberhalb bestimmter Schwellen) auf den weltweiten Nachlasswert einschließlich der italienischen Immobilie an, gewährt jedoch eine Steuergutschrift in Höhe der bereits auf dieses Vermögen gezahlten italienischen Steuer, um die Doppelbesteuerung zu vermeiden. Achtung: die italienischen lokalen Steuern (IMU, TARI) bleiben separat fällig und fallen nicht unter den Gutschriftmechanismus des Abkommens; die italienische Erbschaftserklärung muss zudem innerhalb von 12 Monaten nach dem Todesfall eingereicht werden." },
+    { q:"Ist es vorzuziehen, im eigenen Namen oder über eine Gesellschaft (wie eine SCI) zu kaufen, und welche steuerlichen Folgen hat jede Option bei Kauf, Haltung, Weiterverkauf und Übertragung?", a:"Ein Punkt muss vorab geklärt werden: die französische SCI existiert als Rechtsform in Italien nicht. Wer eine gesellschaftliche Struktur wünscht, muss auf ein gleichwertiges italienisches Vehikel zurückgreifen (typischerweise eine italienische Immobiliengesellschaft bürgerlichen Rechts oder eine S.r.l.); eine französische SCI, die direkt eine Immobilie in Italien erwirbt, würde vom italienischen Fiskus dennoch als ausländische \"intransparente\" Gesellschaft behandelt, mit spezifischen, im Einzelfall zu bewertenden Folgen. Allgemein: beim Kauf verringert die gesellschaftliche Struktur die Übertragungssteuern nicht, die im Wesentlichen gleichwertig bleiben; während der Haltedauer ermöglicht direktes Eigentum die Nutzung begünstigter Regelungen für Mieteinkünfte (cedolare secca), die natürlichen Personen vorbehalten sind, während eine italienische Gesellschaft Mieteinnahmen als Unternehmenseinkommen mit anderen Sätzen besteuert (IRES/IRAP); beim Weiterverkauf profitiert direktes Eigentum von der oben beschriebenen Befreiung nach 5 Jahren, während die Übertragung von Gesellschaftsanteilen eigenen Regeln folgt (oft 26 % Steuer auf den Übertragungsgewinn, unabhängig von der Haltedauer); bei der Übertragung/Nachfolge kann eine gesellschaftliche Struktur die Nachlassplanung erleichtern (Anteilsübertragung statt Aufteilung des Eigentums, mögliche Familienpakte), bringt aber laufende Verwaltungskosten mit sich (Buchhaltung, Bilanzen), die direktes Eigentum nicht erfordert. Für persönliche oder familiäre Nutzung bleibt direktes Eigentum in der Regel die einfachste Lösung; eine gesellschaftliche Struktur ist häufiger bei größeren Immobilienportfolios oder komplexen Vermögensübertragungsstrategien gerechtfertigt. Dies ist ein allgemeiner Überblick: die Wahl sollte stets mit einem Steuerberater und einem Notar, sowohl auf italienischer als auch auf französischer Seite, anhand der spezifischen Vermögens- und Familiensituation validiert werden." }
+  ]},
+  { cat:"Weitere Fragen Ausländischer Investoren", items:[
+    { q:"Kann ich als gebietsfremder ausländischer Käufer eine Hypothek in Italien erhalten?", a:"Ja, mehrere italienische Banken und einige internationale Institute vergeben Hypotheken an gebietsfremde ausländische Bürger, in der Regel mit einem vorsichtigeren Beleihungsverhältnis (oft 50-60 % des Immobilienwerts statt der für Gebietsansässige üblichen 80 %) und umfangreicheren Einkommensnachweisen (ausländische Steuererklärungen, Banknachweise). DOMINUS kann Sie mit Kreditinstituten in Kontakt bringen, die an internationale Kunden gewöhnt sind." },
+    { q:"Wie überweise ich Gelder aus dem Ausland für den Kauf, und welche Geldwäsche-Nachverfolgungspflichten gelten?", a:"Zahlungen müssen per nachverfolgbarer Banküberweisung erfolgen, in der Regel auf das Konto des Notars oder direkt an den Verkäufer gemäß den im Vorvertrag vereinbarten Modalitäten. Die italienischen Geldwäschevorschriften verpflichten den Notar, die Herkunft der Mittel und die Identität der Parteien zu prüfen (Sorgfaltspflicht gegenüber dem Kunden); es empfiehlt sich daher, im Voraus Unterlagen vorzubereiten, die die rechtmäßige Herkunft der Beträge belegen (Gehaltsabrechnungen, frühere Verkaufsurkunden, Kontoauszüge)." },
+    { q:"Muss ich ein italienisches Bankkonto eröffnen?", a:"Für den Kauf allein ist dies nicht immer zwingend erforderlich, wird aber dringend empfohlen, um Nebenkosten, lokale Steuern (IMU, TARI) und eventuelle in Italien eingenommene Mieteinnahmen einfach verwalten zu können. Viele Banken verlangen den italienischen Steuersitz oder zumindest eine Steuernummer und erste Unterlagen; DOMINUS unterstützt Kunden auch bei diesem Schritt." },
+    { q:"Kann ich die Immobilie an Touristen kurzzeitig vermieten, und welche Pflichten sind damit verbunden?", a:"Ja, die touristische Kurzzeitvermietung (bis zu 30 Tage) ist erlaubt, erfordert aber die Meldung des CIN (Nationale Identifikationsnummer), ausgestellt vom Tourismusministerium, die Registrierung beim zuständigen regionalen Portal, die Übermittlung der Gästedaten an die örtliche Polizei (Meldeschein) und steuerlich die Anwendung der cedolare secca zu 21 % (26 % ab der zweiten vermieteten Einheit) oder der ordentlichen Besteuerung." },
+    { q:"Wenn ich eine neu gebaute Immobilie kaufe, zahle ich Mehrwertsteuer oder Registersteuer?", a:"Das hängt vom Verkäufer ab: wird die Immobilie direkt vom Bauunternehmen innerhalb von 5 Jahren nach Fertigstellung verkauft, gilt die Mehrwertsteuer (in der Regel 10 %, oder 22 % für Luxusimmobilien, mit ermäßigtem Satz von 4 % bei Erstwohnsitz) zuzüglich fester Register-, Hypotheken- und Katastersteuer; verkauft eine Privatperson oder ein Unternehmen nach 5 Jahren ohne Option zur Mehrwertsteuer, gilt stattdessen die proportionale Registersteuer (2 % Erstwohnsitz, sonst 9 %) zuzüglich fester Hypotheken- und Katastersteuer." },
+    { q:"Muss ich die italienische Immobilie auch in meinem eigenen steuerlichen Wohnsitzland erklären?", a:"In den meisten Ländern ja: der Besitz von Immobilien im Ausland löst in der Regel spezifische Erklärungspflichten im steuerlichen Wohnsitzland des Eigentümers aus (zum Beispiel für französische Gebietsansässige die oben beschriebene IFI-Erklärung; andere Länder sehen eigene Formulare zur steuerlichen Überwachung von Auslandsvermögen vor). Diese Pflichten kommen zu den italienischen (Erklärung der Mieteinkünfte, IMU) hinzu und ersetzen sie nicht. Wir empfehlen stets, die spezifischen Vorschriften Ihres Landes mit einem lokalen Steuerberater zu prüfen." }
+  ]},
+  { cat:"Dossier und DOMINUS-Prozess", items:[
+    { q:"Was ist das DOMINUS-Dossier?", a:"Es ist ein vertrauliches Dokument, das alle Informationen zu einer Off-Market-Gelegenheit zusammenfasst: Beschreibung, Grundrisse, Katasterdaten, Fotos, Marktwert und die für die Bewertung verwendeten Datenquellen." },
+    { q:"Wie fordere ich eine Bewertung oder ein Dossier an?", a:"Sie können das Formular auf der Contact-Seite oder auf der International-Advisory-Seite ausfüllen und Ihr Ziel angeben (Kauf, Bewertung, Wohnsitz, Gesellschaft). Ein Berater antwortet Ihnen persönlich innerhalb von 24 Stunden." },
+    { q:"Wie lange dauert der gesamte Kaufprozess?", a:"Das hängt von der Komplexität des Projekts ab: ein einfacher Kauf kann in 2-3 Monaten vom Angebot bis zur Urkunde abgeschlossen werden; Wege, die Profilierung, Wohnsitz oder Firmengründung einschließen, dauern länger, in der Regel einige Monate." }
+  ]},
+  { cat:"Kontakt", items:[
+    { q:"Wie kann ich DOMINUS kontaktieren?", a:"Über das Formular auf der Contact-Seite, das eigene Formular auf der International-Advisory-Seite, oder durch direkte Schreiben an amministrazione@dominus-suite.it. Wir antworten persönlich innerhalb von 24 Stunden." },
+    { q:"In welchen Sprachen arbeiten Sie?", a:"Die Website und unsere Dienstleistungen sind auf Italienisch, Englisch, Französisch, Deutsch, Spanisch und Arabisch verfügbar, um eine internationale Kundschaft bestmöglich zu betreuen." }
+  ]}
+];
+FAQ_DATA.es = [
+  { cat:"General sobre DOMINUS", items:[
+    { q:"¿Qué es DOMINUS y a qué se dedica?", a:"DOMINUS es una consultora inmobiliaria especializada en oportunidades off-market en Italia. Acompañamos a clientes italianos e internacionales en la búsqueda, valoración y adquisición de inmuebles, además de servicios dedicados de traslado de residencia y constitución de sociedades para quienes desean instalarse en Italia." },
+    { q:"¿Qué significa \"off-market\"?", a:"Una oportunidad off-market es un inmueble no publicitado en los portales tradicionales: la venta se realiza a través de una red de relaciones directas, a menudo con confidencialidad para el vendedor y mayor margen de negociación para el comprador." },
+    { q:"¿Cómo funciona la valoración inmobiliaria gratuita?", a:"A través de nuestro valorador online recopilamos los datos del inmueble (ubicación, superficie, estado, características) y elaboramos una estimación de valor basada en datos de mercado comparables, junto con el cálculo del valor catastral a efectos fiscales." },
+    { q:"¿Cuánto cuestan los servicios de DOMINUS?", a:"Los costes varían según el servicio solicitado (búsqueda inmobiliaria, asesoría de residencia, constitución de sociedad). La primera consulta y la valoración preliminar son gratuitas: los detalles económicos se definen tras la fase de perfilado, según el proyecto." }
+  ]},
+  { cat:"Compra de Inmuebles", items:[
+    { q:"¿Puede un extranjero comprar una vivienda en Italia?", a:"Sí. Los ciudadanos de la Unión Europea pueden comprar libremente. Los ciudadanos extracomunitarios deben verificar la llamada condición de reciprocidad con su país de origen, salvo tratados bilaterales que la excluyan (p. ej. EE. UU., Canadá, Reino Unido en muchos casos)." },
+    { q:"¿Qué es la condición de reciprocidad?", a:"Es el principio según el cual un ciudadano extracomunitario solo puede comprar un inmueble en Italia si su país de origen concede el mismo derecho a los ciudadanos italianos. Se verifica caso por caso según la nacionalidad del comprador." },
+    { q:"¿Cuáles son las fases de compra de un inmueble en Italia?", a:"Habitualmente: una oferta de compra con depósito, un contrato preliminar (compromesso) registrado y, finalmente, la escritura notarial con inscripción en el registro de la propiedad. DOMINUS asiste al cliente en cada fase, coordinando al notario y a otros profesionales." },
+    { q:"¿Qué costes adicionales existen además del precio del inmueble?", a:"Hay que considerar los impuestos de adquisición (registro, hipotecario y catastral, que varían entre primera y segunda vivienda), los honorarios notariales y, si es necesaria, la traducción jurada de los documentos. DOMINUS ofrece asesoramiento y acompañamiento en la búsqueda del inmueble, no actividad de intermediación inmobiliaria, por lo que no aplica comisiones de intermediación sobre la compra." }
+  ]},
+  { cat:"Residencia y Traslado", items:[
+    { q:"¿Comprar una vivienda en Italia da automáticamente derecho a la residencia?", a:"No. La compra de un inmueble no otorga automáticamente el derecho de residencia. Para los ciudadanos extracomunitarios, la entrada, la estancia y la residencia deben obtenerse a través de un trámite independiente (visado y permiso de residencia)." },
+    { q:"¿Qué es el visado de residencia electiva?", a:"Es un visado nacional italiano pensado para quienes disponen de ingresos estables y autónomos (no procedentes de trabajo por cuenta ajena) y desean trasladarse a Italia sin ejercer actividad laboral. Requiere prueba de alojamiento, seguro médico y recursos económicos adecuados." },
+    { q:"¿Qué requisitos económicos se necesitan para la residencia electiva?", a:"El umbral orientativo es de unos 31.000 € anuales para el solicitante principal, con incrementos por cónyuge y familiares a cargo. Los recursos deben proceder de fuentes estables y no laborales (pensiones, rentas, patrimonio)." },
+    { q:"¿Cuánto tiempo se tarda en obtener el permiso de residencia?", a:"Tras obtener el visado, la solicitud del permiso de residencia debe presentarse dentro de los 8 días siguientes a la llegada a Italia. Los plazos de emisión varían según la Questura competente, generalmente de algunas semanas a varios meses." }
+  ]},
+  { cat:"Sociedad e Inversión", items:[
+    { q:"¿Puedo constituir una sociedad en Italia siendo extranjero?", a:"Sí, tanto los ciudadanos comunitarios como los extracomunitarios pueden constituir sociedades italianas. Se necesita un código fiscal italiano para cada socio/administrador; para los ciudadanos extracomunitarios puede requerirse un permiso de residencia o la aplicación de un acuerdo bilateral." },
+    { q:"¿Cuál es el capital mínimo para una SRL italiana?", a:"Una SRL simplificada (SRLS) puede constituirse con capital simbólico desde 1 €, reservada a personas físicas. Una SRL ordinaria requiere generalmente un capital mínimo de 10.000 €, con mayor flexibilidad estatutaria." },
+    { q:"¿Se necesita un permiso de residencia para ser socio de una sociedad italiana?", a:"Para ser simplemente socio (sin un rol de administrador que requiera residencia estable en Italia) a menudo no se necesita permiso de residencia; para ocupar cargos operativos o para ciudadanos extracomunitarios sin acuerdos bilaterales puede ser necesario. Debe verificarse siempre caso por caso con un notario." },
+    { q:"¿Puede una sociedad italiana comprar inmuebles por cuenta de los socios?", a:"Sí, es una estructura frecuentemente utilizada para patrimonios inmobiliarios más complejos, con ventajas en términos de gestión, sucesión y a veces fiscalidad. La elección entre compra personal o societaria depende del proyecto específico del cliente." }
+  ]},
+  { cat:"Fiscalidad para Inversores Extranjeros (enfoque Francia–Italia)", items:[
+    { q:"¿El inmueble adquirido en Italia entra en la base imponible del IFI del cliente francés? ¿Cómo se valora y se deducen los pasivos?", a:"Sí. Si eres residente fiscal en Francia, el IFI (Impôt sur la Fortune Immobilière) se aplica a tu patrimonio inmobiliario neto mundial, por lo tanto también al inmueble situado en Italia, cuando el valor neto conjunto supere el umbral de 1.300.000 €. El inmueble debe valorarse a su valor venal real (de mercado) a 1 de enero del ejercicio fiscal; del valor bruto pueden deducirse las deudas directamente vinculadas al propio bien (por ejemplo, el capital pendiente de un préstamo contraído para la compra, la reforma o el mantenimiento del inmueble), siempre que sean deudas reales y existentes en la fecha de referencia — no son deducibles las deudas genéricas no vinculadas al inmueble. Si el bien se posee a través de una sociedad, debe declararse \"en transparencia\", valorando las participaciones en proporción al valor del inmueble subyacente, salvo excepciones para sociedades con actividad operativa real. Recomendamos siempre una verificación específica con un asesor fiscal habilitado en Francia, ya que las reglas de deducción (en particular sobre deudas intrafamiliares) están sujetas a un control antiabuso estricto." },
+    { q:"¿Qué régimen fiscal se aplica a las rentas por alquiler, tanto en Italia como en Francia?", a:"Italia, como Estado donde se sitúa el inmueble, tiene el derecho primario de gravar las rentas de alquiler (artículo 6 del convenio franco-italiano de 1989 contra la doble imposición). El propietario no residente puede optar entre la \"cedolare secca\" (tipo fijo del 21 %, o 26 % para alquileres de corta duración/turísticos por encima de ciertos umbrales) o la tributación IRPEF ordinaria progresiva (hasta el 43 %) más recargos. En Francia, como Estado de residencia, estas rentas deben declararse igualmente y computan en el cálculo del \"taux effectif\" (el tipo medio aplicado a la renta global), pero la doble imposición se elimina mediante un crédito fiscal igual al impuesto francés teóricamente debido sobre esa misma renta: en la práctica, el impuesto italiano ya pagado neutraliza el impuesto francés sobre esa renta, sin generar sin embargo una devolución si el impuesto italiano fuera superior." },
+    { q:"En caso de reventa con plusvalía, para un residente fiscal francés: ¿qué tributación se aplica en Italia, cuál en Francia, y cómo se coordina la eliminación de la doble imposición?", a:"En Italia, la plusvalía por reventa está totalmente exenta de tributación si el inmueble se ha poseído durante más de 5 años (art. 67 del TUIR); si la venta se produce dentro de los 5 años, la plusvalía tributa, con opción de un impuesto sustitutivo del 26 % en lugar de la tributación IRPEF progresiva. En Francia, esa misma plusvalía está generalmente sujeta a un impuesto del 19 % más un 17,2 % de cotizaciones sociales (36,2 % en total), con un recargo adicional del 2 % al 6 % para plusvalías superiores a 50.000 €; no obstante, se prevén reducciones progresivas según el periodo de posesión, con exención total del impuesto sobre la renta tras 22 años y de las cotizaciones sociales tras 30 años. Punto esencial: el convenio franco-italiano elimina la doble imposición, pero no garantiza la ausencia total de tributación. Si vendes dentro de los 5 años y pagas el impuesto italiano, obtienes un crédito fiscal en Francia; si vendes después de 5 años (exento en Italia), la administración fiscal francesa puede igualmente gravar la plusvalía según sus propias reglas, ya que el crédito fiscal solo se aplica cuando se ha pagado efectivamente un impuesto italiano." },
+    { q:"¿Cómo se trata la sucesión: qué Estado grava, según qué escala, y qué mecanismo de crédito fiscal se aplica en Francia?", a:"En virtud del convenio franco-italiano de 1990 en materia de sucesiones, Italia tiene el derecho de gravar los inmuebles situados en su territorio, independientemente de la residencia del fallecido o de los herederos. El impuesto de sucesiones italiano es particularmente contenido: amplias exenciones para cónyuge e hijos (1.000.000 € cada uno) con un tipo del 4 % sobre el exceso, exención de 100.000 € para hermanos con un tipo del 6 %, tipo del 6 % (sin exención) u 8 % para otros parientes/terceros, además de los impuestos hipotecario y catastral (2 % y 1 % del valor respectivamente) siempre debidos. Si los herederos son residentes fiscales en Francia, la administración francesa aplica su propio impuesto de sucesiones (con tipos mucho más elevados, hasta el 45 % para los hijos por encima de ciertos umbrales) sobre el valor mundial de la herencia, incluido el inmueble italiano, pero concede un crédito fiscal igual al impuesto italiano ya pagado sobre ese bien, para evitar la doble imposición. Atención: los impuestos locales italianos (IMU, TARI) siguen siendo debidos por separado y no entran en el mecanismo de crédito del convenio; la declaración de sucesión italiana debe además presentarse dentro de los 12 meses siguientes al fallecimiento." },
+    { q:"¿Es preferible comprar a título personal o a través de una sociedad (tipo SCI), y cuáles son las consecuencias fiscales de cada opción en la compra, la posesión, la reventa y la transmisión?", a:"Conviene aclarar de entrada un punto: la SCI francesa no existe como figura jurídica en Italia. Quien desee una estructura societaria debe recurrir a un vehículo italiano equivalente (típicamente una sociedad civil inmobiliaria italiana o una S.r.l.); una SCI francesa que comprase directamente un inmueble en Italia sería en todo caso tratada por el fisco italiano como una sociedad extranjera \"opaca\", con consecuencias específicas a evaluar caso por caso. En general: en la compra, la estructura societaria no reduce los impuestos de transmisión, que permanecen sustancialmente equivalentes; durante la posesión, la propiedad directa permite beneficiarse de los regímenes favorables sobre rentas de alquiler (cedolare secca) reservados a personas físicas, mientras que una sociedad italiana grava los alquileres como renta empresarial con tipos distintos (IRES/IRAP); en la reventa, la propiedad directa se beneficia de la exención tras 5 años descrita anteriormente, mientras que la cesión de participaciones sociales sigue sus propias reglas (a menudo tributación del 26 % sobre la plusvalía de cesión, independientemente de los años de posesión); en la transmisión, una estructura societaria puede facilitar la planificación sucesoria (cesión de participaciones en lugar de fraccionamiento de la propiedad, posibles pactos de familia), pero implica costes de gestión recurrentes (contabilidad, balances) que la propiedad directa no requiere. Para un uso personal o familiar, la propiedad directa sigue siendo generalmente la solución más sencilla; una estructura societaria se justifica más a menudo para patrimonios inmobiliarios más amplios o estrategias de transmisión patrimonial complejas. Se trata de una visión general: la elección debe validarse siempre con un asesor fiscal y un notario, tanto en la parte italiana como en la francesa, según la situación patrimonial y familiar específica." }
+  ]},
+  { cat:"Otras Preguntas de Inversores Extranjeros", items:[
+    { q:"¿Puedo obtener una hipoteca en Italia siendo comprador extranjero no residente?", a:"Sí, varios bancos italianos y algunas entidades internacionales conceden hipotecas a ciudadanos extranjeros no residentes, generalmente con una relación préstamo-valor más prudente (a menudo 50-60 % del valor del inmueble en lugar del 80 % habitual para residentes) y una documentación de ingresos más amplia (declaraciones de la renta extranjeras, trazabilidad bancaria). DOMINUS puede ponerte en contacto con entidades acostumbradas a trabajar con clientela internacional." },
+    { q:"¿Cómo transfiero los fondos desde el extranjero para la compra, y qué obligaciones de trazabilidad antiblanqueo se aplican?", a:"Los pagos deben realizarse mediante transferencia bancaria trazable, generalmente a la cuenta del notario o directamente al vendedor según lo acordado en el contrato preliminar. La normativa italiana antiblanqueo obliga al notario a verificar el origen de los fondos y la identidad de las partes (diligencia debida del cliente); por ello es conveniente preparar de antemano la documentación que acredite el origen lícito de las sumas (nóminas, escrituras de venta anteriores, extractos bancarios)." },
+    { q:"¿Debo abrir una cuenta bancaria italiana?", a:"No siempre es obligatorio solo para la compra, pero se recomienda encarecidamente para gestionar con facilidad los suministros, los impuestos locales (IMU, TARI) y eventuales rentas de alquiler cobradas en Italia. Muchos bancos exigen la residencia fiscal italiana o al menos un código fiscal y documentación inicial; DOMINUS también apoya a los clientes en esta fase." },
+    { q:"¿Puedo alquilar el inmueble a turistas mediante alquiler de corta duración, y qué obligaciones conlleva?", a:"Sí, el alquiler turístico de corta duración (hasta 30 días) está permitido, pero requiere la comunicación del CIN (Código Identificativo Nacional) emitido por el Ministerio de Turismo, el registro en el portal regional competente, el envío de los datos de los huéspedes a la policía local (ficha de seguridad pública) y, a efectos fiscales, la aplicación de la cedolare secca al 21 % (26 % a partir de la segunda unidad alquilada) o la tributación ordinaria." },
+    { q:"Si compro un inmueble de nueva construcción, ¿pago IVA o impuesto de transmisiones?", a:"Depende del vendedor: si el inmueble lo vende directamente la empresa constructora dentro de los 5 años siguientes a la finalización de las obras, se aplica el IVA (generalmente 10 %, o 22 % para inmuebles de lujo, con tipo reducido del 4 % si es primera vivienda) más impuestos de registro, hipotecario y catastral en cuantía fija; si el vendedor es un particular o una empresa que vende transcurridos los 5 años sin optar por el IVA, se aplica en cambio el impuesto de registro proporcional (2 % primera vivienda, 9 % en otro caso) más impuestos hipotecario y catastral fijos." },
+    { q:"¿Debo declarar el inmueble italiano también en mi propio país de residencia fiscal?", a:"En la mayoría de los países sí: la posesión de un inmueble en el extranjero generalmente conlleva obligaciones declarativas específicas en el país de residencia fiscal del propietario (por ejemplo, para los residentes franceses, la eventual declaración del IFI descrita anteriormente; otros países prevén formularios específicos para el control fiscal de los bienes en el extranjero). Estas obligaciones se suman, y no sustituyen, a las italianas (declaración de rentas de alquiler, IMU). Recomendamos siempre verificar la normativa específica de tu país con un asesor fiscal local." }
+  ]},
+  { cat:"Dossier y Proceso DOMINUS", items:[
+    { q:"¿Qué es el dossier DOMINUS?", a:"Es un documento confidencial que reúne toda la información sobre una oportunidad off-market: descripción, planos, datos catastrales, fotos, valor de mercado y las fuentes de los datos utilizados para la valoración." },
+    { q:"¿Cómo solicito una valoración o un dossier?", a:"Puedes rellenar el formulario en la página Contact o en la página International Advisory, indicando tu objetivo (compra, valoración, residencia, sociedad). Un asesor te responderá personalmente en 24 horas." },
+    { q:"¿Cuánto tiempo dura todo el proceso de compra?", a:"Depende de la complejidad del proyecto: una compraventa sencilla puede concluirse en 2-3 meses desde la oferta hasta la escritura; los procesos que incluyen perfilado, residencia o constitución de sociedad requieren más tiempo, generalmente varios meses." }
+  ]},
+  { cat:"Contacto", items:[
+    { q:"¿Cómo puedo contactar con DOMINUS?", a:"A través del formulario de la página Contact, el formulario dedicado de la página International Advisory, o escribiendo directamente a amministrazione@dominus-suite.it. Respondemos personalmente en 24 horas." },
+    { q:"¿En qué idiomas trabajáis?", a:"El sitio web y nuestros servicios están disponibles en italiano, inglés, francés, alemán, español y árabe, para atender lo mejor posible a una clientela internacional." }
+  ]}
+];
+FAQ_DATA.ar = [
+  { cat:"معلومات عامة عن DOMINUS", items:[
+    { q:"ما هي DOMINUS وماذا تقدم؟", a:"DOMINUS هي شركة استشارات عقارية متخصصة في الفرص العقارية خارج السوق المفتوحة (off-market) في إيطاليا. نرافق العملاء الإيطاليين والدوليين في البحث عن العقارات وتقييمها وشرائها، إضافة إلى خدمات مخصصة لنقل محل الإقامة وتأسيس الشركات لمن يرغب في الاستقرار في إيطاليا." },
+    { q:"ماذا تعني \"off-market\"؟", a:"الفرصة off-market هي عقار غير معلن عنه في البوابات العقارية التقليدية: تتم عملية البيع من خلال شبكة علاقات مباشرة، غالبًا بسرية تجاه البائع وهامش تفاوض أكبر للمشتري." },
+    { q:"كيف تعمل خدمة التقييم العقاري المجانية؟", a:"من خلال أداة التقييم الإلكترونية نقوم بجمع بيانات العقار (الموقع، المساحة، الحالة، الخصائص) ونضع تقديرًا للقيمة استنادًا إلى بيانات سوقية مقارنة، إلى جانب حساب القيمة العقارية الضريبية (valore catastale)." },
+    { q:"كم تكلف خدمات DOMINUS؟", a:"تختلف التكاليف حسب الخدمة المطلوبة (البحث العقاري، الاستشارة الخاصة بالإقامة، تأسيس الشركة). الاستشارة الأولى والتقييم الأولي مجانيان: يتم تحديد التفاصيل المالية بعد مرحلة تحديد الاحتياجات، وفقًا للمشروع." }
+  ]},
+  { cat:"شراء العقارات", items:[
+    { q:"هل يمكن للأجنبي شراء عقار في إيطاليا؟", a:"نعم. يمكن لمواطني الاتحاد الأوروبي الشراء بحرية. أما مواطنو الدول غير الأعضاء في الاتحاد الأوروبي فعليهم التحقق من ما يسمى بشرط المعاملة بالمثل مع بلدهم الأصلي، ما لم توجد اتفاقيات ثنائية تستثنيهم من ذلك (مثل الولايات المتحدة وكندا والمملكة المتحدة في حالات كثيرة)." },
+    { q:"ما هو شرط المعاملة بالمثل؟", a:"هو المبدأ الذي بموجبه لا يمكن لمواطن من خارج الاتحاد الأوروبي شراء عقار في إيطاليا إلا إذا كان بلده الأصلي يمنح المواطنين الإيطاليين نفس الحق. يتم التحقق من ذلك حالة بحالة وفقًا لجنسية المشتري." },
+    { q:"ما هي مراحل شراء عقار في إيطاليا؟", a:"عادة: عرض شراء مصحوب بعربون، عقد أولي (compromesso) يتم تسجيله، وأخيرًا العقد النهائي أمام كاتب العدل مع التسجيل في السجل العقاري. تُرافق DOMINUS العميل في كل مرحلة، وتنسّق مع كاتب العدل والمهنيين الآخرين." },
+    { q:"ما هي التكاليف الإضافية بخلاف سعر العقار؟", a:"يجب مراعاة ضرائب الشراء (ضريبة التسجيل، الرهن العقاري، والضريبة العقارية، وتختلف بين السكن الأول والثاني)، وأتعاب كاتب العدل، وإذا لزم الأمر، الترجمة المحلفة للمستندات. تقدم DOMINUS الاستشارة والمرافقة في البحث عن العقار، وليست وسيطًا عقاريًا، وبالتالي لا تفرض أي عمولة سمسرة على عملية الشراء." }
+  ]},
+  { cat:"الإقامة والانتقال", items:[
+    { q:"هل يمنح شراء عقار في إيطاليا الحق في الإقامة تلقائيًا؟", a:"لا. شراء العقار لا يمنح تلقائيًا الحق في الإقامة. بالنسبة لمواطني الدول غير الأعضاء في الاتحاد الأوروبي، يجب الحصول على الدخول والإقامة من خلال إجراء منفصل (تأشيرة وتصريح إقامة)." },
+    { q:"ما هي تأشيرة الإقامة الاختيارية (residenza elettiva)؟", a:"هي تأشيرة إيطالية وطنية مخصصة لمن يملك دخلاً مستقرًا ومستقلاً (غير ناتج عن عمل بأجر) ويرغب في الانتقال إلى إيطاليا دون ممارسة نشاط مهني. تتطلب إثبات السكن، والتأمين الصحي، والموارد المالية الكافية." },
+    { q:"ما هي المتطلبات المالية للحصول على الإقامة الاختيارية؟", a:"الحد التوجيهي هو نحو 31,000 يورو سنويًا لمقدم الطلب الرئيسي، مع زيادات للزوج/الزوجة والمعالين. يجب أن تكون الموارد من مصادر مستقرة وغير ناتجة عن عمل (معاشات تقاعدية، إيرادات، ثروة)." },
+    { q:"كم من الوقت يستغرق الحصول على تصريح الإقامة؟", a:"بعد الحصول على التأشيرة، يجب تقديم طلب تصريح الإقامة خلال 8 أيام من الوصول إلى إيطاليا. تختلف مدة الإصدار حسب مديرية الشرطة (Questura) المختصة، وعادة ما تتراوح بين بضعة أسابيع وعدة أشهر." }
+  ]},
+  { cat:"الشركات والاستثمار", items:[
+    { q:"هل يمكنني تأسيس شركة في إيطاليا كأجنبي؟", a:"نعم، يمكن لمواطني الاتحاد الأوروبي وغير الأعضاء فيه تأسيس شركات إيطالية. يلزم رمز ضريبي إيطالي (codice fiscale) لكل شريك/مدير؛ وبالنسبة لمواطني الدول غير الأعضاء قد يُطلب تصريح إقامة أو تطبيق اتفاقية ثنائية." },
+    { q:"ما هو الحد الأدنى لرأس مال شركة SRL الإيطالية؟", a:"يمكن تأسيس شركة SRL مبسّطة (SRLS) برأس مال رمزي يبدأ من 1 يورو، وهي مخصصة للأشخاص الطبيعيين. أما شركة SRL العادية فتتطلب عادة رأس مال أدنى قدره 10,000 يورو، مع مرونة أكبر في النظام الأساسي." },
+    { q:"هل يلزم تصريح إقامة لأكون شريكًا في شركة إيطالية؟", a:"لمجرد أن تكون شريكًا (دون دور إداري يتطلب إقامة مستقرة في إيطاليا) غالبًا لا يلزم تصريح إقامة؛ أما لشغل مناصب تنفيذية أو بالنسبة لمواطني دول غير أعضاء دون اتفاقيات ثنائية فقد يكون ذلك ضروريًا. يجب دائمًا التحقق من ذلك حالة بحالة مع كاتب العدل." },
+    { q:"هل يمكن لشركة إيطالية شراء عقارات نيابة عن الشركاء؟", a:"نعم، وهي بنية شائعة الاستخدام للممتلكات العقارية الأكثر تعقيدًا، مع مزايا من حيث الإدارة والتوريث وأحيانًا من الناحية الضريبية. يعتمد الاختيار بين الشراء الشخصي أو عبر الشركة على مشروع العميل المحدد." }
+  ]},
+  { cat:"الضرائب للمستثمرين الأجانب (بؤرة فرنسا–إيطاليا)", items:[
+    { q:"هل يدخل العقار المُقتنى في إيطاليا ضمن الوعاء الضريبي لضريبة الثروة العقارية (IFI) الفرنسية للعميل؟ وكيف يتم تقييمه وخصم الديون منه؟", a:"نعم. إذا كنت مقيمًا ضريبيًا في فرنسا، فإن ضريبة الثروة العقارية (IFI) تُطبَّق على ثروتك العقارية الصافية على مستوى العالم، وبالتالي أيضًا على العقار الموجود في إيطاليا، عندما تتجاوز القيمة الصافية الإجمالية عتبة 1,300,000 يورو. يجب تقييم العقار بقيمته السوقية الحقيقية في 1 يناير من السنة الضريبية؛ ويمكن خصم الديون المرتبطة مباشرة بالعقار نفسه من القيمة الإجمالية (مثل رأس المال المتبقي من قرض تم الحصول عليه لشراء العقار أو تجديده أو صيانته)، شريطة أن تكون ديونًا حقيقية وقائمة في تاريخ الإسناد — ولا تُخصم الديون العامة غير المرتبطة بالعقار. إذا كان العقار مملوكًا عبر شركة، يجب التصريح به \"بالشفافية\"، بتقييم الحصص بنسبة قيمة العقار الأساسي، باستثناء الشركات ذات النشاط التشغيلي الحقيقي. ننصح دائمًا بالتحقق مع مستشار ضريبي معتمد في فرنسا، حيث تخضع قواعد الخصم (خاصة الديون بين أفراد الأسرة) لرقابة صارمة لمكافحة التهرب." },
+    { q:"ما هو النظام الضريبي المطبق على دخل الإيجار، سواء في إيطاليا أو في فرنسا؟", a:"تملك إيطاليا، بوصفها الدولة التي يقع فيها العقار، الحق الأساسي في فرض الضريبة على دخل الإيجار (المادة 6 من اتفاقية عام 1989 بين فرنسا وإيطاليا لتجنب الازدواج الضريبي). يمكن للمالك غير المقيم الاختيار بين نظام \"cedolare secca\" (ضريبة ثابتة 21%، أو 26% للإيجارات قصيرة المدى/السياحية فوق عتبات معينة) أو الضريبة التصاعدية العادية (حتى 43%) بالإضافة إلى الرسوم الإضافية. أما في فرنسا، كدولة الإقامة، فيجب أيضًا التصريح بهذا الدخل، ويُحتسب ضمن \"المعدل الفعلي\" (taux effectif) المطبق على الدخل الإجمالي، لكن يُزال الازدواج الضريبي عبر ائتمان ضريبي يعادل الضريبة الفرنسية النظرية المستحقة على هذا الدخل نفسه: عمليًا، تُحيّد الضريبة الإيطالية المدفوعة بالفعل الضريبة الفرنسية على هذا الدخل، دون أن يؤدي ذلك إلى استرداد إن كانت الضريبة الإيطالية أعلى." },
+    { q:"في حال إعادة البيع مع تحقيق أرباح رأسمالية، بالنسبة لمقيم ضريبي فرنسي: ما هي الضريبة المطبقة في إيطاليا، وما هي في فرنسا، وكيف يتم تنسيق إزالة الازدواج الضريبي؟", a:"في إيطاليا، تُعفى الأرباح الرأسمالية الناتجة عن إعادة البيع كليًا من الضريبة إذا كان العقار مملوكًا لأكثر من 5 سنوات (المادة 67 من قانون الضريبة على الدخل الإيطالي TUIR)؛ أما إذا تمت عملية البيع خلال 5 سنوات، فتخضع الأرباح للضريبة، مع خيار ضريبة بديلة بنسبة 26% بدلاً من الضريبة التصاعدية. أما في فرنسا، فتخضع هذه الأرباح نفسها عمومًا لضريبة بنسبة 19% بالإضافة إلى 17.2% اشتراكات اجتماعية (36.2% إجمالاً)، مع رسم إضافي يتراوح بين 2% و6% للأرباح التي تتجاوز 50,000 يورو؛ غير أنه تُطبَّق تخفيضات تدريجية حسب مدة الملكية، مع إعفاء كامل من ضريبة الدخل بعد 22 عامًا ومن الاشتراكات الاجتماعية بعد 30 عامًا. النقطة الأساسية: تُزيل الاتفاقية الفرنسية-الإيطالية الازدواج الضريبي، لكنها لا تضمن عدم الخضوع للضريبة كليًا. فإذا بعت خلال 5 سنوات ودفعت الضريبة الإيطالية، تحصل على ائتمان ضريبي في فرنسا؛ وإذا بعت بعد 5 سنوات (معفى في إيطاليا)، يمكن للإدارة الضريبية الفرنسية أن تفرض الضريبة على الأرباح وفقًا لقواعدها الخاصة، لأن الائتمان الضريبي يُطبَّق فقط عند دفع ضريبة إيطالية فعلية." },
+    { q:"كيف يُعامَل الميراث ضريبيًا: أي دولة تفرض الضريبة، وفق أي جدول، وما هي آلية الائتمان الضريبي المطبقة في فرنسا؟", a:"بموجب الاتفاقية الفرنسية-الإيطالية لعام 1990 بشأن الميراث، تملك إيطاليا حق فرض الضريبة على العقارات الواقعة على أراضيها، بغض النظر عن محل إقامة المتوفى أو الورثة. ضريبة الميراث الإيطالية معتدلة نسبيًا: إعفاءات واسعة للزوج/الزوجة والأبناء (1,000,000 يورو لكل منهم) مع نسبة 4% على الفائض، إعفاء 100,000 يورو للإخوة والأخوات بنسبة 6%، ونسبة 6% (دون إعفاء) أو 8% لأقارب أو أطراف أخرى، بالإضافة إلى ضريبتي الرهن العقاري والضريبة العقارية (2% و1% من القيمة على التوالي) المستحقتين دائمًا. إذا كان الورثة مقيمين ضريبيًا في فرنسا، تطبق الإدارة الفرنسية ضريبة الميراث الخاصة بها (بنسب أعلى بكثير، تصل إلى 45% للأبناء فوق عتبات معينة) على القيمة الإجمالية للتركة على مستوى العالم، بما في ذلك العقار الإيطالي، لكنها تمنح ائتمانًا ضريبيًا يعادل الضريبة الإيطالية المدفوعة بالفعل على هذا العقار، لتجنب الازدواج الضريبي. تنبيه: تظل الضرائب المحلية الإيطالية (IMU، TARI) مستحقة بشكل منفصل ولا تدخل ضمن آلية الائتمان في الاتفاقية؛ كما يجب تقديم تصريح الميراث الإيطالي خلال 12 شهرًا من تاريخ الوفاة." },
+    { q:"هل من الأفضل الشراء بصفة شخصية أم عبر شركة (من نوع SCI)، وما هي التبعات الضريبية لكل خيار عند الشراء والاحتفاظ وإعادة البيع والانتقال؟", a:"يجدر التوضيح بدايةً أن شركة SCI الفرنسية لا وجود لها كصيغة قانونية في إيطاليا. فمن يرغب في هيكل شركة عليه اللجوء إلى وسيلة إيطالية مماثلة (عادة شركة عقارية مدنية إيطالية أو شركة SRL)؛ أما شركة SCI فرنسية تشتري عقارًا مباشرة في إيطاليا فستُعامَل من قبل السلطات الضريبية الإيطالية كشركة أجنبية \"معتمة\" (opaca)، مع تبعات خاصة يجب تقييمها حالة بحالة. بشكل عام: عند الشراء، لا يقلل هيكل الشركة من ضرائب النقل، التي تظل متساوية إلى حد كبير؛ خلال فترة الملكية، تسمح الملكية المباشرة بالاستفادة من الأنظمة التفضيلية على دخل الإيجار (cedolare secca) المخصصة للأشخاص الطبيعيين، بينما تفرض الشركة الإيطالية الضريبة على الإيجارات كدخل تجاري بنسب مختلفة (IRES/IRAP)؛ عند إعادة البيع، تستفيد الملكية المباشرة من الإعفاء بعد 5 سنوات كما ذُكر سابقًا، بينما يخضع التنازل عن الحصص لقواعده الخاصة (غالبًا ضريبة 26% على أرباح التنازل، بصرف النظر عن مدة الملكية)؛ عند الانتقال، يمكن أن يسهّل هيكل الشركة تخطيط التوريث (التنازل عن الحصص بدلاً من تقسيم الملكية، اتفاقيات عائلية محتملة)، لكنه يستلزم تكاليف إدارية متكررة (محاسبة، ميزانيات) لا تتطلبها الملكية المباشرة. للاستخدام الشخصي أو العائلي، تظل الملكية المباشرة عمومًا الحل الأبسط؛ ويُبرَّر هيكل الشركة غالبًا للممتلكات العقارية الأوسع أو استراتيجيات التوريث المعقدة. هذه نظرة عامة: يجب دائمًا التحقق من الاختيار مع مستشار ضريبي وكاتب عدل، في الجانبين الإيطالي والفرنسي، وفقًا للوضع المالي والعائلي المحدد." }
+  ]},
+  { cat:"أسئلة أخرى من المستثمرين الأجانب", items:[
+    { q:"هل يمكنني الحصول على قرض عقاري في إيطاليا كمشترٍ أجنبي غير مقيم؟", a:"نعم، تمنح عدة بنوك إيطالية وبعض المؤسسات الدولية قروضًا عقارية للمواطنين الأجانب غير المقيمين، عادة بنسبة تمويل أكثر تحفظًا (غالبًا 50-60% من قيمة العقار بدلاً من 80% المعتادة للمقيمين) ومستندات دخل أوسع (إقرارات ضريبية أجنبية، تتبع مصرفي). يمكن لـ DOMINUS أن تربطك بمؤسسات معتادة على التعامل مع العملاء الدوليين." },
+    { q:"كيف أحوّل الأموال من الخارج لإتمام الشراء، وما هي التزامات التتبع المتعلقة بمكافحة غسل الأموال؟", a:"يجب أن تتم المدفوعات عبر تحويل مصرفي قابل للتتبع، عادة إلى حساب كاتب العدل أو مباشرة إلى البائع وفقًا لما اتُفق عليه في العقد الأولي. يُلزم القانون الإيطالي لمكافحة غسل الأموال كاتب العدل بالتحقق من مصدر الأموال وهوية الأطراف (العناية الواجبة تجاه العميل)؛ لذا يُستحسن تجهيز المستندات التي تثبت المصدر المشروع للمبالغ مسبقًا (كشوف الرواتب، عقود بيع سابقة، كشوف حسابات مصرفية)." },
+    { q:"هل يجب أن أفتح حسابًا مصرفيًا إيطاليًا؟", a:"ليس ذلك إلزاميًا دائمًا لمجرد الشراء، لكنه يُنصح به بشدة لإدارة الفواتير والضرائب المحلية (IMU، TARI) وأي دخل إيجار يُحصَّل في إيطاليا بسهولة. تشترط العديد من البنوك الإقامة الضريبية الإيطالية أو على الأقل رمزًا ضريبيًا ووثائق أولية؛ وتدعم DOMINUS العملاء أيضًا في هذه المرحلة." },
+    { q:"هل يمكنني تأجير العقار للسياح عبر الإيجار قصير المدى، وما الالتزامات المترتبة على ذلك؟", a:"نعم، الإيجار السياحي قصير المدى (حتى 30 يومًا) مسموح به، لكنه يتطلب الإبلاغ عن الرمز التعريفي الوطني CIN الصادر عن وزارة السياحة، والتسجيل في البوابة الإقليمية المختصة، وإرسال بيانات النزلاء إلى الشرطة المحلية (بطاقة الأمن العام)، ومن الناحية الضريبية، تطبيق نظام cedolare secca بنسبة 21% (26% اعتبارًا من الوحدة الثانية المؤجرة) أو الضريبة العادية." },
+    { q:"إذا اشتريت عقارًا جديد البناء، هل أدفع ضريبة القيمة المضافة أم ضريبة النقل؟", a:"يعتمد ذلك على البائع: إذا كان العقار يُباع مباشرة من قبل الشركة الباني خلال 5 سنوات من انتهاء الأشغال، تُطبَّق ضريبة القيمة المضافة (عادة 10%، أو 22% للعقارات الفاخرة، مع نسبة مخفضة 4% إذا كان السكن الأول) بالإضافة إلى ضرائب التسجيل والرهن العقاري والضريبة العقارية بمبلغ ثابت؛ أما إذا كان البائع فردًا أو شركة تبيع بعد مرور 5 سنوات دون اختيار ضريبة القيمة المضافة، فتُطبَّق بدلاً من ذلك ضريبة التسجيل النسبية (2% للسكن الأول، 9% في الحالات الأخرى) بالإضافة إلى ضرائب الرهن العقاري والضريبة العقارية الثابتة." },
+    { q:"هل يجب أن أصرّح بالعقار الإيطالي أيضًا في بلد إقامتي الضريبية؟", a:"في معظم البلدان، نعم: تترتب على امتلاك عقار في الخارج عادة التزامات تصريح خاصة في بلد الإقامة الضريبية للمالك (على سبيل المثال، بالنسبة للمقيمين في فرنسا، تصريح ضريبة الثروة العقارية IFI المذكور سابقًا؛ وتنص بلدان أخرى على نماذج خاصة للرقابة الضريبية على الممتلكات في الخارج). هذه الالتزامات تُضاف إلى الالتزامات الإيطالية (التصريح بدخل الإيجار، IMU) ولا تحل محلها. نوصي دائمًا بالتحقق من القواعد الخاصة ببلدك مع مستشار ضريبي محلي." }
+  ]},
+  { cat:"الملف والإجراءات لدى DOMINUS", items:[
+    { q:"ما هو ملف DOMINUS (dossier)؟", a:"هو مستند سري يجمع كل المعلومات المتعلقة بفرصة off-market: الوصف، المخططات، البيانات العقارية، الصور، القيمة السوقية، ومصادر البيانات المستخدمة في التقييم." },
+    { q:"كيف أطلب تقييمًا أو ملفًا؟", a:"يمكنك ملء النموذج في صفحة Contact أو في صفحة International Advisory، مع تحديد هدفك (شراء، تقييم، إقامة، تأسيس شركة). سيتواصل معك مستشار شخصيًا خلال 24 ساعة." },
+    { q:"كم يستغرق كل إجراء الشراء؟", a:"يعتمد ذلك على تعقيد المشروع: يمكن إتمام عملية بيع بسيطة خلال 2-3 أشهر من العرض حتى العقد النهائي؛ أما الإجراءات التي تشمل تحديد الاحتياجات أو الإقامة أو تأسيس الشركة فتستغرق وقتًا أطول، عادة عدة أشهر." }
+  ]},
+  { cat:"التواصل", items:[
+    { q:"كيف يمكنني التواصل مع DOMINUS؟", a:"من خلال النموذج في صفحة Contact، أو النموذج المخصص في صفحة International Advisory، أو بالكتابة مباشرة إلى amministrazione@dominus-suite.it. نرد شخصيًا خلال 24 ساعة." },
+    { q:"بأي لغات تعملون؟", a:"الموقع الإلكتروني وخدماتنا متاحة باللغات الإيطالية والإنجليزية والفرنسية والألمانية والإسبانية والعربية، لخدمة العملاء الدوليين على أفضل وجه." }
+  ]}
+];
+
+/* ============ UI STRINGS ============ */
+var UI = {
+  it:{ code:"IT", dir:"ltr", title_tag:"FAQ | DOMINUS",
+    nav_home:"Home", nav_opportunities:"Opportunities", nav_success_stories:"Success Stories", nav_events:"Eventi", nav_relocation:"International Advisory", nav_faq:"FAQ", nav_join_us:"Lavora con Noi", nav_contact:"Contact",
+    hero_kicker:"Domande Frequenti", hero_title:"Come Possiamo Aiutarti?",
+    hero_subtitle:"Cerca per parola chiave o sfoglia le domande più frequenti su acquisto immobiliare, residenza, società, fiscalità internazionale e servizi DOMINUS.",
+    search_placeholder:"Cerca per parola chiave, es. reciprocità, visto, SRL...",
+    no_results_text:"Nessun risultato per questa ricerca. Prova con un'altra parola chiave o contattaci direttamente.",
+    cta_text:"Non hai trovato quello che cercavi? Il nostro team è a disposizione per rispondere a qualsiasi domanda specifica sul tuo progetto.",
+    cta_btn:"Contattaci", footer_text:"Off Market Consulting",
+    fiscal_disclaimer:"Le informazioni fiscali e legali riportate in questa pagina, incluse quelle relative alla fiscalità internazionale, hanno scopo puramente informativo, sono soggette a modifiche normative e non costituiscono consulenza fiscale, legale o notarile personalizzata. Aliquote, soglie e trattati possono variare nel tempo: raccomandiamo sempre una verifica con un commercialista o avvocato tributarista abilitato nel proprio Paese di residenza, oltre che con un notaio italiano, prima di assumere decisioni.",
+    results_count_one:"1 risultato", results_count_many:"{n} risultati", results_none:"" },
+  en:{ code:"EN", dir:"ltr", title_tag:"FAQ | DOMINUS",
+    nav_home:"Home", nav_opportunities:"Opportunities", nav_success_stories:"Success Stories", nav_events:"Events", nav_relocation:"International Advisory", nav_faq:"FAQ", nav_join_us:"Join Us", nav_contact:"Contact",
+    hero_kicker:"Frequently Asked Questions", hero_title:"How Can We Help You?",
+    hero_subtitle:"Search by keyword or browse the most frequent questions about property purchase, residence, companies, international taxation and DOMINUS services.",
+    search_placeholder:"Search by keyword, e.g. reciprocity, visa, SRL...",
+    no_results_text:"No results for this search. Try a different keyword or contact us directly.",
+    cta_text:"Didn't find what you were looking for? Our team is available to answer any specific question about your project.",
+    cta_btn:"Contact Us", footer_text:"Off Market Consulting",
+    fiscal_disclaimer:"The tax and legal information on this page, including that relating to international taxation, is for general informational purposes only, subject to regulatory change, and does not constitute personalized tax, legal or notarial advice. Rates, thresholds and treaties may change over time: we always recommend checking with a licensed accountant or tax lawyer in your own country of residence, as well as an Italian notary, before making decisions.",
+    results_count_one:"1 result", results_count_many:"{n} results", results_none:"" },
+  fr:{ code:"FR", dir:"ltr", title_tag:"FAQ | DOMINUS",
+    nav_home:"Accueil", nav_opportunities:"Opportunities", nav_success_stories:"Success Stories", nav_events:"Événements", nav_relocation:"Conseil International", nav_faq:"FAQ", nav_join_us:"Travailler avec nous", nav_contact:"Contact",
+    hero_kicker:"Questions Fréquentes", hero_title:"Comment Pouvons-Nous Vous Aider ?",
+    hero_subtitle:"Recherchez par mot-clé ou parcourez les questions les plus fréquentes sur l'achat immobilier, la résidence, les sociétés et les services DOMINUS.",
+    search_placeholder:"Rechercher par mot-clé, ex. réciprocité, visa, SRL...",
+    no_results_text:"Aucun résultat pour cette recherche. Essayez un autre mot-clé ou contactez-nous directement.",
+    cta_text:"Vous n'avez pas trouvé ce que vous cherchiez ? Notre équipe est disponible pour répondre à toute question spécifique sur votre projet.",
+    cta_btn:"Contactez-nous", footer_text:"Off Market Consulting",
+    results_count_one:"1 résultat", results_count_many:"{n} résultats", results_none:"" },
+  de:{ code:"DE", dir:"ltr", title_tag:"FAQ | DOMINUS",
+    nav_home:"Home", nav_opportunities:"Opportunities", nav_success_stories:"Success Stories", nav_events:"Events", nav_relocation:"International Advisory", nav_faq:"FAQ", nav_join_us:"Mit uns arbeiten", nav_contact:"Contact",
+    hero_kicker:"Häufig Gestellte Fragen", hero_title:"Wie Können Wir Ihnen Helfen?",
+    hero_subtitle:"Suchen Sie nach Stichwort oder durchsuchen Sie die häufigsten Fragen zu Immobilienkauf, Wohnsitz, Gesellschaften und DOMINUS-Dienstleistungen.",
+    search_placeholder:"Nach Stichwort suchen, z.B. Gegenseitigkeit, Visum, SRL...",
+    no_results_text:"Keine Ergebnisse für diese Suche. Versuchen Sie ein anderes Stichwort oder kontaktieren Sie uns direkt.",
+    cta_text:"Nicht gefunden, wonach Sie gesucht haben? Unser Team steht Ihnen für spezifische Fragen zu Ihrem Projekt zur Verfügung.",
+    cta_btn:"Kontaktieren Sie uns", footer_text:"Off Market Consulting",
+    results_count_one:"1 Ergebnis", results_count_many:"{n} Ergebnisse", results_none:"" },
+  es:{ code:"ES", dir:"ltr", title_tag:"FAQ | DOMINUS",
+    nav_home:"Inicio", nav_opportunities:"Opportunities", nav_success_stories:"Success Stories", nav_events:"Eventos", nav_relocation:"Asesoría Internacional", nav_faq:"FAQ", nav_join_us:"Trabaja con nosotros", nav_contact:"Contact",
+    hero_kicker:"Preguntas Frecuentes", hero_title:"¿Cómo Podemos Ayudarte?",
+    hero_subtitle:"Busca por palabra clave o consulta las preguntas más frecuentes sobre compra de inmuebles, residencia, sociedades y servicios de DOMINUS.",
+    search_placeholder:"Buscar por palabra clave, ej. reciprocidad, visado, SRL...",
+    no_results_text:"No hay resultados para esta búsqueda. Prueba con otra palabra clave o contáctanos directamente.",
+    cta_text:"¿No encontraste lo que buscabas? Nuestro equipo está disponible para responder cualquier pregunta específica sobre tu proyecto.",
+    cta_btn:"Contáctanos", footer_text:"Off Market Consulting",
+    results_count_one:"1 resultado", results_count_many:"{n} resultados", results_none:"" },
+  ar:{ code:"AR", dir:"rtl", title_tag:"الأسئلة الشائعة | DOMINUS",
+    nav_home:"الرئيسية", nav_opportunities:"الفرص", nav_success_stories:"قصص النجاح", nav_events:"الفعاليات", nav_relocation:"الاستشارات الدولية", nav_faq:"الأسئلة الشائعة", nav_join_us:"اعمل معنا", nav_contact:"اتصل بنا",
+    hero_kicker:"الأسئلة الشائعة", hero_title:"كيف يمكننا مساعدتك؟",
+    hero_subtitle:"ابحث بكلمة مفتاحية أو تصفح الأسئلة الأكثر شيوعاً حول شراء العقارات والإقامة والشركات وخدمات DOMINUS.",
+    search_placeholder:"ابحث بكلمة مفتاحية، مثل المعاملة بالمثل، التأشيرة، SRL...",
+    no_results_text:"لا توجد نتائج لهذا البحث. جرّب كلمة مفتاحية أخرى أو تواصل معنا مباشرة.",
+    cta_text:"لم تجد ما تبحث عنه؟ فريقنا جاهز للإجابة على أي سؤال محدد بخصوص مشروعك.",
+    cta_btn:"تواصل معنا", footer_text:"Off Market Consulting",
+    results_count_one:"نتيجة واحدة", results_count_many:"{n} نتائج", results_none:"" }
+};
+
+var currentLanguage = "it";
+function dict(key){ return (UI[currentLanguage] && UI[currentLanguage][key]) || UI.it[key] || key; }
+
+var faqSection = document.getElementById("faqSection");
+var noResults = document.getElementById("noResults");
+var searchInput = document.getElementById("faqSearch");
+var searchMeta = document.getElementById("searchMeta");
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+
+function highlight(text, query){
+  if(!query) return escapeHtml(text);
+  var escaped = escapeHtml(text);
+  var escapedQuery = escapeHtml(query).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  var re = new RegExp("(" + escapedQuery + ")", "ig");
+  return escaped.replace(re, "<mark>$1</mark>");
+}
+
+function renderFaq(){
+  var data = FAQ_DATA[currentLanguage] || FAQ_DATA.it;
+  var query = (searchInput.value || "").trim().toLowerCase();
+  var html = "";
+  var totalMatches = 0;
+
+  data.forEach(function(category, catIdx){
+    var visibleItems = category.items.filter(function(item){
+      if(!query) return true;
+      return (item.q + " " + item.a).toLowerCase().indexOf(query) !== -1;
+    });
+    if(!visibleItems.length) return;
+
+    totalMatches += visibleItems.length;
+    html += '<div class="category"><div class="category-title">' + escapeHtml(category.cat) + '</div>';
+    visibleItems.forEach(function(item, i){
+      var openAttr = query ? " open" : (catIdx === 0 && i === 0 ? " open" : "");
+      html += '<details class="faq-item"' + openAttr + '>'
+            + '<summary>' + highlight(item.q, query) + '</summary>'
+            + '<div class="faq-answer">' + highlight(item.a, query) + '</div>'
+            + '</details>';
+    });
+    html += '</div>';
+  });
+
+  faqSection.innerHTML = html;
+  noResults.style.display = (query && totalMatches === 0) ? "block" : "none";
+
+  if(query){
+    var label = totalMatches === 1 ? dict("results_count_one") : dict("results_count_many").replace("{n}", totalMatches);
+    searchMeta.textContent = label;
+  } else {
+    searchMeta.textContent = "";
+  }
+}
+
+searchInput.addEventListener("input", renderFaq);
+
+function applyLanguage(lang){
+  currentLanguage = UI[lang] ? lang : "it";
+  try{ sessionStorage.setItem("immonova_public_language", currentLanguage); }catch(e){}
+
+  document.documentElement.lang = currentLanguage;
+  document.body.setAttribute("dir", (UI[currentLanguage] && UI[currentLanguage].dir) || "ltr");
+  document.title = dict("title_tag");
+
+  document.querySelectorAll("[data-i18n]").forEach(function(el){
+    var key = el.getAttribute("data-i18n");
+    if(dict(key)) el.textContent = dict(key);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(function(el){
+    var key = el.getAttribute("data-i18n-placeholder");
+    if(dict(key)) el.setAttribute("placeholder", dict(key));
+  });
+
+  document.getElementById("languageButton").textContent = (UI[currentLanguage] && UI[currentLanguage].code) || "IT";
+  document.querySelectorAll("[data-lang]").forEach(function(btn){
+    btn.classList.toggle("active", btn.getAttribute("data-lang") === currentLanguage);
+  });
+
+  renderFaq();
+}
+
+document.getElementById("languageButton").addEventListener("click", function(e){
+  e.stopPropagation();
+  document.getElementById("languageMenu").classList.toggle("open");
+});
+document.querySelectorAll("[data-lang]").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    applyLanguage(btn.getAttribute("data-lang"));
+    document.getElementById("languageMenu").classList.remove("open");
+  });
+});
+document.addEventListener("click", function(){
+  document.getElementById("languageMenu").classList.remove("open");
+});
+
+(function initLanguage(){
+  var params = new URLSearchParams(window.location.search);
+  var langParam = params.get("lang");
+  var qParam = params.get("q");
+  var saved = null;
+  try{ saved = sessionStorage.getItem("immonova_public_language"); }catch(e){}
+  var browser = (navigator.language || "it").slice(0,2).toLowerCase();
+  applyLanguage(langParam || saved || (UI[browser] ? browser : "it"));
+  if(qParam){ searchInput.value = qParam; renderFaq(); }
+})();
+</script>
+
+<script>
+(function(){
+  var toggle = document.getElementById("navToggle");
+  var nav = document.querySelector("header.header .nav");
+  if(toggle && nav){
+    toggle.addEventListener("click", function(){
+      var isOpen = nav.classList.toggle("open");
+      toggle.innerHTML = isOpen ? "&times;" : "&#9776;";
+      toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    });
+    nav.querySelectorAll("a").forEach(function(a){
+      a.addEventListener("click", function(){
+        nav.classList.remove("open");
+        toggle.innerHTML = "&#9776;";
+        toggle.setAttribute("aria-expanded", "false");
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>

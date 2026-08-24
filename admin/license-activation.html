@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attivazione Licenza | Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--page-bg-color,#f4ecdf);font-family:var(--font-family,"Avenir Next","Helvetica Neue",Arial,sans-serif);color:var(--text-color,#7f6430);min-height:100vh;display:flex;align-items:center;justify-content:center}
+.box{background:rgba(255,255,255,.4);padding:40px;max-width:420px;width:90%}
+.logo{font-size:20px;font-weight:300;letter-spacing:.3em;color:var(--primary-color,#a67f34);margin-bottom:10px;text-align:center}
+.subtitle{font-size:12.5px;color:#8f7643;margin-bottom:24px;text-align:center;line-height:1.6}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#8f7643;margin-bottom:5px}
+.field input{width:100%;padding:10px;border:1px solid rgba(166,127,52,.25);background:#fff;font-family:inherit;font-size:13px;letter-spacing:.05em}
+.btn{width:100%;padding:12px;border:1px solid var(--primary-color,#a67f34);background:var(--primary-color,#a67f34);color:#fff;cursor:pointer;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-family:inherit;margin-top:8px}
+.status{margin-top:12px;font-size:12.5px;min-height:16px}
+.error{color:#9c2f2f}
+.success{color:#4f7f45}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo">ATTIVAZIONE</div>
+  <p class="subtitle">Inserisci il codice licenza ricevuto per attivare questo sito. Va fatto una sola volta, alla prima installazione.</p>
+  <div class="field"><label>Codice licenza</label><input id="licenseCode" placeholder="es. aB3xQ9..."></div>
+  <button class="btn" onclick="activate()">Attiva</button>
+  <div id="status" class="status"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script>
+const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Stesso valore usato in js/license-gate.js
+const CONTROL_PLANE_URL = "https://cspzkofhgfrnkhjpfazb.supabase.co"; // guestintown
+const CONTROL_PLANE_ANON_KEY = "sb_publishable_oYbR_A78f8SRKdJbkeZegQ_4gAx-567";
+
+window.activate = async function(){
+  const licenseCode = document.getElementById("licenseCode").value.trim();
+  const statusEl = document.getElementById("status");
+  if(!licenseCode){ statusEl.textContent = "Inserisci un codice."; statusEl.className = "status error"; return; }
+
+  statusEl.textContent = "Verifica in corso...";
+  statusEl.className = "status";
+
+  let result;
+  try {
+    const res = await fetch(CONTROL_PLANE_URL + "/functions/v1/license-verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": CONTROL_PLANE_ANON_KEY },
+      body: JSON.stringify({ license_code: licenseCode })
+    });
+    result = await res.json();
+  } catch(e){
+    statusEl.textContent = "Impossibile contattare il pannello centrale: " + e;
+    statusEl.className = "status error";
+    return;
+  }
+
+  if(!result.valid){
+    statusEl.textContent = "Codice non valido: " + (result.reason || "");
+    statusEl.className = "status error";
+    return;
+  }
+
+  const { error } = await client.from("immonova_license").upsert({ id: 1, license_code: licenseCode });
+  if(error){
+    statusEl.textContent = "Errore salvataggio: " + error.message;
+    statusEl.className = "status error";
+    return;
+  }
+
+  sessionStorage.removeItem("immonova_license_check");
+  statusEl.textContent = "Attivato per " + (result.business_name || "") + " — reindirizzo...";
+  statusEl.className = "status success";
+  setTimeout(() => { window.location.href = "dashboard.html"; }, 1200);
+};
+</script>
+</body>
+</html>

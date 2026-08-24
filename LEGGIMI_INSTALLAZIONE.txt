@@ -1,0 +1,60 @@
+==============================================================================
+IMMONOVA WHITELABEL — CARTELLA PULITA PER INSTALLAZIONE
+==============================================================================
+Questa cartella è il risultato dell'unione e pulizia di tutto il materiale
+che avevi accumulato in "Sito_da _vendere" (sito completo + moduli/pacchetti
++ le 56 edge function scaricate da immonova.it). È pronta per essere
+caricata su un NUOVO progetto Supabase (mai su immonova.it).
+
+CONTENUTO:
+- Tutte le pagine del sito pubblico (index.html, opportunities.html, ecc.)
+- admin/ — tutta la dashboard, inclusi i moduli più recenti:
+    dashboard.html (con il menu aggiornato, incl. "Dossier & Report")
+    feature-modules.html (Moduli e Pacchetti — mancava nel pacchetto originale)
+    roles-permissions.html, theme-settings.html, site-settings.html
+- js/ — config.js, theme-loader.js, site-branding.js, site-analytics.js
+- supabase/functions/ — 61 edge function totali:
+    10 già adattate specificamente per il sito whitelabel (broadcast, calendar,
+    google oauth, dossier email) — NON toccate
+    51 aggiunte dall'export di immonova.it, ancora "as-is": funzionano ma
+    vanno riviste una per una prima di collegarle a pagine admin nuove
+    (in particolare i 14 motori Discovery e i moduli Dossier/Report avanzati)
+- sql/ — le migrazioni da eseguire IN ORDINE su Supabase SQL Editor:
+    00_struttura_base_immonova.sql   (struttura tabelle di partenza, da immonova.it)
+    01_ruoli_permessi.sql            (super_admin, ruoli, permessi)
+    02_temi_personalizzabili.sql     (tema/colori/font personalizzabili)
+    03_moduli_pacchetti.sql          (catalogo moduli attivabili/disattivabili)
+    04_correzione_moduli.sql         (correzione Discovery + aggiunta Dossier & Report)
+    _nomi_secret_da_ricreare.txt     (elenco nomi dei secret da configurare — i
+                                       VALORI vanno rigenerati, mai riusati da
+                                       immonova.it)
+
+COSA HO TOLTO (file di lavoro/spazzatura, non servono all'installazione):
+  CNAME, test-mail.html, install-banner-snippet.html, README.md vuoto
+
+PROSSIMI PASSI (i due punti che mi hai chiesto, in ordine):
+1) Da qui puoi creare il progetto Supabase pulito ed eseguire il codice
+   sql/ in ordine, poi deployare le edge function e configurare i secret
+   (vedi la guida deploy che ti avevo già dato in precedenza).
+2) Una volta confermata questa cartella, costruisco:
+   - il sistema di installazione con codice utente (per vendere il
+     prodotto a terzi con un proprio codice di attivazione)
+   - la pagina di gestione abbonamenti/pacchetti con pagamenti, per
+     disattivare automaticamente i clienti non paganti
+==============================================================================
+
+==============================================================================
+AGGIORNAMENTO: sistema di licenza incluso
+==============================================================================
+Questa cartella ora include anche il controllo licenza/abbonamento:
+  admin/dashboard.html          (aggiornato: verifica la licenza all'apertura)
+  admin/license-activation.html (pagina dove il cliente inserisce il codice)
+  admin/license-expired.html    (pagina mostrata se l'abbonamento non è attivo)
+  js/license-gate.js            (script che fa il controllo — da compilare
+                                  con l'URL/anon key del TUO pannello centrale
+                                  prima di installare sul sito del cliente)
+  sql/05_licenza.sql            (da eseguire per ultimo, dopo 00-04)
+
+Il PANNELLO CENTRALE (dove gestisci clienti/licenze/pagamenti Stripe) è
+un progetto separato, NON incluso in questa cartella — è un sito e un
+database a parte, solo tuo. Te lo consegno come zip a sé stante.
