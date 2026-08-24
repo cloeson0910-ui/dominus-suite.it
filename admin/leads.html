@@ -169,6 +169,7 @@
             <div class="lead-license">
               Codice licenza demo: <strong onclick="copyCode('${esc(l.cp_clients.license_code)}')" style="cursor:pointer; text-decoration:underline;" title="Clicca per copiare">${esc(l.cp_clients.license_code)}</strong>
               ${demoLabel(l.cp_clients)}
+              ${l.cp_clients.site_url ? `<br>Sito demo: <a href="https://${esc(l.cp_clients.site_url)}" target="_blank">${esc(l.cp_clients.site_url)}</a>` : ''}
             </div>` : ''}
         </div>
         <div class="lead-meta">
