@@ -235,6 +235,27 @@
   }
   .closing-note a{ color:var(--accent-strong); text-decoration:none; border-bottom:1px solid var(--rule); }
 
+  .contact-form{
+    margin:44px auto 0; max-width:440px; text-align:left; display:flex; flex-direction:column; gap:16px;
+  }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field label{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--fg-dim); }
+  .field input, .field textarea{
+    font-family:'Archivo', sans-serif; font-size:15px; color:var(--fg-strong);
+    background:var(--bg-raised); border:1px solid var(--rule); padding:12px 14px;
+    border-radius:2px; outline:none; transition:border-color .15s ease;
+  }
+  .field input:focus, .field textarea:focus{ border-color:var(--accent-strong); }
+  .field textarea{ resize:vertical; min-height:88px; font-family:inherit; }
+  .contact-form .btn-solid{
+    margin-top:6px; border:1px solid var(--fg-strong); cursor:pointer; font:inherit;
+    font-size:14px; letter-spacing:.02em; padding:14px 20px;
+  }
+  .contact-form .btn-solid:disabled{ opacity:.55; cursor:default; }
+  .form-status{ font-size:13px; min-height:18px; margin-top:2px; }
+  .form-status.ok{ color:var(--accent-strong); }
+  .form-status.err{ color:#b5482f; }
+
   /* ---------- Footer ---------- */
   footer{
     border-top:1px solid var(--rule); padding:36px 0;
@@ -389,7 +410,32 @@
     <span class="eyebrow">Prossimo passo</span>
     <h2 style="margin-top:16px">Vediamo se Dominus<br>è la misura giusta</h2>
     <p>Una conversazione di venti minuti per capire quali pacchetti servono davvero alla tua agenzia — nessun impegno.</p>
-    <a class="btn-solid" href="mailto:contatti@dominus-suite.it">Richiedi una demo</a>
+
+    <form class="contact-form" id="demoForm">
+      <div class="field">
+        <label for="f-nome">Nome e cognome</label>
+        <input type="text" id="f-nome" name="nome" required autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="f-agenzia">Agenzia</label>
+        <input type="text" id="f-agenzia" name="agenzia" autocomplete="organization">
+      </div>
+      <div class="field">
+        <label for="f-email">Email</label>
+        <input type="email" id="f-email" name="email" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="f-telefono">Telefono</label>
+        <input type="tel" id="f-telefono" name="telefono" autocomplete="tel">
+      </div>
+      <div class="field">
+        <label for="f-messaggio">Messaggio</label>
+        <textarea id="f-messaggio" name="messaggio" placeholder="Raccontaci in breve la tua agenzia e cosa cerchi."></textarea>
+      </div>
+      <button type="submit" class="btn-solid" id="formSubmitBtn">Richiedi una demo</button>
+      <p class="form-status" id="formStatus" role="status"></p>
+    </form>
+
     <p class="closing-note">Oppure scrivi direttamente a <a href="mailto:contatti@dominus-suite.it">contatti@dominus-suite.it</a></p>
   </div>
 </section>
@@ -400,7 +446,7 @@
       <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28" fill="none" stroke="var(--fg-dim)" stroke-width="1.2"/><text x="30" y="39" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="26" fill="var(--fg-dim)">D</text></svg>
       <span class="footer-word">DOMINVS</span>
     </div>
-    <span class="fine">Real Estate Intelligence Suite</span>
+    <span class="fine">Real Estate Intelligence Suite · <a href="admin/login.html" style="color:inherit; opacity:.6;">Accedi</a></span>
   </div>
 </footer>
 
@@ -413,4 +459,51 @@
   } else {
     document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
   }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  // Chiavi del progetto "pannello centrale" (control plane) — stesso progetto
+  // usato da pannello_centrale/js/cp_config.js. Sostituisci con i valori reali.
+  const CP_SUPABASE_URL = "https://TUO-PROGETTO-CONTROL-PLANE.supabase.co";
+  const CP_SUPABASE_ANON_KEY = "INCOLLA-QUI-LA-ANON-KEY-DEL-CONTROL-PLANE";
+
+  (function(){
+    var supaClient = window.supabase.createClient(CP_SUPABASE_URL, CP_SUPABASE_ANON_KEY);
+    var form = document.getElementById('demoForm');
+    var btn = document.getElementById('formSubmitBtn');
+    var status = document.getElementById('formStatus');
+
+    form.addEventListener('submit', async function(ev){
+      ev.preventDefault();
+      status.textContent = '';
+      status.className = 'form-status';
+      btn.disabled = true;
+      btn.textContent = 'Invio in corso…';
+
+      var payload = {
+        nome: form.nome.value.trim(),
+        agenzia: form.agenzia.value.trim() || null,
+        email: form.email.value.trim(),
+        telefono: form.telefono.value.trim() || null,
+        messaggio: form.messaggio.value.trim() || null,
+        origine: 'dominus-suite.it'
+      };
+
+      try{
+        var res = await supaClient.from('cp_dominus_leads').insert([payload]);
+        if(res.error) throw res.error;
+        form.reset();
+        status.textContent = 'Richiesta inviata. Ti risponderemo al più presto.';
+        status.className = 'form-status ok';
+        btn.textContent = 'Richiesta inviata';
+      } catch(err){
+        console.error(err);
+        status.textContent = 'Si è verificato un errore. Riprova oppure scrivici a contatti@dominus-suite.it.';
+        status.className = 'form-status err';
+        btn.disabled = false;
+        btn.textContent = 'Richiedi una demo';
+      }
+    });
+  })();
 </script>
