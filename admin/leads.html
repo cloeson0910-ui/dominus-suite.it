@@ -54,6 +54,8 @@
   .lead-contacts{ font-size:12.5px; color:#857D69; margin-top:8px; display:flex; gap:16px; flex-wrap:wrap; }
   .lead-contacts a{ color:#7C5F2E; text-decoration:none; border-bottom:1px solid rgba(124,95,46,0.3); }
   .lead-message{ font-size:13px; color:#3A362E; margin-top:12px; line-height:1.6; max-width:560px; }
+  .lead-license{ font-size:12px; color:#857D69; margin-top:12px; padding-top:12px; border-top:1px dashed rgba(60,50,30,0.18); }
+  .lead-license strong{ color:#7C5F2E; }
   .lead-meta{ display:flex; flex-direction:column; align-items:flex-end; gap:10px; min-width:150px; }
   .lead-date{ font-size:11px; color:#857D69; letter-spacing:.03em; }
   select.status-select{
@@ -100,8 +102,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-  const CP_SUPABASE_URL = "https://bpzzmitmbavcmcasswbu.supabase.co";
-  const CP_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJwenptaXRtYmF2Y21jYXNzd2J1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MDk1ODQsImV4cCI6MjA5NzM4NTU4NH0.SkPicFpfYe69rI0JmASqm-jif-Ov3gQ0Mu20UbrYawY";
+  const CP_SUPABASE_URL = "https://cspzkofhgfrnkhjpfazb.supabase.co";
+  const CP_SUPABASE_ANON_KEY = "sb_publishable_oYbR_A78f8SRKdJbkeZegQ_4gAx-567";
   const client = window.supabase.createClient(CP_SUPABASE_URL, CP_SUPABASE_ANON_KEY);
 
   let ALL_LEADS = [];
@@ -163,6 +165,11 @@
             ${l.telefono ? `<a href="tel:${esc(l.telefono)}">${esc(l.telefono)}</a>` : ''}
           </div>
           ${l.messaggio ? `<div class="lead-message">${esc(l.messaggio)}</div>` : ''}
+          ${l.cp_clients ? `
+            <div class="lead-license">
+              Codice licenza demo: <strong onclick="copyCode('${esc(l.cp_clients.license_code)}')" style="cursor:pointer; text-decoration:underline;" title="Clicca per copiare">${esc(l.cp_clients.license_code)}</strong>
+              ${demoLabel(l.cp_clients)}
+            </div>` : ''}
         </div>
         <div class="lead-meta">
           <span class="lead-date">${fmtDate(l.created_at)}</span>
@@ -176,10 +183,23 @@
     `).join('');
   }
 
+  function demoLabel(c){
+    if(!c.is_demo || !c.demo_expires_at) return '';
+    const msLeft = new Date(c.demo_expires_at).getTime() - Date.now();
+    const daysLeft = Math.ceil(msLeft / (24*60*60*1000));
+    return msLeft > 0
+      ? `· <span style="color:#7C5F2E">scade tra ${daysLeft} ${daysLeft===1?'giorno':'giorni'}</span>`
+      : `· <span style="color:#9c2f2f">demo scaduta</span>`;
+  }
+
+  window.copyCode = function(code){
+    navigator.clipboard?.writeText(code);
+  };
+
   async function load(){
     const { data, error } = await client
       .from('cp_dominus_leads')
-      .select('*')
+      .select('*, cp_clients(business_name, license_code, is_demo, demo_expires_at, status)')
       .order('created_at', { ascending:false });
     if(error){
       document.getElementById('list').innerHTML = '<div class="empty">Errore nel caricamento: ' + esc(error.message) + '</div>';

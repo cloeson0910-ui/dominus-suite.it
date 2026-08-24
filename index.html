@@ -465,11 +465,10 @@
 <script>
   // Chiavi del progetto "pannello centrale" (control plane) — stesso progetto
   // usato da pannello_centrale/js/cp_config.js. Sostituisci con i valori reali.
-  const CP_SUPABASE_URL = "https://bpzzmitmbavcmcasswbu.supabase.co";
-  const CP_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJwenptaXRtYmF2Y21jYXNzd2J1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MDk1ODQsImV4cCI6MjA5NzM4NTU4NH0.SkPicFpfYe69rI0JmASqm-jif-Ov3gQ0Mu20UbrYawY";
+  const CP_SUPABASE_URL = "https://cspzkofhgfrnkhjpfazb.supabase.co";
+  const CP_SUPABASE_ANON_KEY = "sb_publishable_oYbR_A78f8SRKdJbkeZegQ_4gAx-567";
 
   (function(){
-    var supaClient = window.supabase.createClient(CP_SUPABASE_URL, CP_SUPABASE_ANON_KEY);
     var form = document.getElementById('demoForm');
     var btn = document.getElementById('formSubmitBtn');
     var status = document.getElementById('formStatus');
@@ -491,8 +490,21 @@
       };
 
       try{
-        var res = await supaClient.from('cp_dominus_leads').insert([payload]);
-        if(res.error) throw res.error;
+        // Chiama la funzione "dominus-lead-intake": registra la richiesta E
+        // crea in automatico il cliente demo + codice licenza pronto,
+        // senza bisogno di aprire il pannello e cliccare "Nuovo cliente".
+        var res = await fetch(CP_SUPABASE_URL + '/functions/v1/dominus-lead-intake', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': CP_SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + CP_SUPABASE_ANON_KEY
+          },
+          body: JSON.stringify(payload)
+        });
+        var data = await res.json();
+        if(!res.ok || !data.success) throw new Error(data.error || 'Errore sconosciuto');
+
         form.reset();
         status.textContent = 'Richiesta inviata. Ti risponderemo al più presto.';
         status.className = 'form-status ok';
