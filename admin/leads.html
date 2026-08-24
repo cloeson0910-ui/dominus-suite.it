@@ -185,7 +185,7 @@
             <option value="contattato" ${l.stato === 'contattato' ? 'selected' : ''}>Contattato</option>
             <option value="archiviato" ${l.stato === 'archiviato' ? 'selected' : ''}>Archiviato</option>
           </select>
-          ${l.cp_clients ? `<button class="delete-btn" onclick="deleteLead('${l.cp_clients.id}', '${esc(l.nome)}')">Elimina tutto</button>` : ''}
+          <button class="delete-btn" onclick="deleteLead('${esc(l.email)}', '${esc(l.nome)}')">Elimina tutto</button>
         </div>
       </div>
     `).join('');
@@ -204,8 +204,8 @@
     navigator.clipboard?.writeText(code);
   };
 
-  window.deleteLead = async function(clientId, nome){
-    if(!confirm(`Eliminare tutto quello che riguarda "${nome}"? Cliente demo, tenant, accesso di login e richiesta: cancellati per sempre, non si può annullare.`)) return;
+  window.deleteLead = async function(email, nome){
+    if(!confirm(`Eliminare TUTTO quello collegato alla mail "${email}" (richiesta di "${nome}" e ogni altro test fatto con questa mail)? Clienti demo, tenant, accesso di login e richieste: cancellati per sempre, non si può annullare.`)) return;
 
     const btn = event.target;
     btn.disabled = true;
@@ -218,7 +218,7 @@
       const res = await fetch(`${CP_SUPABASE_URL}/functions/v1/dominus-delete-demo`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        body: JSON.stringify({ client_id: clientId }),
+        body: JSON.stringify({ email: email }),
       });
       const result = await res.json();
       if(!result.success){
