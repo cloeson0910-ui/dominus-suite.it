@@ -511,7 +511,7 @@
         btn.textContent = 'Richiesta inviata';
       } catch(err){
         console.error(err);
-        status.textContent = 'Si è verificato un errore. Riprova oppure scrivici a contatti@dominus-suite.it.';
+        status.textContent = 'Si è verificato un errore (' + (err && err.message ? err.message : 'sconosciuto') + '). Riprova oppure scrivici a contatti@dominus-suite.it.';
         status.className = 'form-status err';
         btn.disabled = false;
         btn.textContent = 'Richiedi una demo';
