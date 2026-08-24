@@ -64,6 +64,12 @@
   }
   .status-select[data-status="nuovo"]{ border-color:#9C7A3E; color:#7C5F2E; font-weight:600; }
   .status-select[data-status="archiviato"]{ opacity:.55; }
+  .delete-btn{
+    font-family:inherit; font-size:11px; letter-spacing:.05em; text-transform:uppercase;
+    padding:7px 10px; border:1px solid rgba(156,47,47,0.4); background:none; color:#9c2f2f; cursor:pointer;
+  }
+  .delete-btn:hover{ background:#9c2f2f; color:#fff; }
+  .delete-btn:disabled{ opacity:.5; cursor:default; }
 
   .empty, .loading{ text-align:center; padding:60px 20px; color:#857D69; font-size:14px; }
 </style>
@@ -179,6 +185,7 @@
             <option value="contattato" ${l.stato === 'contattato' ? 'selected' : ''}>Contattato</option>
             <option value="archiviato" ${l.stato === 'archiviato' ? 'selected' : ''}>Archiviato</option>
           </select>
+          ${l.cp_clients ? `<button class="delete-btn" onclick="deleteLead('${l.cp_clients.id}', '${esc(l.nome)}')">Elimina tutto</button>` : ''}
         </div>
       </div>
     `).join('');
@@ -197,10 +204,41 @@
     navigator.clipboard?.writeText(code);
   };
 
+  window.deleteLead = async function(clientId, nome){
+    if(!confirm(`Eliminare tutto quello che riguarda "${nome}"? Cliente demo, tenant, accesso di login e richiesta: cancellati per sempre, non si può annullare.`)) return;
+
+    const btn = event.target;
+    btn.disabled = true;
+    btn.textContent = "Elimino…";
+
+    const { data: sessionData } = await client.auth.getSession();
+    const token = sessionData?.session?.access_token;
+
+    try {
+      const res = await fetch(`${CP_SUPABASE_URL}/functions/v1/dominus-delete-demo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        body: JSON.stringify({ client_id: clientId }),
+      });
+      const result = await res.json();
+      if(!result.success){
+        alert("Errore: " + (result.error || "sconosciuto"));
+        btn.disabled = false;
+        btn.textContent = "Elimina tutto";
+        return;
+      }
+      await load();
+    } catch(err){
+      alert("Errore di connessione: " + err.message);
+      btn.disabled = false;
+      btn.textContent = "Elimina tutto";
+    }
+  };
+
   async function load(){
     const { data, error } = await client
       .from('cp_dominus_leads')
-      .select('*, cp_clients(business_name, license_code, is_demo, demo_expires_at, status)')
+      .select('*, cp_clients(id, business_name, license_code, is_demo, demo_expires_at, status)')
       .order('created_at', { ascending:false });
     if(error){
       document.getElementById('list').innerHTML = '<div class="empty">Errore nel caricamento: ' + esc(error.message) + '</div>';
