@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Accesso | Dominus</title>
+<title>Crea accesso | Dominus</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,440;1,9..144,500&family=Archivo:wght@400;500;600;700&display=swap');
   *{box-sizing:border-box}
@@ -15,7 +15,8 @@
   .mark{ display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom:26px; }
   .mark svg{ width:34px; height:34px; }
   .mark span{ font-family:'Archivo', sans-serif; font-weight:700; letter-spacing:.28em; font-size:14px; color:#14110D; }
-  h1{ font-family:'Fraunces', Georgia, serif; font-weight:440; font-size:19px; text-align:center; color:#14110D; margin:0 0 26px; }
+  h1{ font-family:'Fraunces', Georgia, serif; font-weight:440; font-size:19px; text-align:center; color:#14110D; margin:0 0 10px; }
+  p.sub{ font-size:12.5px; color:#857D69; text-align:center; margin:0 0 26px; line-height:1.6; }
   .field{ margin-bottom:16px; }
   .field label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#857D69; margin-bottom:6px; }
   .field input{
@@ -28,8 +29,10 @@
     cursor:pointer; font-size:12.5px; letter-spacing:.1em; text-transform:uppercase; font-family:inherit; margin-top:6px;
   }
   .btn:hover{ background:#7C5F2E; border-color:#7C5F2E; }
-  .status{ margin-top:14px; font-size:12.5px; min-height:16px; text-align:center; }
+  .status{ margin-top:14px; font-size:12.5px; min-height:16px; text-align:center; line-height:1.6; }
   .error{ color:#9c2f2f; }
+  .ok{ color:#4f7f45; }
+  .back{ display:block; text-align:center; margin-top:20px; font-size:12px; color:#857D69; text-decoration:none; }
 </style>
 </head>
 <body>
@@ -38,12 +41,13 @@
     <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28" fill="none" stroke="#9C7A3E" stroke-width="1.2"/><text x="30" y="39" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="26" fill="#9C7A3E">D</text></svg>
     <span>DOMINVS</span>
   </div>
-  <h1>Accesso pannello</h1>
+  <h1>Crea il tuo accesso admin</h1>
+  <p class="sub">Da usare una sola volta, per creare il primo (o un nuovo) utente del pannello.</p>
   <div class="field"><label>Email</label><input id="email" type="email" autocomplete="username"></div>
-  <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password"></div>
-  <button class="btn" onclick="doLogin()">Accedi</button>
+  <div class="field"><label>Password</label><input id="password" type="password" autocomplete="new-password"></div>
+  <button class="btn" onclick="doSignup()">Crea accesso</button>
   <div id="status" class="status"></div>
-  <a href="signup.html" style="display:block; text-align:center; margin-top:20px; font-size:12px; color:#857D69; text-decoration:none;">Non hai ancora un accesso? Creane uno</a>
+  <a class="back" href="login.html">Torna al login</a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -52,20 +56,31 @@
   const CP_SUPABASE_ANON_KEY = "sb_publishable_oYbR_A78f8SRKdJbkeZegQ_4gAx-567";
   const client = window.supabase.createClient(CP_SUPABASE_URL, CP_SUPABASE_ANON_KEY);
 
-  window.doLogin = async function(){
+  window.doSignup = async function(){
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
     const statusEl = document.getElementById("status");
-    statusEl.textContent = "Accesso in corso…";
+    if(!email || !password){ statusEl.textContent = "Compila email e password."; statusEl.className = "status error"; return; }
+    if(password.length < 6){ statusEl.textContent = "La password deve avere almeno 6 caratteri."; statusEl.className = "status error"; return; }
+
+    statusEl.textContent = "Creazione in corso…";
     statusEl.className = "status";
 
-    const { error } = await client.auth.signInWithPassword({ email, password });
+    const { data, error } = await client.auth.signUp({ email, password });
     if(error){
       statusEl.textContent = "Errore: " + error.message;
       statusEl.className = "status error";
       return;
     }
-    window.location.href = "leads.html";
+
+    if(data.session){
+      statusEl.textContent = "Accesso creato e attivo. Reindirizzo…";
+      statusEl.className = "status ok";
+      setTimeout(() => { window.location.href = "leads.html"; }, 1000);
+    } else {
+      statusEl.textContent = "Accesso creato. Controlla la tua email per confermarlo, poi torna al login.";
+      statusEl.className = "status ok";
+    }
   };
 </script>
 </body>
