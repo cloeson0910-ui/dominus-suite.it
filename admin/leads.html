@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Richieste | Dominus</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,440;0,9..144,600;1,9..144,400;1,9..144,500&family=Archivo:wght@400;500;600;700&display=swap');
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:#F2ECDE; color:#3A362E; font-family:'Archivo', ui-sans-serif, system-ui, sans-serif;
+    min-height:100vh;
+  }
+  a{ color:inherit; }
+  h1,h2{ font-family:'Fraunces', Georgia, serif; font-weight:440; color:#14110D; }
+
+  .header{
+    padding:22px 40px; display:flex; justify-content:space-between; align-items:center;
+    border-bottom:1px solid rgba(60,50,30,0.16); background:#FBF8F0;
+  }
+  .mark{ display:flex; align-items:center; gap:10px; }
+  .mark svg{ width:28px; height:28px; }
+  .mark span{ font-weight:700; letter-spacing:.26em; font-size:12.5px; color:#14110D; }
+  .header-actions{ display:flex; gap:18px; align-items:center; }
+  .header-actions a, .header-actions button{
+    font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:#857D69;
+    text-decoration:none; background:none; border:none; cursor:pointer; font-family:inherit;
+  }
+  .header-actions a:hover, .header-actions button:hover{ color:#14110D; }
+
+  .container{ max-width:1040px; margin:0 auto; padding:44px 40px 80px; }
+  .top-row{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:30px; }
+  .title{ font-size:28px; }
+  .subtitle{ font-size:13px; color:#857D69; margin-top:6px; }
+  .count-pill{
+    font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#9C7A3E;
+    border:1px solid rgba(156,122,62,0.35); padding:6px 14px; white-space:nowrap;
+  }
+
+  .filters{ display:flex; gap:8px; margin-bottom:22px; flex-wrap:wrap; }
+  .filter-btn{
+    padding:8px 16px; border:1px solid rgba(60,50,30,0.18); background:transparent; color:#857D69;
+    font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; cursor:pointer; font-family:inherit;
+  }
+  .filter-btn.active{ background:#14110D; color:#F2ECDE; border-color:#14110D; }
+
+  .lead-card{
+    background:#FBF8F0; border:1px solid rgba(60,50,30,0.14); padding:20px 24px; margin-bottom:12px;
+    display:flex; justify-content:space-between; gap:20px; align-items:flex-start; flex-wrap:wrap;
+  }
+  .lead-main{ flex:1; min-width:240px; }
+  .lead-name{ font-size:16px; font-weight:600; color:#14110D; }
+  .lead-agency{ font-size:12.5px; color:#9C7A3E; margin-top:2px; }
+  .lead-contacts{ font-size:12.5px; color:#857D69; margin-top:8px; display:flex; gap:16px; flex-wrap:wrap; }
+  .lead-contacts a{ color:#7C5F2E; text-decoration:none; border-bottom:1px solid rgba(124,95,46,0.3); }
+  .lead-message{ font-size:13px; color:#3A362E; margin-top:12px; line-height:1.6; max-width:560px; }
+  .lead-license{ font-size:12px; color:#857D69; margin-top:12px; padding-top:12px; border-top:1px dashed rgba(60,50,30,0.18); }
+  .lead-license strong{ color:#7C5F2E; }
+  .lead-meta{ display:flex; flex-direction:column; align-items:flex-end; gap:10px; min-width:150px; }
+  .lead-date{ font-size:11px; color:#857D69; letter-spacing:.03em; }
+  select.status-select{
+    font-family:inherit; font-size:11.5px; letter-spacing:.05em; text-transform:uppercase;
+    padding:7px 10px; border:1px solid rgba(60,50,30,0.22); background:#fff; color:#14110D; cursor:pointer;
+  }
+  .status-select[data-status="nuovo"]{ border-color:#9C7A3E; color:#7C5F2E; font-weight:600; }
+  .status-select[data-status="archiviato"]{ opacity:.55; }
+
+  .empty, .loading{ text-align:center; padding:60px 20px; color:#857D69; font-size:14px; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a class="mark" href="../index.html">
+    <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28" fill="none" stroke="#9C7A3E" stroke-width="1.2"/><text x="30" y="39" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="26" fill="#9C7A3E">D</text></svg>
+    <span>DOMINVS · ADMIN</span>
+  </a>
+  <div class="header-actions">
+    <a href="../index.html" target="_blank">Vedi il sito</a>
+    <button onclick="doLogout()">Esci</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="top-row">
+    <div>
+      <h1 class="title">Richieste demo</h1>
+      <p class="subtitle">Le richieste inviate dal form del sito, in ordine cronologico.</p>
+    </div>
+    <span class="count-pill" id="countPill">— richieste</span>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" data-filter="tutti" onclick="setFilter('tutti', this)">Tutti</button>
+    <button class="filter-btn" data-filter="nuovo" onclick="setFilter('nuovo', this)">Nuovi</button>
+    <button class="filter-btn" data-filter="contattato" onclick="setFilter('contattato', this)">Contattati</button>
+    <button class="filter-btn" data-filter="archiviato" onclick="setFilter('archiviato', this)">Archiviati</button>
+  </div>
+
+  <div id="list"><div class="loading">Caricamento…</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const CP_SUPABASE_URL = "https://cspzkofhgfrnkhjpfazb.supabase.co";
+  const CP_SUPABASE_ANON_KEY = "sb_publishable_oYbR_A78f8SRKdJbkeZegQ_4gAx-567";
+  const client = window.supabase.createClient(CP_SUPABASE_URL, CP_SUPABASE_ANON_KEY);
+
+  let ALL_LEADS = [];
+  let CURRENT_FILTER = 'tutti';
+
+  function esc(v){ return String(v ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function fmtDate(iso){
+    const d = new Date(iso);
+    return d.toLocaleDateString('it-IT', { day:'2-digit', month:'short', year:'numeric' }) + ' · ' +
+           d.toLocaleTimeString('it-IT', { hour:'2-digit', minute:'2-digit' });
+  }
+
+  async function checkAuth(){
+    const { data } = await client.auth.getSession();
+    if(!data.session){ window.location.href = "login.html"; return false; }
+    return true;
+  }
+
+  window.doLogout = async function(){
+    await client.auth.signOut();
+    window.location.href = "login.html";
+  };
+
+  window.setFilter = function(name, btn){
+    CURRENT_FILTER = name;
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    render();
+  };
+
+  window.updateStatus = async function(id, newStatus){
+    const { error } = await client.from('cp_dominus_leads').update({ stato: newStatus }).eq('id', id);
+    if(error){ alert("Errore: " + error.message); return; }
+    const lead = ALL_LEADS.find(l => l.id === id);
+    if(lead) lead.stato = newStatus;
+    render();
+  };
+
+  function render(){
+    const listEl = document.getElementById('list');
+    const filtered = CURRENT_FILTER === 'tutti' ? ALL_LEADS : ALL_LEADS.filter(l => l.stato === CURRENT_FILTER);
+
+    document.getElementById('countPill').textContent =
+      ALL_LEADS.length + (ALL_LEADS.length === 1 ? ' richiesta' : ' richieste') +
+      (CURRENT_FILTER !== 'tutti' ? ' · ' + filtered.length + ' mostrate' : '');
+
+    if(!filtered.length){
+      listEl.innerHTML = '<div class="empty">Nessuna richiesta in questa categoria.</div>';
+      return;
+    }
+
+    listEl.innerHTML = filtered.map(l => `
+      <div class="lead-card">
+        <div class="lead-main">
+          <div class="lead-name">${esc(l.nome)}</div>
+          ${l.agenzia ? `<div class="lead-agency">${esc(l.agenzia)}</div>` : ''}
+          <div class="lead-contacts">
+            <a href="mailto:${esc(l.email)}">${esc(l.email)}</a>
+            ${l.telefono ? `<a href="tel:${esc(l.telefono)}">${esc(l.telefono)}</a>` : ''}
+          </div>
+          ${l.messaggio ? `<div class="lead-message">${esc(l.messaggio)}</div>` : ''}
+          ${l.cp_clients ? `
+            <div class="lead-license">
+              Codice licenza demo: <strong onclick="copyCode('${esc(l.cp_clients.license_code)}')" style="cursor:pointer; text-decoration:underline;" title="Clicca per copiare">${esc(l.cp_clients.license_code)}</strong>
+              ${demoLabel(l.cp_clients)}
+              ${l.cp_clients.site_url ? `<br>Sito demo: <a href="${esc(l.cp_clients.site_url)}" target="_blank">${esc(l.cp_clients.site_url)}</a>` : ''}
+            </div>` : ''}
+        </div>
+        <div class="lead-meta">
+          <span class="lead-date">${fmtDate(l.created_at)}</span>
+          <select class="status-select" data-status="${l.stato}" onchange="updateStatus('${l.id}', this.value)">
+            <option value="nuovo" ${l.stato === 'nuovo' ? 'selected' : ''}>Nuovo</option>
+            <option value="contattato" ${l.stato === 'contattato' ? 'selected' : ''}>Contattato</option>
+            <option value="archiviato" ${l.stato === 'archiviato' ? 'selected' : ''}>Archiviato</option>
+          </select>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function demoLabel(c){
+    if(!c.is_demo || !c.demo_expires_at) return '';
+    const msLeft = new Date(c.demo_expires_at).getTime() - Date.now();
+    const daysLeft = Math.ceil(msLeft / (24*60*60*1000));
+    return msLeft > 0
+      ? `· <span style="color:#7C5F2E">scade tra ${daysLeft} ${daysLeft===1?'giorno':'giorni'}</span>`
+      : `· <span style="color:#9c2f2f">demo scaduta</span>`;
+  }
+
+  window.copyCode = function(code){
+    navigator.clipboard?.writeText(code);
+  };
+
+  async function load(){
+    const { data, error } = await client
+      .from('cp_dominus_leads')
+      .select('*, cp_clients(business_name, license_code, is_demo, demo_expires_at, status)')
+      .order('created_at', { ascending:false });
+    if(error){
+      document.getElementById('list').innerHTML = '<div class="empty">Errore nel caricamento: ' + esc(error.message) + '</div>';
+      return;
+    }
+    ALL_LEADS = data || [];
+    render();
+  }
+
+  (async function(){
+    if(await checkAuth()) load();
+  })();
+</script>
+</body>
+</html>
