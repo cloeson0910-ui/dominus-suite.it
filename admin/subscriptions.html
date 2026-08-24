@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clienti e Abbonamenti | Pannello Centrale</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%}
+body{background:#f4ecdf;font-family:"Avenir Next","Helvetica Neue",Arial,sans-serif;color:#7f6430}
+
+.header{padding:24px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(166,127,52,.12)}
+.logo{font-size:20px;font-weight:300;letter-spacing:.3em;color:#a67f34}
+.logout{padding:10px 20px;border:1px solid rgba(166,127,52,.25);background:rgba(255,255,255,.25);cursor:pointer;color:#a67f34;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-family:inherit}
+
+.container{max-width:1200px;margin:auto;padding:30px 40px}
+.title{font-size:30px;font-weight:200;color:#a67f34;margin-bottom:6px}
+.subtitle{font-size:13px;color:#8f7643;margin-bottom:26px}
+
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap}
+.btn{padding:10px 18px;border:1px solid #a67f34;background:#a67f34;color:#fff;cursor:pointer;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-family:inherit}
+.btn.secondary{background:transparent;color:#a67f34}
+.btn.danger{background:#9c2f2f;border-color:#9c2f2f}
+.btn.small{padding:6px 12px;font-size:10.5px}
+
+table{width:100%;border-collapse:collapse;background:rgba(255,255,255,.3)}
+th,td{padding:10px 12px;text-align:left;font-size:13px;border-bottom:1px solid rgba(166,127,52,.12)}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#8f7643}
+.badge{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:2px}
+.badge.attivo{background:rgba(79,127,69,.15);color:#4f7f45}
+.badge.sospeso{background:rgba(180,140,40,.15);color:#a6802f}
+.badge.disattivato,.badge.canceled,.badge.past_due{background:rgba(156,47,47,.12);color:#9c2f2f}
+.badge.in_attesa{background:rgba(120,120,120,.12);color:#666}
+
+.pkg-list{font-size:11.5px;color:#7f6430}
+.pkg-pill{display:inline-block;padding:2px 8px;margin:2px 3px 2px 0;background:rgba(166,127,52,.1);border-radius:10px}
+.pkg-pill.off{background:rgba(156,47,47,.08);color:#9c2f2f;text-decoration:line-through}
+
+.license-code{font-family:monospace;font-size:12px;background:rgba(166,127,52,.08);padding:3px 8px;border-radius:3px;cursor:pointer}
+
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);align-items:center;justify-content:center;z-index:50}
+.modal-backdrop.open{display:flex}
+.modal{background:#fdfaf4;padding:28px;max-width:460px;width:90%;max-height:85vh;overflow:auto}
+.modal h3{color:#a67f34;font-size:18px;font-weight:400;margin-bottom:16px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#8f7643;margin-bottom:5px}
+.field input,.field select{width:100%;padding:9px 10px;border:1px solid rgba(166,127,52,.25);background:#fff;font-family:inherit;font-size:13px}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+
+.status{margin-top:14px;font-size:13px;min-height:18px}
+.success{color:#4f7f45}
+.error{color:#9c2f2f}
+
+#accessDenied{display:none}
+</style>
+</head>
+<body>
+
+<header class="header">
+<div class="logo">CONTROL PLANE</div>
+<button class="logout" id="logoutBtn">Logout</button>
+</header>
+
+<div class="container">
+<h1 class="title">Clienti e Abbonamenti</h1>
+<p class="subtitle">Ogni riga è un sito venduto. Da qui attivi/disattivi pacchetti, generi link di pagamento Stripe e vedi chi ha smesso di pagare.</p>
+
+<div id="accessDenied" class="status error">Questa pagina è riservata al super amministratore.</div>
+
+<div id="mainContent" style="display:none">
+  <div class="toolbar">
+    <div id="saveStatus" class="status"></div>
+    <button class="btn" onclick="openNewClientModal()">+ Nuovo cliente</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Cliente</th><th>Codice licenza</th><th>Stato licenza</th><th>Pacchetti attivi</th><th>Azioni</th></tr>
+    </thead>
+    <tbody id="clientsBody"></tbody>
+  </table>
+</div>
+
+</div>
+
+<!-- Modale: nuovo cliente -->
+<div class="modal-backdrop" id="newClientModal">
+  <div class="modal">
+    <h3>Nuovo cliente</h3>
+    <div class="field"><label>Ragione sociale / nome</label><input id="ncBusinessName"></div>
+    <div class="field"><label>Email di contatto</label><input id="ncEmail" type="email"></div>
+    <div class="field"><label>Telefono (opzionale)</label><input id="ncPhone"></div>
+    <div class="field"><label>Note (opzionale)</label><input id="ncNotes"></div>
+    <div class="field" style="display:flex; align-items:center; gap:8px;">
+      <input type="checkbox" id="ncIsDemo" style="width:16px;height:16px;">
+      <label for="ncIsDemo" style="margin:0">Attiva come demo (si blocca da sola dopo 10 giorni)</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeModal('newClientModal')">Annulla</button>
+      <button class="btn" onclick="createClient()">Crea</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modale: gestione pacchetti di un cliente -->
+<div class="modal-backdrop" id="packagesModal">
+  <div class="modal">
+    <h3 id="pmClientName">Pacchetti</h3>
+    <div id="pmPackagesList"></div>
+    <div class="field" style="margin-top:16px">
+      <label>Aggiungi pacchetto</label>
+      <select id="pmNewPackageKey">
+        <option value="base">Base</option>
+        <option value="calendario">Calendario</option>
+        <option value="social">Social</option>
+        <option value="notifiche">Notifiche</option>
+        <option value="discovery">Discovery</option>
+        <option value="valutazioni">Valutazioni AI</option>
+        <option value="comunicazioni">Comunicazioni</option>
+        <option value="app">App</option>
+        <option value="eventi_crm">Eventi &amp; CRM avanzato</option>
+        <option value="dossier">Dossier &amp; Report</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Price ID Stripe (dal Dashboard Stripe, prodotto ricorrente per questo pacchetto)</label>
+      <input id="pmPriceId" placeholder="price_...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeModal('packagesModal')">Chiudi</button>
+      <button class="btn" onclick="generateCheckoutLink()">Genera link di pagamento</button>
+    </div>
+    <div id="pmStatus" class="status"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/cp_config.js"></script>
+
+<script>
+const client = window.supabase.createClient(CP_SUPABASE_URL, CP_SUPABASE_ANON_KEY);
+let clients = [];
+let currentClientId = null;
+
+function esc(v){ return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function openModal(id){ document.getElementById(id).classList.add("open"); }
+function closeModal(id){ document.getElementById(id).classList.remove("open"); }
+
+async function checkAuth(){
+  const { data:{ session } } = await client.auth.getSession();
+  if(!session){ window.location.href = "login.html"; return false; }
+  const { data: profile } = await client.from("cp_profiles").select("is_super_admin").eq("id", session.user.id).maybeSingle();
+  if(!profile?.is_super_admin){
+    document.getElementById("accessDenied").style.display = "block";
+    return false;
+  }
+  return true;
+}
+
+async function loadClients(){
+  const { data: clientsData, error } = await client.from("cp_clients").select("*").order("created_at", {ascending:false});
+  if(error){
+    document.getElementById("clientsBody").innerHTML = '<tr><td colspan="5">Errore: '+esc(error.message)+'</td></tr>';
+    return;
+  }
+  const { data: subsData } = await client.from("cp_subscriptions").select("*");
+
+  clients = (clientsData||[]).map(c => ({
+    ...c,
+    subs: (subsData||[]).filter(s => s.client_id === c.id)
+  }));
+  render();
+}
+
+function subActive(s){
+  if(s.override_manuale === "forza_disattivo") return false;
+  if(s.override_manuale === "forza_attivo") return true;
+  return ["active","trialing"].includes(s.stripe_status||"");
+}
+
+function render(){
+  document.getElementById("clientsBody").innerHTML = clients.map(c => {
+    const pkgHtml = c.subs.length
+      ? c.subs.map(s => `<span class="pkg-pill ${subActive(s)?"":"off"}">${esc(s.package_key)}</span>`).join("")
+      : '<span style="color:#aaa">nessun pacchetto</span>';
+    let demoHtml = "";
+    if(c.is_demo && c.demo_expires_at){
+      const msLeft = new Date(c.demo_expires_at).getTime() - Date.now();
+      const daysLeft = Math.ceil(msLeft / (24*60*60*1000));
+      demoHtml = msLeft > 0
+        ? `<br><span class="badge" style="background:#e8dfc1;color:#7f6430">Demo · scade tra ${daysLeft} ${daysLeft===1?'giorno':'giorni'}</span>`
+        : `<br><span class="badge" style="background:#f3d9d9;color:#9c2f2f">Demo scaduta</span>`;
+    }
+    return `
+      <tr>
+        <td><strong>${esc(c.business_name)}</strong><br><span style="font-size:11px;color:#9a8a63">${esc(c.contact_email)}</span>${demoHtml}</td>
+        <td><span class="license-code" title="Clicca per copiare" onclick="copyCode('${esc(c.license_code)}')">${esc(c.license_code)}</span></td>
+        <td><span class="badge ${esc(c.status)}">${esc(c.status)}</span></td>
+        <td class="pkg-list">${pkgHtml}</td>
+        <td>
+          <button class="btn small secondary" onclick="openPackagesModal('${c.id}')">Pacchetti</button>
+          ${c.status === 'attivo'
+            ? `<button class="btn small danger" onclick="setClientStatus('${c.id}','disattivato')">Disattiva tutto</button>`
+            : `<button class="btn small" onclick="setClientStatus('${c.id}','attivo')">Riattiva</button>`}
+          ${c.is_demo ? `<button class="btn small secondary" onclick="convertDemoToClient('${c.id}')">Rendi definitivo</button>` : ''}
+        </td>
+      </tr>`;
+  }).join("") || '<tr><td colspan="5">Nessun cliente ancora.</td></tr>';
+}
+
+function copyCode(code){
+  navigator.clipboard?.writeText(code);
+  const el = document.getElementById("saveStatus");
+  el.textContent = "Codice licenza copiato.";
+  el.className = "status success";
+}
+
+window.openNewClientModal = function(){ openModal("newClientModal"); };
+
+window.createClient = async function(){
+  const business_name = document.getElementById("ncBusinessName").value.trim();
+  const contact_email = document.getElementById("ncEmail").value.trim();
+  const contact_phone = document.getElementById("ncPhone").value.trim();
+  const notes = document.getElementById("ncNotes").value.trim();
+  const isDemo = document.getElementById("ncIsDemo").checked;
+  if(!business_name || !contact_email){ alert("Nome ed email sono obbligatori."); return; }
+
+  const payload = { business_name, contact_email, contact_phone: contact_phone||null, notes: notes||null };
+  if(isDemo){
+    payload.is_demo = true;
+    payload.demo_expires_at = new Date(Date.now() + 10*24*60*60*1000).toISOString();
+  }
+
+  const { data: inserted, error } = await client.from("cp_clients").insert(payload).select().single();
+  if(error){ alert("Errore: " + error.message); return; }
+
+  // Demo: attiva subito il pacchetto base, senza bisogno di Stripe, così il
+  // cliente può usare il sito da subito e per tutta la durata dei 10 giorni.
+  if(isDemo && inserted){
+    await client.from("cp_subscriptions").insert({
+      client_id: inserted.id,
+      package_key: "base",
+      override_manuale: "forza_attivo",
+    });
+  }
+
+  closeModal("newClientModal");
+  document.getElementById("ncBusinessName").value = "";
+  document.getElementById("ncEmail").value = "";
+  document.getElementById("ncPhone").value = "";
+  document.getElementById("ncNotes").value = "";
+  document.getElementById("ncIsDemo").checked = false;
+  await loadClients();
+};
+
+window.setClientStatus = async function(clientId, status){
+  const { error } = await client.from("cp_clients").update({ status }).eq("id", clientId);
+  if(error){ alert("Errore: " + error.message); return; }
+  await loadClients();
+};
+
+window.convertDemoToClient = async function(clientId){
+  if(!confirm("Togliere la scadenza automatica e rendere questo cliente definitivo?")) return;
+  const { error } = await client.from("cp_clients")
+    .update({ is_demo: false, demo_expires_at: null, status: "attivo" })
+    .eq("id", clientId);
+  if(error){ alert("Errore: " + error.message); return; }
+  await loadClients();
+};
+
+window.openPackagesModal = function(clientId){
+  currentClientId = clientId;
+  const c = clients.find(x => x.id === clientId);
+  document.getElementById("pmClientName").textContent = "Pacchetti — " + c.business_name;
+  document.getElementById("pmPackagesList").innerHTML = c.subs.map(s => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(166,127,52,.1)">
+      <div>
+        <strong>${esc(s.package_key)}</strong><br>
+        <span style="font-size:11px;color:#9a8a63">stripe: ${esc(s.stripe_status||"—")}${s.override_manuale ? " · override: "+esc(s.override_manuale) : ""}</span>
+      </div>
+      <div>
+        <button class="btn small ${subActive(s)?"danger":""}" onclick="toggleOverride('${s.id}','${subActive(s)?"forza_disattivo":"forza_attivo"}')">${subActive(s)?"Disattiva":"Attiva"}</button>
+      </div>
+    </div>
+  `).join("") || '<p style="font-size:12px;color:#9a8a63">Nessun pacchetto ancora assegnato.</p>';
+  document.getElementById("pmStatus").textContent = "";
+  openModal("packagesModal");
+};
+
+window.toggleOverride = async function(subId, override_manuale){
+  const { error } = await client.from("cp_subscriptions").update({ override_manuale }).eq("id", subId);
+  if(error){ alert("Errore: " + error.message); return; }
+  await loadClients();
+  openPackagesModal(currentClientId);
+};
+
+window.generateCheckoutLink = async function(){
+  const package_key = document.getElementById("pmNewPackageKey").value;
+  const price_id = document.getElementById("pmPriceId").value.trim();
+  const statusEl = document.getElementById("pmStatus");
+  if(!price_id){ statusEl.textContent = "Inserisci il Price ID Stripe."; statusEl.className = "status error"; return; }
+
+  statusEl.textContent = "Genero link...";
+  statusEl.className = "status";
+
+  const { data: { session } } = await client.auth.getSession();
+  const res = await fetch(CP_SUPABASE_URL + "/functions/v1/stripe-checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + session.access_token },
+    body: JSON.stringify({ client_id: currentClientId, package_key, price_id })
+  });
+  const out = await res.json();
+
+  if(!out.success){
+    statusEl.textContent = "Errore: " + out.error;
+    statusEl.className = "status error";
+    return;
+  }
+
+  navigator.clipboard?.writeText(out.checkout_url);
+  statusEl.textContent = "Link copiato negli appunti — mandalo al cliente: " + out.checkout_url;
+  statusEl.className = "status success";
+  await loadClients();
+};
+
+document.getElementById("logoutBtn").addEventListener("click", async function(){
+  await client.auth.signOut();
+  window.location.href = "login.html";
+});
+
+(async function init(){
+  const ok = await checkAuth();
+  if(!ok) return;
+  document.getElementById("mainContent").style.display = "block";
+  await loadClients();
+})();
+</script>
+
+</body>
+</html>
