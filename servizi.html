@@ -1,0 +1,175 @@
+<title>Servizi | Dominus</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,440;0,9..144,600;1,9..144,400;1,9..144,500&family=Archivo:wght@400;500;600;700&display=swap');
+
+  :root{
+    --parchment: #F2ECDE; --parchment-dim: #E8DFCB; --ink: #14110D; --ink-soft: #211C15;
+    --slate: #3A362E; --stone: #857D69; --brass: #9C7A3E; --brass-bright: #C9A45C;
+    --hair: rgba(60,50,30,0.16);
+    --bg: var(--parchment); --bg-raised: #FBF8F0; --fg: var(--slate); --fg-dim: var(--stone);
+    --fg-strong: var(--ink); --accent: var(--brass); --accent-strong: #7C5F2E; --rule: var(--hair);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: var(--ink); --bg-raised: var(--ink-soft); --fg: #D9D1BE; --fg-dim: #8C8370;
+      --fg-strong: var(--parchment); --accent: var(--brass-bright); --accent-strong: var(--brass-bright);
+      --rule: rgba(201,164,92,0.22);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: var(--ink); --bg-raised: var(--ink-soft); --fg: #D9D1BE; --fg-dim: #8C8370;
+    --fg-strong: var(--parchment); --accent: var(--brass-bright); --accent-strong: var(--brass-bright);
+    --rule: rgba(201,164,92,0.22);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{ margin:0; background:var(--bg); color:var(--fg); font-family:'Archivo', ui-sans-serif, system-ui, sans-serif; font-size:16.5px; line-height:1.65; }
+  a{ color:inherit }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, 'Times New Roman', serif; font-weight:440; color:var(--fg-strong); text-wrap:balance; margin:0; }
+  .wrap{ max-width:1120px; margin:0 auto; padding-left:32px; padding-right:32px; }
+  @media (max-width:640px){ .wrap{ padding-left:20px; padding-right:20px; } }
+  .eyebrow{ font-family:'Archivo', sans-serif; font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent-strong); font-weight:600; }
+
+  .nav{ position:sticky; top:0; z-index:40; display:flex; align-items:center; justify-content:space-between; padding:22px 32px; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--rule); }
+  .nav-mark{ display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .nav-mark svg{ width:30px; height:30px; flex-shrink:0; }
+  .nav-word{ font-family:'Fraunces', serif; font-weight:500; font-size:19px; letter-spacing:.14em; color:var(--fg-strong); }
+  .nav-links{ display:flex; align-items:center; gap:28px; }
+  .nav-link{ font-size:12.5px; letter-spacing:.06em; text-decoration:none; color:var(--fg-dim); }
+  .nav-link:hover{ color:var(--fg-strong); }
+  .nav-cta{ font-size:12px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; padding:11px 22px; border:1px solid var(--fg-strong); text-decoration:none; color:var(--fg-strong); white-space:nowrap; transition:background .2s ease, color .2s ease; }
+  .nav-cta:hover{ background:var(--fg-strong); color:var(--bg); }
+
+  .hero{ padding:88px 32px 56px; text-align:center; }
+  .hero-inner{ max-width:680px; margin:0 auto; }
+  .hero h1{ font-size:clamp(2.2rem, 5vw, 3.4rem); line-height:1.08; letter-spacing:-0.01em; }
+  .hero h1 em{ font-style:italic; font-weight:400; color:var(--accent-strong); }
+  .hero-sub{ margin:22px auto 0; max-width:560px; font-size:16.5px; color:var(--fg-dim); line-height:1.7; }
+
+  section{ padding:0 0 100px; }
+  .services{ display:flex; flex-direction:column; }
+  .service{ display:grid; grid-template-columns:64px 1fr; gap:28px; padding:44px 0; border-top:1px solid var(--rule); }
+  .services .service:last-child{ border-bottom:1px solid var(--rule); }
+  @media (max-width:640px){ .service{ grid-template-columns:40px 1fr; } }
+  .service-num{ font-family:'Fraunces', serif; font-style:italic; font-size:2rem; color:var(--rule); line-height:1; }
+  .service-name{ font-size:1.5rem; margin-bottom:12px; }
+  .service-desc{ color:var(--fg-dim); font-size:15px; max-width:60ch; margin:0 0 18px; line-height:1.7; }
+  .service-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; }
+  .service-list li{ font-size:14px; color:var(--fg); padding-left:22px; position:relative; line-height:1.55; max-width:56ch; }
+  .service-list li::before{ content:"—"; position:absolute; left:0; color:var(--accent-strong); }
+
+  .closing{ text-align:center; padding-top:20px; }
+  .closing h2{ font-size:clamp(1.8rem,3.4vw,2.4rem); }
+  .closing p{ color:var(--fg-dim); margin:18px auto 0; max-width:440px; font-size:15.5px; }
+  .btn-solid{ font-size:12.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; padding:15px 30px; text-decoration:none; display:inline-block; margin-top:30px; background:var(--fg-strong); color:var(--bg); border:1px solid var(--fg-strong); }
+  .btn-solid:hover{ background:var(--accent-strong); border-color:var(--accent-strong); }
+
+  footer{ border-top:1px solid var(--rule); padding:36px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; }
+  .footer-mark{ display:flex; align-items:center; gap:10px; }
+  .footer-mark svg{ width:20px; height:20px; }
+  .footer-word{ font-family:'Fraunces', serif; font-size:13px; letter-spacing:.16em; color:var(--fg-dim); }
+  footer .fine{ font-size:11.5px; color:var(--fg-dim); letter-spacing:.04em; }
+</style>
+
+<nav class="nav">
+  <a class="nav-mark" href="index.html">
+    <svg viewBox="0 0 60 60" aria-hidden="true">
+      <circle cx="30" cy="30" r="28" fill="none" stroke="var(--fg-strong)" stroke-width="1.2"/>
+      <circle cx="30" cy="30" r="23" fill="none" stroke="var(--accent)" stroke-width="1"/>
+      <text x="30" y="39" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="26" fill="var(--fg-strong)">D</text>
+    </svg>
+    <span class="nav-word">DOMINVS</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html#sistema">Il sistema</a>
+    <a class="nav-link" href="servizi.html">Servizi</a>
+    <a class="nav-link" href="prezzi.html">Prezzi</a>
+    <a class="nav-cta" href="index.html#contatti">Richiedi una demo</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">Servizi</span>
+    <h1 style="margin-top:16px">Ti mettiamo <em>online</em>,<br>non solo online il software</h1>
+    <p class="hero-sub">Oltre al gestionale, ci occupiamo di tutto quello che serve perché la tua agenzia sia operativa da subito: dominio, indirizzi email, accessi del team.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="services">
+
+      <div class="service">
+        <div class="service-num">I</div>
+        <div>
+          <div class="service-name">Migrazione del dominio</div>
+          <p class="service-desc">Se hai già un dominio (es. tuaagenzia.it), lo colleghiamo al sito che costruiamo per te — nessuna interruzione, nessun cambio di indirizzo per i tuoi clienti.</p>
+          <ul class="service-list">
+            <li>Aggiorniamo i DNS del dominio perché puntino al nuovo sito</li>
+            <li>Verifichiamo certificato SSL e propagazione prima di andare live</li>
+            <li>Coordiniamo il passaggio con il tuo attuale gestore, se necessario</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="service">
+        <div class="service-num">II</div>
+        <div>
+          <div class="service-name">Acquisizione del dominio</div>
+          <p class="service-desc">Se non hai ancora un dominio, lo registriamo noi per conto tuo — nome a tua scelta, disponibilità verificata, pronto e collegato al sito fin dal primo giorno.</p>
+          <ul class="service-list">
+            <li>Ricerca disponibilità e suggerimenti sul nome più adatto</li>
+            <li>Registrazione a tuo nome, rinnovo gestito senza pensieri</li>
+            <li>Collegamento diretto al sito Dominus, senza passaggi manuali da parte tua</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="service">
+        <div class="service-num">III</div>
+        <div>
+          <div class="service-name">Email aziendali e dei collaboratori</div>
+          <p class="service-desc">Creiamo le caselle email sul tuo dominio — quella principale dell'agenzia e una per ogni collaboratore che inviti nel gestionale.</p>
+          <ul class="service-list">
+            <li>Casella email aziendale (es. info@tuaagenzia.it)</li>
+            <li>Una casella per ogni collaboratore, entro il limite utenti del tuo piano</li>
+            <li>Ogni nuova casella riceve una password provvisoria di attivazione, da cambiare al primo accesso</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="service">
+        <div class="service-num">IV</div>
+        <div>
+          <div class="service-name">Cambio e ripristino password</div>
+          <p class="service-desc">Ogni utente può cambiare la propria password quando vuole, e recuperarla da solo se la dimentica — senza dover scrivere a noi.</p>
+          <ul class="service-list">
+            <li>Cambio password in autonomia dal proprio profilo</li>
+            <li>Ripristino via email in caso di password dimenticata</li>
+            <li>Il titolare dell'agenzia può forzare il reset di un collaboratore, se serve</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="closing">
+      <span class="eyebrow">Prossimo passo</span>
+      <h2 style="margin-top:16px">Partiamo da dove sei tu</h2>
+      <p>Dominio già tuo, dominio da registrare, email da creare per il team: raccontaci la situazione, ci pensiamo noi.</p>
+      <a class="btn-solid" href="index.html#contatti">Richiedi una demo</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; width:100%;">
+    <div class="footer-mark">
+      <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28" fill="none" stroke="var(--fg-dim)" stroke-width="1.2"/><text x="30" y="39" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="26" fill="var(--fg-dim)">D</text></svg>
+      <span class="footer-word">DOMINVS</span>
+    </div>
+    <span class="fine">Real Estate Intelligence Suite · <a href="admin/login.html" style="color:inherit; opacity:.6;">Accedi</a></span>
+  </div>
+</footer>
