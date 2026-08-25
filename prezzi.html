@@ -75,6 +75,33 @@
   .foot-note{ max-width:640px; margin:48px auto 0; text-align:center; font-size:13.5px; color:var(--fg-dim); line-height:1.7; }
   .foot-note a{ color:var(--accent-strong); text-decoration:none; border-bottom:1px solid var(--rule); }
 
+  .billing-toggle{ display:flex; align-items:center; justify-content:center; gap:14px; margin:30px auto 0; }
+  .billing-toggle button{ font-family:'Archivo', sans-serif; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; font-weight:600; padding:10px 20px; border:1px solid var(--rule); background:transparent; color:var(--fg-dim); cursor:pointer; }
+  .billing-toggle button.active{ border-color:var(--fg-strong); color:var(--fg-strong); background:var(--bg-raised); }
+  .billing-toggle .save-badge{ font-size:10.5px; letter-spacing:.04em; color:var(--accent-strong); background:color-mix(in srgb, var(--accent) 14%, transparent); padding:3px 9px; }
+
+  .plan-price .amount.annual-amount{ display:none; }
+  .plans.annual .amount.monthly-amount{ display:none; }
+  .plans.annual .amount.annual-amount{ display:inline; }
+  .plans.annual .plan-note-monthly{ display:none; }
+  .plan-note-annual{ display:none; }
+  .plans.annual .plan-note-annual{ display:inline; }
+
+  .btn-buy{ font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; padding:14px 20px; text-decoration:none; text-align:center; display:block; margin-top:10px; border:none; cursor:pointer; font-family:'Archivo', sans-serif; background:var(--accent-strong); color:var(--bg-raised); width:100%; }
+  .btn-buy:hover{ opacity:.9; }
+  .btn-buy:disabled{ opacity:.6; cursor:not-allowed; }
+
+  .buy-modal-overlay{ display:none; position:fixed; inset:0; background:rgba(20,17,13,.55); z-index:100; align-items:center; justify-content:center; padding:20px; }
+  .buy-modal-overlay.open{ display:flex; }
+  .buy-modal{ background:var(--bg-raised); border:1px solid var(--rule); max-width:420px; width:100%; padding:34px 30px; position:relative; }
+  .buy-modal h3{ font-size:1.4rem; margin-bottom:6px; }
+  .buy-modal p.sub{ font-size:13px; color:var(--fg-dim); margin:0 0 20px; }
+  .buy-modal label{ display:block; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--fg-dim); margin-bottom:6px; }
+  .buy-modal input{ width:100%; padding:11px 13px; border:1px solid var(--rule); background:var(--bg); color:var(--fg-strong); font-size:14px; font-family:'Archivo', sans-serif; margin-bottom:14px; outline:none; }
+  .buy-modal-close{ position:absolute; top:14px; right:16px; background:none; border:none; color:var(--fg-dim); font-size:18px; cursor:pointer; }
+  .buy-modal-status{ font-size:13px; margin-top:8px; min-height:18px; }
+  .buy-modal-status.error{ color:#a33; }
+
   footer{ border-top:1px solid var(--rule); padding:36px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; }
   .footer-mark{ display:flex; align-items:center; gap:10px; }
   .footer-mark svg{ width:20px; height:20px; }
@@ -106,60 +133,85 @@
     <p class="hero-sub">Nessuna funzione a scomparsa: ogni piano include tutto il sistema Dominus. Il prezzo cresce solo con il numero di persone che lo usano.</p>
   </div>
   <div class="promo-banner">Lancio: <strong>-30% per il primo anno</strong> ai primi 20 clienti che attivano un abbonamento — codice <strong>PRIMI20</strong> in fase di pagamento.</div>
+  <div class="billing-toggle">
+    <button type="button" class="active" data-billing="monthly">Mensile</button>
+    <button type="button" data-billing="annual">Annuale <span class="save-badge">-17%, 2 mesi gratis</span></button>
+  </div>
 </header>
 
 <section>
   <div class="wrap">
-    <div class="plans">
+    <div class="plans" id="plansGrid">
 
-      <div class="plan">
+      <div class="plan" data-plan="starter">
         <div class="plan-name">Starter</div>
         <div class="plan-audience">1–3 utenti</div>
-        <div class="plan-price"><span class="amount">149€</span><span class="period">/ mese</span></div>
-        <div class="plan-note">Fatturato mensilmente, disdicibile in ogni momento.</div>
+        <div class="plan-price"><span class="amount monthly-amount">149€</span><span class="amount annual-amount">1.490€</span><span class="period monthly-amount">/ mese</span><span class="period annual-amount">/ anno</span></div>
+        <div class="plan-note"><span class="plan-note-monthly">Fatturato mensilmente, disdicibile in ogni momento.</span><span class="plan-note-annual">Fatturato una volta l'anno — equivale a 124€/mese, 2 mesi gratis.</span></div>
         <ul class="plan-features">
           <li>Tutti i 10 pacchetti del sistema, inclusi</li>
           <li>Sito e dashboard con il tuo marchio</li>
           <li>Fino a 3 utenti attivi</li>
           <li>Assistenza via email</li>
         </ul>
+        <button type="button" class="btn-buy" data-buy="starter">Acquista ora</button>
         <a class="btn-line" href="index.html#contatti">Richiedi una demo</a>
       </div>
 
-      <div class="plan featured">
+      <div class="plan featured" data-plan="team">
         <span class="plan-badge">Più scelto</span>
         <div class="plan-name">Team</div>
         <div class="plan-audience">4–10 utenti</div>
-        <div class="plan-price"><span class="amount">349€</span><span class="period">/ mese</span></div>
-        <div class="plan-note">Fatturato mensilmente, disdicibile in ogni momento.</div>
+        <div class="plan-price"><span class="amount monthly-amount">349€</span><span class="amount annual-amount">3.490€</span><span class="period monthly-amount">/ mese</span><span class="period annual-amount">/ anno</span></div>
+        <div class="plan-note"><span class="plan-note-monthly">Fatturato mensilmente, disdicibile in ogni momento.</span><span class="plan-note-annual">Fatturato una volta l'anno — equivale a 291€/mese, 2 mesi gratis.</span></div>
         <ul class="plan-features">
           <li>Tutti i 10 pacchetti del sistema, inclusi</li>
           <li>Sito e dashboard con il tuo marchio</li>
           <li>Fino a 10 utenti attivi</li>
           <li>Assistenza prioritaria</li>
         </ul>
+        <button type="button" class="btn-buy" data-buy="team">Acquista ora</button>
         <a class="btn-solid" href="index.html#contatti">Richiedi una demo</a>
       </div>
 
-      <div class="plan">
+      <div class="plan" data-plan="agency">
         <div class="plan-name">Agency</div>
         <div class="plan-audience">11+ utenti</div>
-        <div class="plan-price"><span class="amount">790€</span><span class="period">/ mese</span></div>
-        <div class="plan-note">Fatturato mensilmente, disdicibile in ogni momento.</div>
+        <div class="plan-price"><span class="amount monthly-amount">790€</span><span class="amount annual-amount">7.900€</span><span class="period monthly-amount">/ mese</span><span class="period annual-amount">/ anno</span></div>
+        <div class="plan-note"><span class="plan-note-monthly">Fatturato mensilmente, disdicibile in ogni momento.</span><span class="plan-note-annual">Fatturato una volta l'anno — equivale a 658€/mese, 2 mesi gratis.</span></div>
         <ul class="plan-features">
           <li>Tutti i 10 pacchetti del sistema, inclusi</li>
           <li>Sito e dashboard con il tuo marchio</li>
           <li>Utenti illimitati</li>
           <li>Assistenza dedicata</li>
         </ul>
+        <button type="button" class="btn-buy" data-buy="agency">Acquista ora</button>
         <a class="btn-line" href="index.html#contatti">Richiedi una demo</a>
       </div>
 
     </div>
 
-    <p class="foot-note">Ogni nuovo cliente parte con una prova gratuita di 10 giorni, pacchetti completi inclusi, per decidere con calma quale piano gli serve davvero. Domande sui prezzi? Scrivi a <a href="mailto:contatti@dominus-suite.it">contatti@dominus-suite.it</a>.</p>
+    <p class="foot-note">Preferisci provare prima di pagare? Ogni nuovo cliente può partire con una prova gratuita di 10 giorni, pacchetti completi inclusi — <a href="index.html#contatti">richiedi una demo</a>. Domande sui prezzi? Scrivi a <a href="mailto:contatti@dominus-suite.it">contatti@dominus-suite.it</a>.</p>
   </div>
 </section>
+
+<div class="buy-modal-overlay" id="buyModalOverlay">
+  <div class="buy-modal">
+    <button type="button" class="buy-modal-close" id="buyModalClose">✕</button>
+    <h3 id="buyModalTitle">Acquista Dominus</h3>
+    <p class="sub" id="buyModalSub">Ti reindirizziamo al pagamento sicuro Stripe — i dati sotto servono solo a creare subito il tuo accesso.</p>
+    <label>Nome e cognome</label>
+    <input type="text" id="buyNome" placeholder="Mario Rossi">
+    <label>Nome agenzia</label>
+    <input type="text" id="buyAgenzia" placeholder="La tua agenzia">
+    <label>Email</label>
+    <input type="email" id="buyEmail" placeholder="mario@tuaagenzia.it">
+    <label>Telefono (opzionale)</label>
+    <input type="tel" id="buyTelefono" placeholder="+39 ...">
+    <button type="button" class="btn-buy" id="buyModalSubmit">Vai al pagamento</button>
+    <div class="buy-modal-status" id="buyModalStatus"></div>
+  </div>
+</div>
 
 <footer>
   <div class="wrap" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; width:100%;">
@@ -170,3 +222,71 @@
     <span class="fine">Real Estate Intelligence Suite · <a href="admin/login.html" style="color:inherit; opacity:.6;">Accedi</a></span>
   </div>
 </footer>
+
+<script>
+(function(){
+  var CONTROL_PLANE_URL = "https://cspzkofhgfrnkhjpfazb.supabase.co";
+  var CONTROL_PLANE_ANON_KEY = "sb_publishable_oYbR_A78f8SRKdJbkeZegQ_4gAx-567";
+  var PLAN_LABELS = { starter: "Starter", team: "Team", agency: "Agency" };
+  var currentBilling = "monthly";
+  var currentPlan = null;
+
+  document.querySelectorAll(".billing-toggle button").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".billing-toggle button").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      currentBilling = btn.getAttribute("data-billing");
+      document.getElementById("plansGrid").classList.toggle("annual", currentBilling === "annual");
+    });
+  });
+
+  var overlay = document.getElementById("buyModalOverlay");
+  document.querySelectorAll("[data-buy]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      currentPlan = btn.getAttribute("data-buy");
+      document.getElementById("buyModalTitle").textContent = "Acquista Dominus " + (PLAN_LABELS[currentPlan] || currentPlan);
+      document.getElementById("buyModalStatus").textContent = "";
+      document.getElementById("buyModalStatus").className = "buy-modal-status";
+      overlay.classList.add("open");
+    });
+  });
+  document.getElementById("buyModalClose").addEventListener("click", function(){ overlay.classList.remove("open"); });
+  overlay.addEventListener("click", function(e){ if(e.target === overlay) overlay.classList.remove("open"); });
+
+  document.getElementById("buyModalSubmit").addEventListener("click", async function(){
+    var nome = document.getElementById("buyNome").value.trim();
+    var agenzia = document.getElementById("buyAgenzia").value.trim();
+    var email = document.getElementById("buyEmail").value.trim();
+    var telefono = document.getElementById("buyTelefono").value.trim();
+    var statusEl = document.getElementById("buyModalStatus");
+    if(!nome || !email){
+      statusEl.textContent = "Nome ed email sono obbligatori.";
+      statusEl.className = "buy-modal-status error";
+      return;
+    }
+    var btn = this;
+    btn.disabled = true;
+    statusEl.textContent = "Ti stiamo reindirizzando al pagamento...";
+    statusEl.className = "buy-modal-status";
+    try{
+      var res = await fetch(CONTROL_PLANE_URL + "/functions/v1/public-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "apikey": CONTROL_PLANE_ANON_KEY },
+        body: JSON.stringify({ plan_key: currentPlan, billing: currentBilling, nome: nome, agenzia: agenzia, email: email, telefono: telefono })
+      });
+      var data = await res.json();
+      if(!data || !data.success || !data.checkout_url){
+        statusEl.textContent = "Errore: " + ((data && data.error) || "riprova tra poco.");
+        statusEl.className = "buy-modal-status error";
+        btn.disabled = false;
+        return;
+      }
+      window.location.href = data.checkout_url;
+    }catch(e){
+      statusEl.textContent = "Errore: " + ((e && e.message) || e);
+      statusEl.className = "buy-modal-status error";
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
