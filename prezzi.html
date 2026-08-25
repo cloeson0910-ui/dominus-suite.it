@@ -1,0 +1,171 @@
+<title>Prezzi | Dominus</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,440;0,9..144,600;1,9..144,400;1,9..144,500&family=Archivo:wght@400;500;600;700&display=swap');
+
+  :root{
+    --parchment: #F2ECDE; --parchment-dim: #E8DFCB; --ink: #14110D; --ink-soft: #211C15;
+    --slate: #3A362E; --stone: #857D69; --brass: #9C7A3E; --brass-bright: #C9A45C;
+    --hair: rgba(60,50,30,0.16);
+    --bg: var(--parchment); --bg-raised: #FBF8F0; --fg: var(--slate); --fg-dim: var(--stone);
+    --fg-strong: var(--ink); --accent: var(--brass); --accent-strong: #7C5F2E; --rule: var(--hair);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: var(--ink); --bg-raised: var(--ink-soft); --fg: #D9D1BE; --fg-dim: #8C8370;
+      --fg-strong: var(--parchment); --accent: var(--brass-bright); --accent-strong: var(--brass-bright);
+      --rule: rgba(201,164,92,0.22);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: var(--ink); --bg-raised: var(--ink-soft); --fg: #D9D1BE; --fg-dim: #8C8370;
+    --fg-strong: var(--parchment); --accent: var(--brass-bright); --accent-strong: var(--brass-bright);
+    --rule: rgba(201,164,92,0.22);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{ margin:0; background:var(--bg); color:var(--fg); font-family:'Archivo', ui-sans-serif, system-ui, sans-serif; font-size:16.5px; line-height:1.65; }
+  a{ color:inherit }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, 'Times New Roman', serif; font-weight:440; color:var(--fg-strong); text-wrap:balance; margin:0; }
+  .wrap{ max-width:1120px; margin:0 auto; padding-left:32px; padding-right:32px; }
+  @media (max-width:640px){ .wrap{ padding-left:20px; padding-right:20px; } }
+  .eyebrow{ font-family:'Archivo', sans-serif; font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent-strong); font-weight:600; }
+
+  .nav{ position:sticky; top:0; z-index:40; display:flex; align-items:center; justify-content:space-between; padding:22px 32px; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--rule); }
+  .nav-mark{ display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .nav-mark svg{ width:30px; height:30px; flex-shrink:0; }
+  .nav-word{ font-family:'Fraunces', serif; font-weight:500; font-size:19px; letter-spacing:.14em; color:var(--fg-strong); }
+  .nav-links{ display:flex; align-items:center; gap:28px; }
+  .nav-link{ font-size:12.5px; letter-spacing:.06em; text-decoration:none; color:var(--fg-dim); }
+  .nav-link:hover{ color:var(--fg-strong); }
+  .nav-cta{ font-size:12px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; padding:11px 22px; border:1px solid var(--fg-strong); text-decoration:none; color:var(--fg-strong); white-space:nowrap; transition:background .2s ease, color .2s ease; }
+  .nav-cta:hover{ background:var(--fg-strong); color:var(--bg); }
+
+  .hero{ padding:88px 32px 56px; text-align:center; }
+  .hero-inner{ max-width:680px; margin:0 auto; }
+  .hero h1{ font-size:clamp(2.2rem, 5vw, 3.4rem); line-height:1.08; letter-spacing:-0.01em; }
+  .hero h1 em{ font-style:italic; font-weight:400; color:var(--accent-strong); }
+  .hero-sub{ margin:22px auto 0; max-width:520px; font-size:16.5px; color:var(--fg-dim); line-height:1.7; }
+
+  .promo-banner{ max-width:620px; margin:32px auto 0; padding:14px 20px; border:1px solid var(--accent); background:color-mix(in srgb, var(--accent) 12%, transparent); font-size:13.5px; text-align:center; color:var(--fg-strong); }
+  .promo-banner strong{ color:var(--accent-strong); }
+
+  section{ padding:56px 0 100px; }
+  .plans{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; align-items:stretch; }
+  @media (max-width:900px){ .plans{ grid-template-columns:1fr; max-width:420px; margin:0 auto; } }
+
+  .plan{ border:1px solid var(--rule); background:var(--bg-raised); padding:36px 30px; display:flex; flex-direction:column; position:relative; }
+  .plan.featured{ border-color:var(--accent-strong); box-shadow:0 0 0 1px var(--accent-strong); }
+  .plan-badge{ position:absolute; top:-13px; left:30px; background:var(--accent-strong); color:var(--bg-raised); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; padding:5px 12px; }
+  .plan-name{ font-size:1.5rem; margin-bottom:6px; }
+  .plan-audience{ font-size:12.5px; color:var(--fg-dim); letter-spacing:.04em; margin-bottom:24px; }
+  .plan-price{ display:flex; align-items:baseline; gap:6px; margin-bottom:4px; }
+  .plan-price .amount{ font-family:'Fraunces', serif; font-size:2.6rem; color:var(--fg-strong); font-weight:500; }
+  .plan-price .period{ font-size:13.5px; color:var(--fg-dim); }
+  .plan-note{ font-size:12px; color:var(--fg-dim); margin-bottom:26px; }
+  .plan-features{ list-style:none; margin:0 0 30px; padding:0; display:flex; flex-direction:column; gap:12px; flex:1; }
+  .plan-features li{ font-size:14px; color:var(--fg); padding-left:22px; position:relative; line-height:1.5; }
+  .plan-features li::before{ content:"—"; position:absolute; left:0; color:var(--accent-strong); }
+  .plan .btn-solid, .plan .btn-line{ font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; padding:14px 20px; text-decoration:none; text-align:center; display:block; }
+  .plan .btn-solid{ background:var(--fg-strong); color:var(--bg); border:1px solid var(--fg-strong); }
+  .plan .btn-solid:hover{ background:var(--accent-strong); border-color:var(--accent-strong); }
+  .plan .btn-line{ border:1px solid var(--rule); color:var(--fg); }
+  .plan .btn-line:hover{ border-color:var(--fg-strong); }
+
+  .foot-note{ max-width:640px; margin:48px auto 0; text-align:center; font-size:13.5px; color:var(--fg-dim); line-height:1.7; }
+  .foot-note a{ color:var(--accent-strong); text-decoration:none; border-bottom:1px solid var(--rule); }
+
+  footer{ border-top:1px solid var(--rule); padding:36px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; }
+  .footer-mark{ display:flex; align-items:center; gap:10px; }
+  .footer-mark svg{ width:20px; height:20px; }
+  .footer-word{ font-family:'Fraunces', serif; font-size:13px; letter-spacing:.16em; color:var(--fg-dim); }
+  footer .fine{ font-size:11.5px; color:var(--fg-dim); letter-spacing:.04em; }
+</style>
+
+<nav class="nav">
+  <a class="nav-mark" href="index.html">
+    <svg viewBox="0 0 60 60" aria-hidden="true">
+      <circle cx="30" cy="30" r="28" fill="none" stroke="var(--fg-strong)" stroke-width="1.2"/>
+      <circle cx="30" cy="30" r="23" fill="none" stroke="var(--accent)" stroke-width="1"/>
+      <text x="30" y="39" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="26" fill="var(--fg-strong)">D</text>
+    </svg>
+    <span class="nav-word">DOMINVS</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html#sistema">Il sistema</a>
+    <a class="nav-link" href="prezzi.html">Prezzi</a>
+    <a class="nav-cta" href="index.html#contatti">Richiedi una demo</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">Prezzi</span>
+    <h1 style="margin-top:16px">Un pacchetto <em>completo</em>,<br>una tariffa in base al team</h1>
+    <p class="hero-sub">Nessuna funzione a scomparsa: ogni piano include tutto il sistema Dominus. Il prezzo cresce solo con il numero di persone che lo usano.</p>
+  </div>
+  <div class="promo-banner">Lancio: <strong>-30% per il primo anno</strong> ai primi 20 clienti che attivano un abbonamento — codice <strong>PRIMI20</strong> in fase di pagamento.</div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="plans">
+
+      <div class="plan">
+        <div class="plan-name">Starter</div>
+        <div class="plan-audience">1–3 utenti</div>
+        <div class="plan-price"><span class="amount">149€</span><span class="period">/ mese</span></div>
+        <div class="plan-note">Fatturato mensilmente, disdicibile in ogni momento.</div>
+        <ul class="plan-features">
+          <li>Tutti i 10 pacchetti del sistema, inclusi</li>
+          <li>Sito e dashboard con il tuo marchio</li>
+          <li>Fino a 3 utenti attivi</li>
+          <li>Assistenza via email</li>
+        </ul>
+        <a class="btn-line" href="index.html#contatti">Richiedi una demo</a>
+      </div>
+
+      <div class="plan featured">
+        <span class="plan-badge">Più scelto</span>
+        <div class="plan-name">Team</div>
+        <div class="plan-audience">4–10 utenti</div>
+        <div class="plan-price"><span class="amount">349€</span><span class="period">/ mese</span></div>
+        <div class="plan-note">Fatturato mensilmente, disdicibile in ogni momento.</div>
+        <ul class="plan-features">
+          <li>Tutti i 10 pacchetti del sistema, inclusi</li>
+          <li>Sito e dashboard con il tuo marchio</li>
+          <li>Fino a 10 utenti attivi</li>
+          <li>Assistenza prioritaria</li>
+        </ul>
+        <a class="btn-solid" href="index.html#contatti">Richiedi una demo</a>
+      </div>
+
+      <div class="plan">
+        <div class="plan-name">Agency</div>
+        <div class="plan-audience">11+ utenti</div>
+        <div class="plan-price"><span class="amount">790€</span><span class="period">/ mese</span></div>
+        <div class="plan-note">Fatturato mensilmente, disdicibile in ogni momento.</div>
+        <ul class="plan-features">
+          <li>Tutti i 10 pacchetti del sistema, inclusi</li>
+          <li>Sito e dashboard con il tuo marchio</li>
+          <li>Utenti illimitati</li>
+          <li>Assistenza dedicata</li>
+        </ul>
+        <a class="btn-line" href="index.html#contatti">Richiedi una demo</a>
+      </div>
+
+    </div>
+
+    <p class="foot-note">Ogni nuovo cliente parte con una prova gratuita di 10 giorni, pacchetti completi inclusi, per decidere con calma quale piano gli serve davvero. Domande sui prezzi? Scrivi a <a href="mailto:contatti@dominus-suite.it">contatti@dominus-suite.it</a>.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; width:100%;">
+    <div class="footer-mark">
+      <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28" fill="none" stroke="var(--fg-dim)" stroke-width="1.2"/><text x="30" y="39" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="26" fill="var(--fg-dim)">D</text></svg>
+      <span class="footer-word">DOMINVS</span>
+    </div>
+    <span class="fine">Real Estate Intelligence Suite · <a href="admin/login.html" style="color:inherit; opacity:.6;">Accedi</a></span>
+  </div>
+</footer>
