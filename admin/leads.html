@@ -56,6 +56,11 @@
   .lead-message{ font-size:13px; color:#3A362E; margin-top:12px; line-height:1.6; max-width:560px; }
   .lead-license{ font-size:12px; color:#857D69; margin-top:12px; padding-top:12px; border-top:1px dashed rgba(60,50,30,0.18); }
   .lead-license strong{ color:#7C5F2E; }
+  .trial-bar-wrap{ margin-top:10px; max-width:320px; }
+  .trial-bar-track{ height:5px; background:rgba(60,50,30,0.12); overflow:hidden; }
+  .trial-bar-fill{ height:100%; background:#9C7A3E; }
+  .trial-bar-fill.urgent{ background:#9c2f2f; }
+  .trial-bar-fill.expired{ background:#857D69; }
   .lead-meta{ display:flex; flex-direction:column; align-items:flex-end; gap:10px; min-width:150px; }
   .lead-date{ font-size:11px; color:#857D69; letter-spacing:.03em; }
   select.status-select{
@@ -176,6 +181,7 @@
               Codice licenza demo: <strong onclick="copyCode('${esc(l.cp_clients.license_code)}')" style="cursor:pointer; text-decoration:underline;" title="Clicca per copiare">${esc(l.cp_clients.license_code)}</strong>
               ${demoLabel(l.cp_clients)}
               ${l.cp_clients.site_url ? `<br>Sito demo: <a href="${esc(l.cp_clients.site_url)}" target="_blank">${esc(l.cp_clients.site_url)}</a>` : ''}
+              ${trialBar(l.cp_clients)}
             </div>` : ''}
         </div>
         <div class="lead-meta">
@@ -198,6 +204,17 @@
     return msLeft > 0
       ? `· <span style="color:#7C5F2E">scade tra ${daysLeft} ${daysLeft===1?'giorno':'giorni'}</span>`
       : `· <span style="color:#9c2f2f">demo scaduta</span>`;
+  }
+
+  const DEMO_TRIAL_DAYS_TOTAL = 10; // stesso valore usato in dominus-lead-intake
+
+  function trialBar(c){
+    if(!c.is_demo || !c.demo_expires_at) return '';
+    const totalMs = DEMO_TRIAL_DAYS_TOTAL * 24*60*60*1000;
+    const msLeft = new Date(c.demo_expires_at).getTime() - Date.now();
+    const pctElapsed = Math.min(100, Math.max(0, ((totalMs - msLeft) / totalMs) * 100));
+    const cls = msLeft <= 0 ? 'expired' : (msLeft <= 2*24*60*60*1000 ? 'urgent' : '');
+    return `<div class="trial-bar-wrap"><div class="trial-bar-track"><div class="trial-bar-fill ${cls}" style="width:${pctElapsed.toFixed(0)}%"></div></div></div>`;
   }
 
   window.copyCode = function(code){
