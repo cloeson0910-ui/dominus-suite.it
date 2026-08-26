@@ -64,6 +64,11 @@
   }
   .status-select[data-status="nuovo"]{ border-color:#9C7A3E; color:#7C5F2E; font-weight:600; }
   .status-select[data-status="archiviato"]{ opacity:.55; }
+  .delete-btn{
+    font-family:inherit; font-size:11px; letter-spacing:.05em; text-transform:uppercase;
+    padding:6px 10px; border:1px solid rgba(156,47,47,0.35); background:transparent; color:#9c2f2f; cursor:pointer;
+  }
+  .delete-btn:hover{ background:#9c2f2f; color:#fff; border-color:#9c2f2f; }
 
   .empty, .loading{ text-align:center; padding:60px 20px; color:#857D69; font-size:14px; }
 </style>
@@ -144,6 +149,51 @@
     render();
   };
 
+  // Elimina la richiesta usando il suo id (chiave primaria univoca) — mai per
+  // nome o email, che possono ripetersi tra più richieste diverse.
+  // Elimina la richiesta identificandola sempre per id (mai per nome/email).
+  // Se la richiesta è collegata a un cliente/licenza demo, l'edge function
+  // delete-dominus-lead cancella anche tutto il tenant demo associato
+  // (opportunità, investitori, profili, utente auth, licenza) — non solo la
+  // riga della richiesta. Per sicurezza rifiuta se il cliente non è più in
+  // prova (già convertito in pagante).
+  window.deleteLead = async function(id){
+    const lead = ALL_LEADS.find(l => l.id === id);
+    const label = lead ? (lead.nome || lead.email || 'questa richiesta') : 'questa richiesta';
+    const hasLicense = !!(lead && lead.cp_clients);
+    const warnLicense = hasLicense
+      ? ' Verrà eliminata anche la licenza demo collegata (codice ' + (lead.cp_clients.license_code || '—') + ') con tutti i suoi dati.'
+      : '';
+    if(!confirm('Eliminare definitivamente la richiesta di "' + label + '"?' + warnLicense + ' L\'operazione non è reversibile.')) return;
+
+    const { data:{ session } } = await client.auth.getSession();
+    if(!session){ window.location.href = "login.html"; return; }
+
+    let result;
+    try{
+      const res = await fetch(CP_SUPABASE_URL + "/functions/v1/delete-dominus-lead", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + session.access_token,
+        },
+        body: JSON.stringify({ lead_id: id }),
+      });
+      result = await res.json();
+    }catch(e){
+      alert("Errore di rete durante l'eliminazione: " + e.message);
+      return;
+    }
+
+    if(!result || !result.success){
+      alert("Errore: " + (result && result.message ? result.message : "eliminazione non riuscita."));
+      return;
+    }
+
+    ALL_LEADS = ALL_LEADS.filter(l => l.id !== id);
+    render();
+  };
+
   function render(){
     const listEl = document.getElementById('list');
     const filtered = CURRENT_FILTER === 'tutti' ? ALL_LEADS : ALL_LEADS.filter(l => l.stato === CURRENT_FILTER);
@@ -181,6 +231,7 @@
             <option value="contattato" ${l.stato === 'contattato' ? 'selected' : ''}>Contattato</option>
             <option value="archiviato" ${l.stato === 'archiviato' ? 'selected' : ''}>Archiviato</option>
           </select>
+          <button type="button" class="delete-btn" onclick="deleteLead('${l.id}')">Elimina</button>
         </div>
       </div>
     `).join('');
