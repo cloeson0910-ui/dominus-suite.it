@@ -56,11 +56,6 @@
   .lead-message{ font-size:13px; color:#3A362E; margin-top:12px; line-height:1.6; max-width:560px; }
   .lead-license{ font-size:12px; color:#857D69; margin-top:12px; padding-top:12px; border-top:1px dashed rgba(60,50,30,0.18); }
   .lead-license strong{ color:#7C5F2E; }
-  .trial-bar-wrap{ margin-top:10px; max-width:320px; }
-  .trial-bar-track{ height:5px; background:rgba(60,50,30,0.12); overflow:hidden; }
-  .trial-bar-fill{ height:100%; background:#9C7A3E; }
-  .trial-bar-fill.urgent{ background:#9c2f2f; }
-  .trial-bar-fill.expired{ background:#857D69; }
   .lead-meta{ display:flex; flex-direction:column; align-items:flex-end; gap:10px; min-width:150px; }
   .lead-date{ font-size:11px; color:#857D69; letter-spacing:.03em; }
   select.status-select{
@@ -69,12 +64,6 @@
   }
   .status-select[data-status="nuovo"]{ border-color:#9C7A3E; color:#7C5F2E; font-weight:600; }
   .status-select[data-status="archiviato"]{ opacity:.55; }
-  .delete-btn{
-    font-family:inherit; font-size:11px; letter-spacing:.05em; text-transform:uppercase;
-    padding:7px 10px; border:1px solid rgba(156,47,47,0.4); background:none; color:#9c2f2f; cursor:pointer;
-  }
-  .delete-btn:hover{ background:#9c2f2f; color:#fff; }
-  .delete-btn:disabled{ opacity:.5; cursor:default; }
 
   .empty, .loading{ text-align:center; padding:60px 20px; color:#857D69; font-size:14px; }
 </style>
@@ -102,7 +91,7 @@
   </div>
 
   <div class="filters">
-    <button class="filter-btn active" data-filter="tutti" onclick="setFilter('tutti', this)">Tutti</button>
+    <button class="filter-btn" data-filter="tutti" onclick="setFilter('tutti', this)">Tutti</button>
     <button class="filter-btn" data-filter="nuovo" onclick="setFilter('nuovo', this)">Nuovi</button>
     <button class="filter-btn" data-filter="contattato" onclick="setFilter('contattato', this)">Contattati</button>
     <button class="filter-btn" data-filter="archiviato" onclick="setFilter('archiviato', this)">Archiviati</button>
@@ -118,7 +107,9 @@
   const client = window.supabase.createClient(CP_SUPABASE_URL, CP_SUPABASE_ANON_KEY);
 
   let ALL_LEADS = [];
-  let CURRENT_FILTER = 'tutti';
+  const VALID_FILTERS = ['tutti', 'nuovo', 'contattato', 'archiviato'];
+  const urlFilter = new URLSearchParams(window.location.search).get('filter');
+  let CURRENT_FILTER = VALID_FILTERS.includes(urlFilter) ? urlFilter : 'tutti';
 
   function esc(v){ return String(v ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
   function fmtDate(iso){
@@ -181,7 +172,6 @@
               Codice licenza demo: <strong onclick="copyCode('${esc(l.cp_clients.license_code)}')" style="cursor:pointer; text-decoration:underline;" title="Clicca per copiare">${esc(l.cp_clients.license_code)}</strong>
               ${demoLabel(l.cp_clients)}
               ${l.cp_clients.site_url ? `<br>Sito demo: <a href="${esc(l.cp_clients.site_url)}" target="_blank">${esc(l.cp_clients.site_url)}</a>` : ''}
-              ${trialBar(l.cp_clients)}
             </div>` : ''}
         </div>
         <div class="lead-meta">
@@ -191,7 +181,6 @@
             <option value="contattato" ${l.stato === 'contattato' ? 'selected' : ''}>Contattato</option>
             <option value="archiviato" ${l.stato === 'archiviato' ? 'selected' : ''}>Archiviato</option>
           </select>
-          <button class="delete-btn" onclick="deleteLead('${esc(l.email)}', '${esc(l.nome)}')">Elimina tutto</button>
         </div>
       </div>
     `).join('');
@@ -206,56 +195,14 @@
       : `· <span style="color:#9c2f2f">demo scaduta</span>`;
   }
 
-  const DEMO_TRIAL_DAYS_TOTAL = 10; // stesso valore usato in dominus-lead-intake
-
-  function trialBar(c){
-    if(!c.is_demo || !c.demo_expires_at) return '';
-    const totalMs = DEMO_TRIAL_DAYS_TOTAL * 24*60*60*1000;
-    const msLeft = new Date(c.demo_expires_at).getTime() - Date.now();
-    const pctElapsed = Math.min(100, Math.max(0, ((totalMs - msLeft) / totalMs) * 100));
-    const cls = msLeft <= 0 ? 'expired' : (msLeft <= 2*24*60*60*1000 ? 'urgent' : '');
-    return `<div class="trial-bar-wrap"><div class="trial-bar-track"><div class="trial-bar-fill ${cls}" style="width:${pctElapsed.toFixed(0)}%"></div></div></div>`;
-  }
-
   window.copyCode = function(code){
     navigator.clipboard?.writeText(code);
-  };
-
-  window.deleteLead = async function(email, nome){
-    if(!confirm(`Eliminare TUTTO quello collegato alla mail "${email}" (richiesta di "${nome}" e ogni altro test fatto con questa mail)? Clienti demo, tenant, accesso di login e richieste: cancellati per sempre, non si può annullare.`)) return;
-
-    const btn = event.target;
-    btn.disabled = true;
-    btn.textContent = "Elimino…";
-
-    const { data: sessionData } = await client.auth.getSession();
-    const token = sessionData?.session?.access_token;
-
-    try {
-      const res = await fetch(`${CP_SUPABASE_URL}/functions/v1/dominus-delete-demo`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        body: JSON.stringify({ email: email }),
-      });
-      const result = await res.json();
-      if(!result.success){
-        alert("Errore: " + (result.error || "sconosciuto"));
-        btn.disabled = false;
-        btn.textContent = "Elimina tutto";
-        return;
-      }
-      await load();
-    } catch(err){
-      alert("Errore di connessione: " + err.message);
-      btn.disabled = false;
-      btn.textContent = "Elimina tutto";
-    }
   };
 
   async function load(){
     const { data, error } = await client
       .from('cp_dominus_leads')
-      .select('*, cp_clients(id, business_name, license_code, is_demo, demo_expires_at, status)')
+      .select('*, cp_clients(business_name, license_code, is_demo, demo_expires_at, status)')
       .order('created_at', { ascending:false });
     if(error){
       document.getElementById('list').innerHTML = '<div class="empty">Errore nel caricamento: ' + esc(error.message) + '</div>';
@@ -266,6 +213,8 @@
   }
 
   (async function(){
+    const activeBtn = document.querySelector('.filter-btn[data-filter="' + CURRENT_FILTER + '"]');
+    if(activeBtn) activeBtn.classList.add('active');
     if(await checkAuth()) load();
   })();
 </script>
