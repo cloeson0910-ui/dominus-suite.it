@@ -125,6 +125,19 @@
   }
   .nav-cta:hover{ background:var(--fg-strong); color:var(--bg); }
 
+  .cta-band-wrap{
+    display:flex; border-bottom:1px solid var(--rule);
+  }
+  .cta-band-wrap .folium-cta{
+    flex:1; border-bottom:none;
+  }
+  .cta-band-wrap .folium-cta:first-child{
+    border-right:1px solid var(--rule);
+  }
+  @media (max-width:760px){
+    .cta-band-wrap{ flex-direction:column; }
+    .cta-band-wrap .folium-cta:first-child{ border-right:none; border-bottom:1px solid var(--rule); }
+  }
   .folium-cta{
     text-align:center; padding:30px 24px;
     background:color-mix(in srgb, var(--accent) 6%, transparent);
@@ -382,6 +395,7 @@
   </div>
 </nav>
 
+<div class="cta-band-wrap">
 <div class="folium-cta reveal">
   <svg class="folium-cta-icon" viewBox="0 0 40 40" aria-hidden="true">
     <circle cx="20" cy="20" r="18" fill="none" stroke="var(--fg-strong)" stroke-width="1.1"/>
@@ -394,7 +408,7 @@
   <div class="folium-cta-caption">Crea il tuo dossier</div>
 </div>
 
-<div class="folium-cta reveal" style="border-bottom:1px solid var(--rule);">
+<div class="folium-cta reveal">
   <svg class="folium-cta-icon" viewBox="0 0 40 40" aria-hidden="true">
     <circle cx="20" cy="20" r="18" fill="none" stroke="var(--fg-strong)" stroke-width="1.1"/>
     <circle cx="20" cy="20" r="14.5" fill="none" stroke="var(--accent)" stroke-width="1"/>
@@ -404,6 +418,7 @@
   </svg>
   <a class="btn-solid" href="https://quantum.dominus-suite.it/quantum-plans.html" target="_blank" rel="noopener">Genera la tua valutazione gratis con Quantum</a>
   <div class="folium-cta-caption">Valuta un immobile</div>
+</div>
 </div>
 
 <header class="hero" id="top">
