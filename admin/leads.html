@@ -56,6 +56,13 @@
   .lead-message{ font-size:13px; color:#3A362E; margin-top:12px; line-height:1.6; max-width:560px; }
   .lead-license{ font-size:12px; color:#857D69; margin-top:12px; padding-top:12px; border-top:1px dashed rgba(60,50,30,0.18); }
   .lead-license strong{ color:#7C5F2E; }
+  .extend-btn{
+    font-family:inherit; font-size:10.5px; letter-spacing:.05em; text-transform:uppercase;
+    padding:4px 9px; margin-left:8px; border:1px solid rgba(156,122,62,0.4); background:transparent;
+    color:#7C5F2E; cursor:pointer; vertical-align:middle;
+  }
+  .extend-btn:hover{ background:#9C7A3E; color:#fff; border-color:#9C7A3E; }
+  .extend-btn:disabled{ opacity:.5; cursor:default; }
   .lead-meta{ display:flex; flex-direction:column; align-items:flex-end; gap:10px; min-width:150px; }
   .lead-date{ font-size:11px; color:#857D69; letter-spacing:.03em; }
   select.status-select{
@@ -221,6 +228,7 @@
             <div class="lead-license">
               Codice licenza demo: <strong onclick="copyCode('${esc(l.cp_clients.license_code)}')" style="cursor:pointer; text-decoration:underline;" title="Clicca per copiare">${esc(l.cp_clients.license_code)}</strong>
               ${demoLabel(l.cp_clients)}
+              ${l.cp_clients.is_demo ? `<button type="button" class="extend-btn" onclick="extendDemo('${l.cp_clients.id}', this)">Prolunga +30gg</button>` : ''}
               ${l.cp_clients.site_url ? `<br>Sito demo: <a href="${esc(l.cp_clients.site_url)}" target="_blank">${esc(l.cp_clients.site_url)}</a>` : ''}
             </div>` : ''}
         </div>
@@ -236,6 +244,38 @@
       </div>
     `).join('');
   }
+
+  // Prolunga la demo di 30 giorni DA OGGI (non aggiunge 30 giorni alla scadenza attuale,
+  // anche se già scaduta) — e resetta i due flag di promemoria/scadenza già inviati,
+  // altrimenti la edge function demo-lifecycle (che li controlla per decidere se rimandare
+  // un avviso) penserebbe di aver già avvisato il cliente e non manderebbe più nulla per
+  // la nuova data. Richiede che le policy RLS di cp_clients permettano l'update da un
+  // amministratore autenticato — stesso presupposto già in uso per l'update dello stato
+  // richiesta poco sopra in questa pagina.
+  window.extendDemo = async function(clientId, btn){
+    if(!confirm('Prolungare questa demo di 30 giorni da oggi?')) return;
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    btn.textContent = 'Attendere…';
+    const newExpiry = new Date(Date.now() + 30*24*60*60*1000).toISOString();
+    const { error } = await client.from('cp_clients').update({
+      demo_expires_at: newExpiry,
+      reminder_sent_at: null,
+      expiry_notified_at: null,
+    }).eq('id', clientId);
+    if(error){
+      alert('Errore: ' + error.message);
+      btn.disabled = false;
+      btn.textContent = originalText;
+      return;
+    }
+    // Aggiorna in memoria TUTTE le richieste collegate a questo stesso cliente (una demo
+    // può avere più richieste associate nel tempo), non solo quella su cui si è cliccato.
+    ALL_LEADS.forEach(l => {
+      if(l.cp_clients && l.cp_clients.id === clientId) l.cp_clients.demo_expires_at = newExpiry;
+    });
+    render();
+  };
 
   function demoLabel(c){
     if(!c.is_demo || !c.demo_expires_at) return '';
@@ -253,7 +293,7 @@
   async function load(){
     const { data, error } = await client
       .from('cp_dominus_leads')
-      .select('*, cp_clients(business_name, license_code, is_demo, demo_expires_at, status)')
+      .select('*, cp_clients(id, business_name, license_code, is_demo, demo_expires_at, status)')
       .order('created_at', { ascending:false });
     if(error){
       document.getElementById('list').innerHTML = '<div class="empty">Errore nel caricamento: ' + esc(error.message) + '</div>';
